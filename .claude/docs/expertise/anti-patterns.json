@@ -1,0 +1,90 @@
+{
+  "version": "1.0",
+  "last_updated": "2025-12-01T00:00:00Z",
+  "description": "Documentation anti-patterns to avoid",
+
+  "anti_patterns": [
+    {
+      "id": "vague-parameters",
+      "category": "api-documentation",
+      "description": "Parameter descriptions that only restate the parameter name",
+      "detection_pattern": "Parameter `{name}` is the {name}",
+      "severity": "warning",
+      "correction": "Describe what the parameter controls, valid values/ranges, defaults, and side effects",
+      "example_bad": "| user_id | The user ID |",
+      "example_good": "| user_id | Unique identifier for the user account. Must be a valid UUID v4. |"
+    },
+    {
+      "id": "missing-error-handling",
+      "category": "api-documentation",
+      "description": "API documentation without error response examples",
+      "detection_pattern": "Endpoint documentation missing error codes section",
+      "severity": "blocker",
+      "correction": "Include at least common error responses (400, 401, 404, 500) with example bodies"
+    },
+    {
+      "id": "wall-of-text",
+      "category": "all",
+      "description": "Long paragraphs without structure or formatting",
+      "detection_pattern": "Paragraph with >200 words without headers, lists, or code blocks",
+      "severity": "warning",
+      "correction": "Break into smaller sections, use bullet points for lists, add code examples"
+    },
+    {
+      "id": "orphan-code-blocks",
+      "category": "all",
+      "description": "Code examples without explanation or context",
+      "detection_pattern": "Code block not preceded by explanatory text",
+      "severity": "warning",
+      "correction": "Add a brief introduction explaining what the code does and when to use it"
+    },
+    {
+      "id": "assumed-knowledge",
+      "category": "user-manual",
+      "description": "Documentation that assumes too much prior knowledge",
+      "detection_pattern": "References to concepts not defined in document or prerequisites",
+      "severity": "warning",
+      "correction": "Either define the concept, link to prerequisite docs, or list in Prerequisites section"
+    },
+    {
+      "id": "stale-screenshots",
+      "category": "user-manual",
+      "description": "Screenshots that don't match current UI",
+      "detection_pattern": "Manual review required",
+      "severity": "warning",
+      "correction": "Update screenshots when UI changes, include version/date in caption"
+    },
+    {
+      "id": "circular-references",
+      "category": "all",
+      "description": "Documentation that references itself without adding value",
+      "detection_pattern": "Link that points to same document section",
+      "severity": "suggestion",
+      "correction": "Remove circular references or replace with actual content"
+    },
+    {
+      "id": "implementation-details",
+      "category": "user-manual",
+      "description": "Exposing internal implementation details to end users",
+      "detection_pattern": "References to internal class names, database schemas, or code paths",
+      "severity": "warning",
+      "correction": "Focus on user-facing behavior and concepts, not internal implementation"
+    },
+    {
+      "id": "passive-voice-overuse",
+      "category": "all",
+      "description": "Excessive use of passive voice making instructions unclear",
+      "detection_pattern": "Multiple instances of 'is done', 'was created', 'should be'",
+      "severity": "suggestion",
+      "correction": "Use active voice: 'Click the button' not 'The button should be clicked'"
+    },
+    {
+      "id": "version-mismatch",
+      "category": "api-documentation",
+      "description": "Documentation that references wrong API version",
+      "detection_pattern": "Version numbers in code don't match header version",
+      "severity": "blocker",
+      "correction": "Ensure all version references are consistent and current"
+    }
+  ]
+}

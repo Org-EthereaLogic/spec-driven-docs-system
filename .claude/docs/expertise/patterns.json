@@ -1,0 +1,80 @@
+{
+  "version": "1.0",
+  "last_updated": "2025-12-01T00:00:00Z",
+  "description": "Effective documentation patterns learned from successful documents",
+
+  "patterns": [
+    {
+      "id": "api-error-documentation",
+      "category": "api-documentation",
+      "description": "Document error responses comprehensively with examples and recovery steps",
+      "effectiveness_score": 0.90,
+      "usage_count": 0,
+      "example": "For each error code, include: HTTP status, error code, message format, common causes, and specific recovery actions the user can take",
+      "applies_to": ["api"]
+    },
+    {
+      "id": "progressive-disclosure",
+      "category": "user-manual",
+      "description": "Start with simple use cases, progressively reveal advanced features",
+      "effectiveness_score": 0.88,
+      "usage_count": 0,
+      "example": "Begin with 'Quick Start' for basic usage, then 'Common Tasks', then 'Advanced Configuration'",
+      "applies_to": ["manual"]
+    },
+    {
+      "id": "decision-record-format",
+      "category": "design-documentation",
+      "description": "Document architectural decisions using ADR (Architecture Decision Record) format",
+      "effectiveness_score": 0.92,
+      "usage_count": 0,
+      "example": "Structure as: Context -> Decision -> Consequences. Include date, status (proposed/accepted/deprecated), and decision drivers",
+      "applies_to": ["design"]
+    },
+    {
+      "id": "code-example-pairs",
+      "category": "api-documentation",
+      "description": "Always show request/response pairs for API endpoints",
+      "effectiveness_score": 0.95,
+      "usage_count": 0,
+      "example": "Show complete curl command with all headers, followed by the JSON response including both success and error cases",
+      "applies_to": ["api"]
+    },
+    {
+      "id": "glossary-first-reference",
+      "category": "all",
+      "description": "Define technical terms on first use, link to glossary",
+      "effectiveness_score": 0.85,
+      "usage_count": 0,
+      "example": "On first mention: 'The **endpoint** (a URL path that accepts requests) handles authentication...'",
+      "applies_to": ["api", "design", "manual"]
+    },
+    {
+      "id": "visual-architecture",
+      "category": "design-documentation",
+      "description": "Include at least one architecture diagram for system designs",
+      "effectiveness_score": 0.91,
+      "usage_count": 0,
+      "example": "Use Mermaid diagrams for component relationships, sequence diagrams for flows",
+      "applies_to": ["design"]
+    },
+    {
+      "id": "troubleshooting-matrix",
+      "category": "user-manual",
+      "description": "Structure troubleshooting as symptom -> cause -> solution",
+      "effectiveness_score": 0.87,
+      "usage_count": 0,
+      "example": "Create a table: | Symptom | Possible Cause | Solution | with the most common issues first",
+      "applies_to": ["manual"]
+    },
+    {
+      "id": "parameter-tables",
+      "category": "api-documentation",
+      "description": "Use tables for parameters when there are 3 or more",
+      "effectiveness_score": 0.89,
+      "usage_count": 0,
+      "example": "| Parameter | Type | Required | Description | Default |",
+      "applies_to": ["api"]
+    }
+  ]
+}

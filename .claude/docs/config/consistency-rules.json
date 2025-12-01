@@ -1,0 +1,81 @@
+{
+  "version": "1.0",
+  "description": "Global consistency rules for technical documentation",
+
+  "terminology": {
+    "description": "Enforced terminology - use the key, avoid the alternatives. Note: Common technical terms with multiple valid meanings (path, run, method, call) are intentionally excluded to prevent false positives.",
+    "enforced_terms": {
+      "endpoint": ["route", "API URL"],
+      "request": ["API call"],
+      "response": ["return value"],
+      "authenticate": ["login", "sign in", "log in"],
+      "authorize": ["check access", "verify permissions"],
+      "parameter": ["param", "arg", "argument"],
+      "configuration": ["config", "settings"],
+      "initialize": ["init", "bootstrap"],
+      "repository": ["repo"],
+      "directory": ["folder", "dir"],
+      "function": ["procedure", "routine"]
+    }
+  },
+
+  "style": {
+    "header_case": "sentence",
+    "code_language_hints": true,
+    "max_heading_depth": 4,
+    "list_style": "dash",
+    "code_block_style": "fenced",
+    "link_style": "inline",
+    "emphasis_style": "asterisk"
+  },
+
+  "formatting": {
+    "max_line_length": 120,
+    "trailing_newline": true,
+    "consistent_spacing": true,
+    "table_alignment": "left"
+  },
+
+  "forbidden_patterns": {
+    "description": "Patterns that must never appear in final documentation",
+    "patterns": [
+      "TODO",
+      "FIXME",
+      "TBD",
+      "XXX",
+      "HACK",
+      "WIP",
+      "...",
+      "placeholder",
+      "lorem ipsum",
+      "example.com",
+      "foo",
+      "bar",
+      "baz",
+      "your-",
+      "<your",
+      "[your",
+      "{your"
+    ]
+  },
+
+  "required_elements": {
+    "api_docs": {
+      "sections": ["Overview", "Authentication", "Endpoints", "Error Handling"],
+      "per_endpoint": ["method", "path", "description", "parameters", "response"]
+    },
+    "design_docs": {
+      "sections": ["Problem Statement", "Proposed Solution", "Alternatives Considered", "Implementation Plan"]
+    },
+    "user_manual": {
+      "sections": ["Introduction", "Getting Started", "Core Concepts", "How-To Guides"]
+    }
+  },
+
+  "cross_reference_rules": {
+    "validate_internal_links": true,
+    "validate_external_links": false,
+    "auto_fix_broken_anchors": true,
+    "require_link_titles": false
+  }
+}

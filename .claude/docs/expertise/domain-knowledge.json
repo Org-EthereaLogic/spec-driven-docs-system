@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "last_updated": "2025-12-01T00:00:00Z",
+  "description": "Project-specific terminology, conventions, and context",
+
+  "terminology": {
+    "description": "Canonical terms and their definitions for this project",
+    "terms": {}
+  },
+
+  "conventions": {
+    "description": "Project-specific naming and formatting conventions",
+    "class_naming": {},
+    "field_naming": {},
+    "file_naming": {}
+  },
+
+  "project_context": {
+    "description": "High-level project context for documentation",
+    "project_name": null,
+    "project_description": null,
+    "primary_language": null,
+    "framework": null,
+    "target_users": []
+  },
+
+  "forbidden_terms": {
+    "description": "Terms that should never be used in this project's documentation",
+    "terms": []
+  },
+
+  "style_overrides": {
+    "description": "Project-specific style rule overrides",
+    "overrides": {}
+  },
+
+  "metadata": {
+    "auto_updated": true,
+    "update_sources": ["code_analysis", "doc_review", "manual_entry"],
+    "confidence_threshold": 0.8
+  }
+}

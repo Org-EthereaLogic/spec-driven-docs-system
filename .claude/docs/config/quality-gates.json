@@ -1,0 +1,166 @@
+{
+  "version": "1.0",
+  "description": "Quality gate definitions for documentation workflow",
+
+  "gates": {
+    "spec_completeness": {
+      "description": "Validates that a specification is complete before writing begins",
+      "trigger": "after_spec_generation",
+      "required": [
+        {
+          "id": "doc_type_valid",
+          "description": "Document type must be one of: api, design, manual",
+          "check": "doc_type in ['api', 'design', 'manual']"
+        },
+        {
+          "id": "subject_defined",
+          "description": "Subject/topic must be non-empty",
+          "check": "len(subject) > 0"
+        },
+        {
+          "id": "audience_specified",
+          "description": "Target audience must be defined",
+          "check": "audience is not None"
+        },
+        {
+          "id": "sections_defined_min_3",
+          "description": "At least 3 sections must be outlined",
+          "check": "len(sections) >= 3"
+        },
+        {
+          "id": "output_path_valid",
+          "description": "Output path must be specified and valid",
+          "check": "output_path matches valid path pattern"
+        }
+      ],
+      "recommended": [
+        {
+          "id": "source_files_listed",
+          "description": "Source files to reference should be listed"
+        },
+        {
+          "id": "examples_specified",
+          "description": "Code examples to include should be specified"
+        },
+        {
+          "id": "cross_references_defined",
+          "description": "Related documents should be identified"
+        }
+      ],
+      "pass_threshold": "all_required"
+    },
+
+    "content_quality": {
+      "description": "Validates content quality after each section",
+      "trigger": "after_section_completion",
+      "required": [
+        {
+          "id": "no_placeholders",
+          "description": "No placeholder text allowed",
+          "check": "no matches for forbidden_patterns"
+        },
+        {
+          "id": "no_todo_markers",
+          "description": "No TODO/FIXME markers",
+          "check": "no matches for TODO|FIXME|TBD"
+        },
+        {
+          "id": "code_examples_valid",
+          "description": "All code examples must be syntactically valid",
+          "check": "all code blocks parse successfully"
+        },
+        {
+          "id": "internal_links_resolve",
+          "description": "All internal links must resolve",
+          "check": "all internal hrefs have valid targets"
+        },
+        {
+          "id": "min_content_length",
+          "description": "Substantial sections must have minimum content",
+          "check": "word_count >= 50 for major sections"
+        }
+      ],
+      "recommended": [
+        {
+          "id": "examples_for_complex_concepts",
+          "description": "Complex concepts should have examples"
+        },
+        {
+          "id": "consistent_terminology",
+          "description": "Terminology should match glossary"
+        },
+        {
+          "id": "proper_heading_hierarchy",
+          "description": "No skipped heading levels"
+        }
+      ],
+      "pass_threshold": "all_required"
+    },
+
+    "consistency": {
+      "description": "Validates consistency before review handoff",
+      "trigger": "before_review_handoff",
+      "required": [
+        {
+          "id": "terminology_matches_glossary",
+          "description": "All terms must match project glossary"
+        },
+        {
+          "id": "naming_conventions_followed",
+          "description": "Naming conventions must be followed"
+        },
+        {
+          "id": "no_conflicting_statements",
+          "description": "No contradictory information within document"
+        },
+        {
+          "id": "format_matches_template",
+          "description": "Structure must match document type template"
+        }
+      ],
+      "pass_threshold": "all_required"
+    },
+
+    "final_approval": {
+      "description": "Final gate before document is marked complete",
+      "trigger": "after_review",
+      "required": [
+        {
+          "id": "no_blocker_issues",
+          "description": "No blocker-severity issues remaining"
+        },
+        {
+          "id": "all_sections_complete",
+          "description": "All required sections present and complete"
+        },
+        {
+          "id": "cross_refs_validated",
+          "description": "All cross-references validated"
+        }
+      ],
+      "pass_threshold": "all_required"
+    }
+  },
+
+  "score_calculation": {
+    "required_weight": 0.6,
+    "recommended_weight": 0.2,
+    "project_specific_weight": 0.2,
+    "formula": "(required_pass/required_total * 0.6) + (recommended_pass/recommended_total * 0.2) + (project_pass/project_total * 0.2) * 100"
+  },
+
+  "grades": {
+    "A": {"min": 90, "max": 100, "action": "approved"},
+    "B": {"min": 80, "max": 89, "action": "approved_with_notes"},
+    "C": {"min": 70, "max": 79, "action": "iteration_recommended"},
+    "D": {"min": 60, "max": 69, "action": "iteration_required"},
+    "F": {"min": 0, "max": 59, "action": "blocked"}
+  },
+
+  "iteration_config": {
+    "max_iterations": 3,
+    "auto_fix_enabled": true,
+    "escalate_after_max": true,
+    "rollback_on_regression": true
+  }
+}

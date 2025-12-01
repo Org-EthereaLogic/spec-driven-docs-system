@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write.*docs/.*\\.md$",
+        "hooks": [".claude/hooks/doc_pre_write.py"]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write.*docs/.*\\.md$",
+        "hooks": [".claude/hooks/doc_post_write.py"]
+      }
+    ]
+  }
+}
