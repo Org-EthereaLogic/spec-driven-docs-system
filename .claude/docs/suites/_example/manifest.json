@@ -1,0 +1,57 @@
+{
+  "$schema": "Suite manifest for documentation batch operations",
+  "_comment": "This is an example manifest. Copy this directory and customize for your suite.",
+
+  "suite_id": "_example",
+  "name": "Example Documentation Suite",
+  "description": "Template suite demonstrating manifest structure for /doc-batch operations",
+  "created": "2025-12-01",
+  "version": "1.0",
+
+  "configuration": {
+    "parallel_limit": 3,
+    "continue_on_error": true,
+    "auto_fix_enabled": true,
+    "max_iterations": 3
+  },
+
+  "documents": [
+    {
+      "doc_id": "api-reference",
+      "title": "API Reference",
+      "type": "api",
+      "spec_path": "specs/docs/_example/api-reference-spec.md",
+      "output_path": "docs/api/reference.md",
+      "status": "pending",
+      "priority": 1,
+      "dependencies": []
+    },
+    {
+      "doc_id": "architecture-design",
+      "title": "Architecture Design",
+      "type": "design",
+      "spec_path": "specs/docs/_example/architecture-design-spec.md",
+      "output_path": "docs/design/architecture.md",
+      "status": "pending",
+      "priority": 2,
+      "dependencies": []
+    },
+    {
+      "doc_id": "user-guide",
+      "title": "User Guide",
+      "type": "manual",
+      "spec_path": "specs/docs/_example/user-guide-spec.md",
+      "output_path": "docs/guides/user-guide.md",
+      "status": "pending",
+      "priority": 3,
+      "dependencies": ["api-reference", "architecture-design"]
+    }
+  ],
+
+  "metadata": {
+    "last_batch_run": null,
+    "completion_percentage": 0,
+    "total_documents": 3,
+    "completed_documents": 0
+  }
+}
