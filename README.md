@@ -61,11 +61,35 @@ A comprehensive documentation system for Claude Code that enables specification-
 - **Design Documents** (`design`): Architecture decisions, trade-offs, implementation plans
 - **User Manuals** (`manual`): Getting started guides, tutorials, troubleshooting
 
+## Agents
+
+The system uses specialized Claude agents to scale document processing. Each agent has its own context window and expertise:
+
+| Agent | Model | Purpose |
+|-------|-------|---------|
+| **doc-orchestrator** | Opus | High-level strategy, requirement analysis, multi-document coordination |
+| **doc-writer** | Sonnet | Technical document generation from specifications |
+| **doc-reviewer** | Sonnet | Quality validation, accuracy checking, consistency enforcement |
+| **doc-librarian** | Haiku | Quick consistency checks, cross-references, index maintenance |
+
+### Agent Integration
+
+- `/doc-plan` → spawns **doc-orchestrator** for requirement gathering
+- `/doc-write` → spawns **doc-writer** for content generation
+- `/doc-review` → spawns **doc-reviewer** for quality validation
+- `/doc-sync` → spawns **doc-librarian** for cross-reference checks
+- `/doc-batch` → coordinates multiple agents for parallel processing
+
 ## Directory Structure
 
 ```
 .claude/
-├── commands/doc/           # Slash commands
+├── agents/                  # Specialized sub-agents
+│   ├── doc-orchestrator.md  # Strategy and coordination
+│   ├── doc-writer.md        # Document generation
+│   ├── doc-reviewer.md      # Quality validation
+│   └── doc-librarian.md     # Cross-reference management
+├── commands/doc/            # Slash commands
 │   ├── doc-plan.md
 │   ├── doc-write.md
 │   ├── doc-review.md
@@ -73,17 +97,17 @@ A comprehensive documentation system for Claude Code that enables specification-
 │   ├── doc-sync.md
 │   ├── doc-status.md
 │   ├── doc-improve.md
-│   └── _doc-helpers/       # Internal helper commands
+│   └── _doc-helpers/        # Internal helper commands
 ├── docs/
-│   ├── config/             # Consistency rules, quality gates
-│   ├── expertise/          # Patterns, anti-patterns, domain knowledge
-│   ├── templates/          # Document templates
-│   └── suites/             # Suite manifests
+│   ├── config/              # Consistency rules, quality gates
+│   ├── expertise/           # Patterns, anti-patterns, domain knowledge
+│   ├── templates/           # Document templates
+│   └── suites/              # Suite manifests
 └── hooks/
-    ├── doc_pre_write.py    # Pre-write validation
-    └── doc_post_write.py   # Post-write consistency checks
+    ├── doc_pre_write.py     # Pre-write validation
+    └── doc_post_write.py    # Post-write consistency checks
 
-specs/docs/                  # Document specifications
+specs/docs/                   # Document specifications
 ```
 
 ## Quick Start
