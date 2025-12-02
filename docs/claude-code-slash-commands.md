@@ -28,7 +28,7 @@ Users can define frequently-used prompts as Markdown files in two locations:
 
 **Arguments**: Support dynamic values using `$ARGUMENTS` for all args or `$1`, `$2` for specific positions—similar to shell scripts.
 
-**Bash Integration**: Execute commands with the `!` prefix; output includes in context. Requires "allowed-tools" frontmatter specification.
+**Bash Integration**: Execute commands with the `!` prefix; output is included in context. Requires "allowed-tools" frontmatter specification.
 
 **File References**: Use `@` prefix to include file contents in commands.
 
@@ -44,7 +44,7 @@ Commands support metadata via frontmatter:
 
 ## Plugin Commands
 
-Plugins distribute custom slash commands through marketplaces. They support namespacing via `/ plugin-name:command-name` format and integrate all standard features (arguments, bash execution, file references).
+Plugins distribute custom slash commands through marketplaces. They support namespacing via `/plugin-name:command-name` format and integrate all standard features (arguments, bash execution, file references).
 
 ## MCP Slash Commands
 

@@ -46,6 +46,49 @@ When applying fixes, modify only the specific issue locations. Do not reformat s
 **Why this matters:** Iteration should be surgical. Broad changes risk introducing new issues. Minimal edits are easier to review and rollback if needed.
 </preserve_working_content>
 
+<enhanced_state_format>
+Track iteration state in a recoverable structured format that enables resume and trend analysis:
+
+```json
+{
+  "document": "path/to/doc.md",
+  "iteration": {
+    "current": 2,
+    "max": 3,
+    "started_at": "2025-12-02T10:20:00Z",
+    "history": [
+      {
+        "iteration": 1,
+        "issues_in": 5,
+        "issues_out": 3,
+        "fixes_applied": ["term-1", "style-2"],
+        "timestamp": "2025-12-02T10:25:00Z",
+        "duration_ms": 1234
+      },
+      {
+        "iteration": 2,
+        "issues_in": 3,
+        "issues_out": 1,
+        "fixes_applied": ["term-3", "content-1"],
+        "timestamp": "2025-12-02T10:28:00Z",
+        "duration_ms": 987
+      }
+    ]
+  },
+  "remaining_issues": [
+    {"id": "blocker-1", "severity": "blocker", "requires_human": true, "description": "Missing error handling section"}
+  ],
+  "trend": "improving"
+}
+```
+
+**Why this matters:** Structured iteration state enables:
+- Resume from interruption (continue from last iteration)
+- Trend analysis (are issues decreasing, stagnating, or regressing?)
+- Audit trail for debugging stuck iterations
+- Performance tracking (how long do iterations take?)
+</enhanced_state_format>
+
 ## Iteration Rules
 
 | Rule | Value | Rationale |

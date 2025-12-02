@@ -29,19 +29,30 @@ A comprehensive documentation system for Claude Code that enables specification-
      "hooks": {
        "PreToolUse": [
          {
-           "matcher": "Write.*docs/.*\\.md$",
-           "hooks": [".claude/hooks/doc_pre_write.py"]
+           "matcher": "Write",
+           "hooks": [
+             {
+               "type": "command",
+               "command": ".claude/hooks/doc_pre_write.py"
+             }
+           ]
          }
        ],
        "PostToolUse": [
          {
-           "matcher": "Write.*docs/.*\\.md$",
-           "hooks": [".claude/hooks/doc_post_write.py"]
+           "matcher": "Write",
+           "hooks": [
+             {
+               "type": "command",
+               "command": ".claude/hooks/doc_post_write.py"
+             }
+           ]
          }
        ]
      }
    }
    ```
+   The hook scripts verify the target path (for example `docs/*.md`) before applying validation.
 
 ## Commands
 

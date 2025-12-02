@@ -305,7 +305,8 @@ Hooks communicate status through exit codes, stdout, and stderr:
 
 <Warning>
   Reminder: Claude Code does not see stdout if the exit code is 0, except for
-  the `UserPromptSubmit` hook where stdout is injected as context.
+  the `UserPromptSubmit` and `SessionStart` hooks where stdout is injected as
+  context.
 </Warning>
 
 #### Exit Code 2 Behavior

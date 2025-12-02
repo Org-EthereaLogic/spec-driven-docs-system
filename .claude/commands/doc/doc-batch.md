@@ -43,6 +43,40 @@ Report progress after each document completes, not just at the end. Update manif
 **Why this matters:** A batch of 20 documents with a failure on #19 should yield 18 completed documents, not zero. Incremental updates preserve progress.
 </incremental_progress>
 
+<complete_context_usage>
+Batch operations may involve many documents and approach context limits. Plan work clearly and use your full context systematically. Before context exhaustion:
+1. Commit all completed documents via git
+2. Update manifest with current state
+3. Report progress so next session can continue
+
+**Why this matters:** A 50-document batch interrupted at document 40 should preserve those 40 documents. Without checkpoints, all progress is lost. Systematic work with checkpoints ensures value is preserved even if context limits are reached.
+</complete_context_usage>
+
+<structured_state_format>
+Track batch state in a structured JSON format for resume capability:
+
+```json
+{
+  "batch_id": "batch-2025-12-02",
+  "operation": "generate",
+  "suite_id": "api-docs",
+  "documents": [
+    {"id": "doc-1", "status": "completed", "quality": 92, "duration_ms": 1234},
+    {"id": "doc-2", "status": "in_progress", "quality": null, "duration_ms": null},
+    {"id": "doc-3", "status": "pending", "quality": null, "duration_ms": null}
+  ],
+  "total": 3,
+  "completed": 1,
+  "in_progress": 1,
+  "pending": 1,
+  "checkpoint": "2025-12-02T10:30:00Z",
+  "git_commit": "abc1234"
+}
+```
+
+**Why this matters:** Structured state enables resume capability. The next session reads state and continues from where the previous stopped. Without structure, resumption requires manual inspection.
+</structured_state_format>
+
 ## Supported Operations
 
 | Operation | Description | Parallelizable |
@@ -252,6 +286,46 @@ After batch completion:
 - `--stop-on-error`: Stop on first failure
 - `--type [api|design|manual]`: Filter by document type
 - `--all`: Include all documents regardless of status
+- `--continue`: Resume from last checkpoint (for interrupted batches)
+
+## Checkpoint Strategy
+
+For batches larger than 5 documents, use git commits as recoverable checkpoints:
+
+### Checkpoint Protocol
+
+1. **After each document completes:**
+   - Update manifest immediately with document status
+   - If 5+ documents completed since last checkpoint, create git checkpoint
+
+2. **Git checkpoint format:**
+   ```bash
+   git add [manifest] [completed-docs]
+   git commit -m "Batch checkpoint: [N]/[total] documents complete
+
+   Suite: [suite-id]
+   Operation: [operation]
+   Completed: [list of doc-ids]"
+   ```
+
+3. **Context exhaustion protocol:**
+   - If approaching context limit, stop after current document
+   - Create final checkpoint with current state
+   - Report resumption instructions:
+     ```text
+     Context limit approaching. Checkpoint saved.
+
+     Progress: [N]/[total] documents complete
+     Resume: Run `/doc-batch [suite-id] [operation] --continue` to continue from checkpoint
+     ```
+
+### Resume Capability
+
+When resuming a batch:
+1. Read batch state from manifest
+2. Filter to documents with status `pending` or `in_progress`
+3. Continue execution from where previous session stopped
+4. Merge results with previous checkpoint data
 
 ## Communication Style
 
