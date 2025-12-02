@@ -107,5 +107,5 @@ The orchestrator accumulates knowledge about:
 
 ### Outputs To
 - Specification files in `specs/docs/`
-- Suite manifests in `docs/suites/{suite-id}/`
+- Suite manifests in `.claude/docs/suites/{suite-id}/`
 - Coordination decisions to other agents

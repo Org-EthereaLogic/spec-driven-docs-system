@@ -2,7 +2,7 @@
 name: doc-reviewer
 model: sonnet
 description: Use for reviewing documentation quality, accuracy, and consistency. Validates against specifications, enforces quality gates, classifies issues by severity, and provides actionable improvement feedback.
-tools: Read, Glob, Grep, Edit
+tools: Read, Glob, Grep, Task, Edit
 ---
 
 # Documentation Reviewer Agent

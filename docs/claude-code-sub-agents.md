@@ -33,10 +33,15 @@ Subagents are Markdown files with YAML frontmatter stored in:
 ---
 name: agent-name
 description: When to invoke this agent
-tools: tool1, tool2, tool3  # Optional
+tools:  # Optional
+  - tool1
+  - tool2
+  - tool3
 model: sonnet  # Optional - sonnet, opus, haiku, or inherit
 permissionMode: default  # Optional
-skills: skill1, skill2  # Optional
+skills:  # Optional
+  - skill1
+  - skill2
 ---
 
 System prompt content here...
@@ -48,10 +53,10 @@ System prompt content here...
 |-------|----------|---------|
 | `name` | Yes | Unique lowercase identifier with hyphens |
 | `description` | Yes | Natural language purpose statement |
-| `tools` | No | Comma-separated list; omit to inherit all |
+| `tools` | No | YAML list; omit to inherit all tools |
 | `model` | No | Model alias or 'inherit'; defaults to sonnet |
 | `permissionMode` | No | default, acceptEdits, bypassPermissions, plan, ignore |
-| `skills` | No | Auto-loaded skills for the subagent |
+| `skills` | No | YAML list of skills auto-loaded for the subagent |
 
 ## Built-in Subagents
 

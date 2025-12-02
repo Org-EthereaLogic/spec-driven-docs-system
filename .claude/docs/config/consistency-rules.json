@@ -67,7 +67,7 @@
     "design_docs": {
       "sections": ["Problem Statement", "Proposed Solution", "Alternatives Considered", "Implementation Plan"]
     },
-    "user_manual": {
+    "manual": {
       "sections": ["Introduction", "Getting Started", "Core Concepts", "How-To Guides"]
     }
   },

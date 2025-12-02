@@ -46,6 +46,42 @@ When applying fixes, make the minimum changes necessary to achieve consistency. 
 **Why this matters:** Sync should be predictable. Users expect terminology and reference fixes, not surprise refactoring. Minimal changes make diffs reviewable and reduce risk of unintended modifications.
 </minimal_changes>
 
+<complete_context_usage>
+Suite synchronization may involve many documents. Work systematically and track progress. If approaching context limits:
+1. Apply all completed fixes immediately
+2. Update sync state with pending violations
+3. Report remaining violations for next session
+
+**Why this matters:** Partial sync is better than no sync. Fixing 80% of violations is valuable even if context prevents completing all. Incremental fixes preserve progress.
+</complete_context_usage>
+
+<structured_violation_tracking>
+Track violations in structured format for resume capability and incremental fixing:
+
+```json
+{
+  "sync_id": "sync-2025-12-02",
+  "suite_id": "api-docs",
+  "violations": [
+    {"id": "v1", "type": "terminology", "status": "fixed", "doc": "auth.md", "line": 45},
+    {"id": "v2", "type": "terminology", "status": "fixed", "doc": "users.md", "line": 23},
+    {"id": "v3", "type": "cross_ref", "status": "pending", "doc": "users.md", "line": 89}
+  ],
+  "summary": {
+    "total": 20,
+    "fixed": 15,
+    "pending": 5
+  },
+  "checkpoint": "2025-12-02T10:30:00Z"
+}
+```
+
+**Why this matters:** Structured tracking enables:
+- Incremental progress (update state after each fix)
+- Resume capability (continue from pending violations)
+- Audit trail (what was fixed, what remains)
+</structured_violation_tracking>
+
 ## Quality Standards for Sync Operations
 
 | Requirement | Why It Matters | How to Verify |

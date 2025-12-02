@@ -36,6 +36,30 @@ Start new patterns with moderate scores (0.85) and let evidence move them up or 
 **Why this matters:** Overconfident initial scores create false priorities. A "proven" pattern that hasn't been tested may override genuinely effective approaches. Conservative scoring lets merit emerge from evidence.
 </conservative_scoring>
 
+<complete_context_usage>
+Pattern analysis may span many documents and require full context usage. Work systematically through the document set. If approaching context limits:
+1. Save extracted patterns to expertise files immediately
+2. Commit updates via git as checkpoint
+3. Report progress for session continuity
+
+**Why this matters:** Partial pattern extraction is valuable. Even if only 50% of documents analyzed, those patterns should be preserved. Work lost to context exhaustion must be re-done.
+</complete_context_usage>
+
+<session_progress_notes>
+Maintain progress notes for cross-session continuity:
+
+```text
+Session [date] progress:
+- Analyzed 15/30 recent documents
+- Extracted 3 new patterns, reinforced 5 existing
+- Found 2 new anti-patterns
+- Next: continue with remaining 15 documents
+- Note: Found recurring anti-pattern in API docs (missing error codes)
+```
+
+**Why this matters:** Progress notes provide context for the next session. Without them, the next run may re-analyze already-processed documents or miss important observations from partial analysis.
+</session_progress_notes>
+
 ## Quality Standards for Learning
 
 | Requirement | Why It Matters | How to Verify |
