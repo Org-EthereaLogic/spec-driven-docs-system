@@ -60,11 +60,11 @@ By defining requirements upfront in a specification, you enable:
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                         USER COMMANDS                            │
-├──────────┬──────────┬──────────┬──────────┬──────────┬─────────┤
-│/doc-plan │/doc-write│/doc-review│/doc-sync│/doc-batch│/doc-stat│
-└────┬─────┴────┬─────┴────┬─────┴────┬────┴────┬─────┴────┬────┘
-     │          │          │          │         │          │
-     ▼          ▼          ▼          ▼         ▼          ▼
+├─────────┬──────────┬───────────┬─────────┬──────────┬───────────┤
+│/doc-plan│/doc-write│/doc-review│/doc-sync│/doc-batch│/doc-status│
+└─────────┴──────────┴───────────┴─────────┴──────────┴───────────┘
+     │          │          │          │          │          │
+     ▼          ▼          ▼          ▼          ▼          ▼
 ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────────────┐
 │Orchestr-│ │ Writer  │ │Reviewer │ │Librarian│ │ Configuration   │
 │ator     │ │(Sonnet) │ │(Sonnet) │ │(Haiku)  │ │ & Templates     │
