@@ -1,0 +1,4 @@
+2025-12-02T04:19:21-08:00 [INFO] (codacy-cli-v2/cli-v2.go:27) Starting Codacy CLI version=1.0.0-main.362.sha.6b54110 (6b54110) built at 2025-11-25T14:54:35Z
+2025-12-02T04:19:21-08:00 [INFO] (codacy-cli-v2/cmd/root.go:34) Executing CLI command full_command=[/Users/etherealogic/Library/Caches/Codacy/codacy-cli-v2/1.0.0-main.362.sha.6b54110/codacy-cli-v2 init --provider gh --organization Org-EthereaLogic --repository spec-driven-docs-system --api-token ***] args=[] command=init
+2025-12-02T04:19:21-08:00 [INFO] (codacy-cli-v2/cli-v2.go:27) Starting Codacy CLI version=1.0.0-main.362.sha.6b54110 (6b54110) built at 2025-11-25T14:54:35Z
+2025-12-02T04:19:21-08:00 [INFO] (codacy-cli-v2/cmd/root.go:34) Executing CLI command args=[] command=init full_command=[/Users/etherealogic/Library/Caches/Codacy/codacy-cli-v2/1.0.0-main.362.sha.6b54110/codacy-cli-v2 init --provider gh --organization Org-EthereaLogic --repository spec-driven-docs-system --api-token ***]
