@@ -441,5 +441,5 @@ Refactor the existing authentication system to use JSON Web Tokens (JWT) for sta
 - Included migration considerations for production safety
 - Specified concrete success criteria
 
-**Output Location:** docs/enhanced/
+**Output Location:** prompts/enhanced-prompt-20240115-150847.md
 ```
