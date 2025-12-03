@@ -1,5 +1,7 @@
 # Spec-Driven Technical Document Creation System
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/80b141ac595548f5b877ee3efa20a96e)](https://app.codacy.com/gh/Org-EthereaLogic/spec-driven-docs-system?utm_source=github.com&utm_medium=referral&utm_content=Org-EthereaLogic/spec-driven-docs-system&utm_campaign=Badge_Grade)
+
 A Claude Code framework for creating, reviewing, and maintaining technical documentation at scale using a specification-first approach.
 
 ---
