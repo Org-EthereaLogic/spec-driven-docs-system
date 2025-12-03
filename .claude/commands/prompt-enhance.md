@@ -251,10 +251,23 @@ Before output, verify the enhanced prompt:
    - Applied techniques with brief rationales
    - Key changes from original
 
-3. **Handle --output Flag**
-   If --output path specified:
-   - Write enhanced prompt to the specified path
-   - Report the file location
+3. **Handle Output File Location**
+   Determine where to save the enhanced prompt:
+
+   a. **If --output flag is specified:**
+      - Write enhanced prompt to the specified path
+      - Report the file location
+
+   b. **If no --output flag specified:**
+      - Use Glob to check for existing `prompts/` directory in project root
+      - If not found, check for existing `docs/` directory in project root
+      - If `prompts/` exists: Save to `prompts/enhanced-prompt-[timestamp].md`
+      - If only `docs/` exists: Save to `docs/enhanced-prompt-[timestamp].md`
+      - If neither directory exists:
+        1. Use AskUserQuestion: "Neither `prompts/` nor `docs/` directory exists. Would you like me to create a `prompts/` directory in the project root to save the enhanced prompt?"
+        2. If user approves: Create `prompts/` directory and save file there
+        3. If user declines: Display the enhanced prompt in the response only (do not save to file)
+      - Report the file location after saving
 
 ## Output Format
 
@@ -280,6 +293,8 @@ Before output, verify the enhanced prompt:
 - [Specific change 1]
 - [Specific change 2]
 - [Specific change 3]
+
+**Output Location:** [file path where prompt was saved, or "Not saved to file"]
 ```
 
 ## Error Handling
@@ -291,6 +306,7 @@ Before output, verify the enhanced prompt:
 | Empty input | Report error, request substantive content | Nothing to analyze |
 | Ambiguous intent | Use AskUserQuestion with options | Prevents wrong enhancement |
 | Cannot determine type | Ask user to clarify the task category | Ensures appropriate techniques |
+| Directory creation denied | Display prompt without saving | Respect user preference |
 
 ## Communication Style
 
@@ -348,6 +364,8 @@ Create an analytics dashboard with the following requirements:
 - Expanded single word "dashboard" into specific feature requirements
 - Added implementation considerations
 - Defined what "done" looks like
+
+**Output Location:** prompts/enhanced-prompt-20240115-143022.md
 ```
 
 ### Example 2: Complex Workflow Enhancement
@@ -422,4 +440,6 @@ Refactor the existing authentication system to use JSON Web Tokens (JWT) for sta
 - Added analysis phase to understand current state first
 - Included migration considerations for production safety
 - Specified concrete success criteria
+
+**Output Location:** docs/enhanced-prompt-20240115-143156.md
 ```
