@@ -1,6 +1,6 @@
 {
-  "version": "1.0",
-  "last_updated": "2025-12-01T00:00:00Z",
+  "version": "1.1",
+  "last_updated": "2025-12-03T00:00:00Z",
   "description": "Effective documentation patterns learned from successful documents",
 
   "patterns": [
@@ -17,19 +17,21 @@
       "id": "progressive-disclosure",
       "category": "user-manual",
       "description": "Start with simple use cases, progressively reveal advanced features",
-      "effectiveness_score": 0.88,
-      "usage_count": 0,
+      "effectiveness_score": 0.90,
+      "usage_count": 2,
       "example": "Begin with 'Quick Start' for basic usage, then 'Common Tasks', then 'Advanced Configuration'",
-      "applies_to": ["manual"]
+      "applies_to": ["manual"],
+      "source_document": "enhanced-adws-v1.0/07_CONTRIBUTING.md"
     },
     {
       "id": "decision-record-format",
       "category": "design-documentation",
       "description": "Document architectural decisions using ADR (Architecture Decision Record) format",
       "effectiveness_score": 0.92,
-      "usage_count": 0,
+      "usage_count": 1,
       "example": "Structure as: Context -> Decision -> Consequences. Include date, status (proposed/accepted/deprecated), and decision drivers",
-      "applies_to": ["design"]
+      "applies_to": ["design"],
+      "source_document": "enhanced-adws-v1.0/03_architecture_blueprint.md"
     },
     {
       "id": "code-example-pairs",
@@ -53,19 +55,21 @@
       "id": "visual-architecture",
       "category": "design-documentation",
       "description": "Include at least one architecture diagram for system designs",
-      "effectiveness_score": 0.91,
-      "usage_count": 0,
+      "effectiveness_score": 0.93,
+      "usage_count": 2,
       "example": "Use Mermaid diagrams for component relationships, sequence diagrams for flows",
-      "applies_to": ["design"]
+      "applies_to": ["design"],
+      "source_document": "enhanced-adws-v1.0/03_architecture_blueprint.md"
     },
     {
       "id": "troubleshooting-matrix",
       "category": "user-manual",
       "description": "Structure troubleshooting as symptom -> cause -> solution",
-      "effectiveness_score": 0.87,
-      "usage_count": 0,
+      "effectiveness_score": 0.89,
+      "usage_count": 2,
       "example": "Create a table: | Symptom | Possible Cause | Solution | with the most common issues first",
-      "applies_to": ["manual"]
+      "applies_to": ["manual"],
+      "source_document": "enhanced-adws-v1.0/07_CONTRIBUTING.md"
     },
     {
       "id": "parameter-tables",
@@ -75,6 +79,76 @@
       "usage_count": 0,
       "example": "| Parameter | Type | Required | Description | Default |",
       "applies_to": ["api"]
+    },
+    {
+      "id": "c4-model-hierarchy",
+      "category": "design-documentation",
+      "description": "Use C4 model hierarchy (Context, Container, Component) with dedicated Mermaid diagram for each level",
+      "effectiveness_score": 0.92,
+      "usage_count": 1,
+      "example": "Start with System Context showing external actors/systems, then Container diagram showing deployable units, then Component diagram showing internal modules",
+      "applies_to": ["design"],
+      "source_document": "enhanced-adws-v1.0/03_architecture_blueprint.md"
+    },
+    {
+      "id": "test-coverage-matrix",
+      "category": "design-documentation",
+      "description": "Include coverage matrix mapping requirements to test cases with counts per priority level",
+      "effectiveness_score": 0.92,
+      "usage_count": 1,
+      "example": "Table with columns: Epic | FR Count | Must Tests | Should Tests | Could Tests | Total Tests. Include totals row.",
+      "applies_to": ["design"],
+      "source_document": "enhanced-adws-v1.0/05_test_plan.md"
+    },
+    {
+      "id": "layered-architecture-diagram",
+      "category": "design-documentation",
+      "description": "Use subgraph elements in Mermaid to show distinct architectural layers with clear boundaries",
+      "effectiveness_score": 0.95,
+      "usage_count": 1,
+      "example": "graph TB with subgraph 'Orchestration Layer', subgraph 'Core Logic Layer', subgraph 'Infrastructure Layer', subgraph 'Data Layer' followed by layer responsibilities table",
+      "applies_to": ["design"],
+      "source_document": "enhanced-adws-v1.0/04_software_design_document.md"
+    },
+    {
+      "id": "goal-focused-how-to",
+      "category": "user-manual",
+      "description": "Structure How-To guides with explicit Goal statement, numbered Steps with embedded code, and Expected Result section",
+      "effectiveness_score": 0.95,
+      "usage_count": 1,
+      "example": "**Goal:** Submit a well-documented bug report... #### Steps 1. Search existing issues... #### Expected Result Maintainers can reproduce within 24 hours.",
+      "applies_to": ["manual"],
+      "source_document": "enhanced-adws-v1.0/07_CONTRIBUTING.md"
+    },
+    {
+      "id": "problem-statement-structure",
+      "category": "design-documentation",
+      "description": "Structure problem statements with Current State, Pain Points (by persona), Impact, and measurable Success Criteria",
+      "effectiveness_score": 0.93,
+      "usage_count": 4,
+      "example": "### Current State [description] ### Pain Points **For Quality Assurance:** ... **For Development Teams:** ... ### Impact [consequences] ### Success Criteria - [ ] Measurable criterion 1",
+      "applies_to": ["design"],
+      "source_document": "enhanced-adws-v1.0/05_test_plan.md"
+    },
+    {
+      "id": "function-signature-table",
+      "category": "design-documentation",
+      "description": "Document module APIs using tables with Function, Parameters, Returns, and Description columns",
+      "effectiveness_score": 0.91,
+      "usage_count": 1,
+      "example": "| Function | Parameters | Returns | Description | |----------|------------|---------|-------------| | main() | None (uses sys.argv) | None | Entry point |",
+      "applies_to": ["design", "api"],
+      "source_document": "enhanced-adws-v1.0/04_software_design_document.md"
+    },
+    {
+      "id": "state-transition-documentation",
+      "category": "design-documentation",
+      "description": "Document state machine transitions with Entry state, Exit state, and data changes for each phase/module",
+      "effectiveness_score": 0.90,
+      "usage_count": 1,
+      "example": "**State Transitions:** - Entry: No state or minimal state with `adw_id` - Exit: State includes `worktree_path`, `backend_port`, `frontend_port`...",
+      "applies_to": ["design"],
+      "source_document": "enhanced-adws-v1.0/04_software_design_document.md"
     }
   ]
 }

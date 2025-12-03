@@ -1,0 +1,79 @@
+{
+  "test_run_id": "e2e-2025-12-03",
+  "started": "2025-12-03T00:00:00Z",
+  "current_phase": 3,
+  "phases": {
+    "phase_1": {
+      "name": "Document Planning",
+      "status": "completed",
+      "tasks": [
+        {"task": "Test /doc-plan api", "status": "completed"},
+        {"task": "Test /doc-plan design", "status": "completed"},
+        {"task": "Test /doc-plan manual", "status": "completed"},
+        {"task": "Verify spec files location", "status": "completed"}
+      ]
+    },
+    "phase_2": {
+      "name": "Document Generation",
+      "status": "completed",
+      "tasks": [
+        {"task": "Test /doc-write on API spec", "status": "completed"},
+        {"task": "Test /doc-write on User Manual spec", "status": "completed"},
+        {"task": "Verify output to draft location", "status": "completed"},
+        {"task": "Fix output directory issues", "status": "completed", "completed_at": "2025-12-03T00:00:00Z"}
+      ]
+    },
+    "phase_3": {
+      "name": "Review Workflow - Architecture Doc",
+      "status": "in_progress",
+      "tasks": [
+        {"task": "Run /doc-write on architecture spec", "status": "pending"},
+        {"task": "Verify output saved to drafts/", "status": "pending"},
+        {"task": "Run /doc-review on architecture doc", "status": "pending"},
+        {"task": "Test iteration loop if issues found", "status": "pending"},
+        {"task": "Verify quality gate scoring", "status": "pending"}
+      ]
+    },
+    "phase_4": {
+      "name": "Batch Operations",
+      "status": "pending",
+      "tasks": [
+        {"task": "Test /doc-batch generate", "status": "pending"},
+        {"task": "Test /doc-batch review", "status": "pending"},
+        {"task": "Test --parallel flag", "status": "pending"},
+        {"task": "Test --continue-on-error flag", "status": "pending"}
+      ]
+    },
+    "phase_5": {
+      "name": "Sync Operations",
+      "status": "pending",
+      "tasks": [
+        {"task": "Test /doc-sync", "status": "pending"},
+        {"task": "Test /doc-sync --fix", "status": "pending"},
+        {"task": "Verify cross-reference validation", "status": "pending"}
+      ]
+    },
+    "phase_6": {
+      "name": "Suite Management",
+      "status": "pending",
+      "tasks": [
+        {"task": "Test /doc-status dashboard", "status": "pending"},
+        {"task": "Test suite manifest operations", "status": "pending"},
+        {"task": "Test /doc-improve", "status": "pending"}
+      ]
+    }
+  },
+  "events": [
+    {
+      "timestamp": "2025-12-03T00:00:00Z",
+      "event": "test_resumed",
+      "phase": 3,
+      "details": "Resuming E2E testing at Phase 3 after fix for output directory"
+    }
+  ],
+  "backport_notes": [
+    "Default manifest template should use drafts/ instead of final/",
+    "/doc-write output should always go to draft location initially",
+    "Only /doc-approve (or similar) should move documents to final/"
+  ]
+}

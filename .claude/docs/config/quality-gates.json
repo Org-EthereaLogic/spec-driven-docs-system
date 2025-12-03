@@ -57,7 +57,32 @@
         {
           "id": "no_placeholders",
           "description": "No placeholder text allowed",
-          "check": "no matches for forbidden_patterns"
+          "check": "no matches for forbidden_patterns",
+          "exceptions": [
+            {
+              "id": "python_protocol_ellipsis",
+              "description": "Allow ellipsis (...) as standalone statement in Python Protocol/ABC method bodies",
+              "rationale": "In Python typing.Protocol and abc.ABC, ellipsis is valid syntax for abstract method stubs (PEP 544). This is semantically equivalent to 'pass' and indicates the method signature without implementation.",
+              "pattern": {
+                "context": "python_code_block",
+                "match": "^\\s*\\.\\.\\.\\s*$",
+                "requires": [
+                  "preceded by def statement within 5 lines",
+                  "inside class inheriting from Protocol or ABC"
+                ]
+              },
+              "allowed_forms": [
+                "def method(self) -> Type:\\n    ...",
+                "def method(self, arg: Type) -> Type:\\n    \"\"\"Docstring.\"\"\"\\n    ..."
+              ],
+              "blocked_forms": [
+                "content ... more content",
+                "See ... for details",
+                "Args:\\n    param: ...",
+                "Returns: ..."
+              ]
+            }
+          ]
         },
         {
           "id": "no_todo_markers",
