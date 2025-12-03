@@ -15,7 +15,7 @@ A Claude Code framework for creating, reviewing, and maintaining technical docum
 
 ### How It Works
 
-```
+```text
 1. PLAN    →  /doc-plan creates a specification from your topic
 2. WRITE   →  /doc-write generates the document from the spec
 3. REVIEW  →  /doc-review validates quality and consistency
@@ -48,17 +48,20 @@ cp -r specs /path/to/your/project/
 ### Your First Document
 
 1. **Plan your document:**
-   ```
+
+   ```bash
    /doc-plan "User Authentication API" --type api
    ```
 
 2. **Generate the document:**
-   ```
+
+   ```bash
    /doc-write specs/docs/user-authentication-api-spec.md
    ```
 
 3. **Review the output:**
-   ```
+
+   ```bash
    /doc-review docs/api/user-authentication.md
    ```
 
@@ -111,14 +114,16 @@ Run `/doc-status` to see your documentation dashboard. If you see the status out
 ### Common Workflows
 
 **Single Document:**
-```
+
+```bash
 /doc-plan "Feature X" --type manual
 /doc-write specs/docs/feature-x-spec.md
 /doc-review docs/guides/feature-x.md
 ```
 
 **Suite Batch Processing:**
-```
+
+```bash
 /doc-batch api-docs generate --parallel
 /doc-batch api-docs review
 /doc-sync api-docs --fix
@@ -128,7 +133,7 @@ Run `/doc-status` to see your documentation dashboard. If you see the status out
 
 ## How Everything Connects
 
-```
+```text
                     ┌─────────────────┐
                     │   /doc-plan     │
                     │  (Orchestrator) │
@@ -198,7 +203,7 @@ Documents are scored on a 0-100 scale:
 
 ## Project Structure
 
-```
+```text
 your-project/
 ├── .claude/
 │   ├── agents/              # AI agent definitions
@@ -231,20 +236,26 @@ your-project/
 ## Configuration
 
 ### Consistency Rules
+
 Located at `.claude/docs/config/consistency-rules.json`:
+
 - Terminology enforcement (preferred terms vs alternatives)
 - Style rules (header case, list style, code blocks)
 - Forbidden patterns (placeholders, incomplete markers)
 
 ### Quality Gates
+
 Located at `.claude/docs/config/quality-gates.json`:
+
 - Spec completeness checks
 - Content quality validation
 - Consistency verification
 - Final approval criteria
 
 ### Expertise Store
+
 Located at `.claude/docs/expertise/`:
+
 - `patterns.json`: Effective documentation patterns
 - `anti-patterns.json`: Patterns to avoid
 - `domain-knowledge.json`: Project-specific terminology
@@ -256,6 +267,7 @@ Located at `.claude/docs/expertise/`:
 This project enforces strict anti-shortcut directives for all AI-generated content. See [DIRECTIVES.md](DIRECTIVES.md) for complete details.
 
 **Key requirements:**
+
 - Complete implementation only - no placeholders, ellipsis, TODO/FIXME
 - No simulation - all operations must be real, no mocked data
 - Fix implementation, not tests - TDD integrity must be maintained
