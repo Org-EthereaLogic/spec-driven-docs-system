@@ -1,27 +1,93 @@
-# macOS
+# =============================================================================
+# Operating System
+# =============================================================================
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
 
+# =============================================================================
+# Node.js
+# =============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =============================================================================
 # Python
+# =============================================================================
 __pycache__/
 *.py[cod]
 *$py.class
+.Python
+*.egg-info/
+.eggs/
+*.egg
 
-# IDE
+# =============================================================================
+# IDE / Editors
+# =============================================================================
 .idea/
 .vscode/
 *.swp
 *.swo
+*~
+*.sublime-workspace
+*.sublime-project
 
-# Local settings (user-specific)
-.claude/settings.local.json
+# =============================================================================
+# Logs
+# =============================================================================
+*.log
+logs/
+.codacy/logs/
 
-# Generated documentation (if you want to exclude)
-# docs/
+# =============================================================================
+# Environment & Secrets
+# =============================================================================
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
 
-# Temporary files
+# =============================================================================
+# Build & Coverage
+# =============================================================================
+dist/
+build/
+coverage/
+.nyc_output/
+
+# =============================================================================
+# Temporary Files
+# =============================================================================
 *.tmp
 *.bak
+*.temp
 
+# =============================================================================
+# Claude Code (User-Specific)
+# =============================================================================
+.claude/settings.local.json
 
-#Ignore vscode AI rules
+# =============================================================================
+# Project-Specific
+# =============================================================================
+
+# Generated documentation (uncomment to exclude from version control)
+# docs/
+
+# Prompt drafts (working files, not final)
+prompt/drafts/
+prompt/enhanced/
+
+# VSCode AI instructions (auto-generated)
 .github/instructions/codacy.instructions.md
+
+# Empty placeholder directories (keep .gitkeep files if present)
+chat/
