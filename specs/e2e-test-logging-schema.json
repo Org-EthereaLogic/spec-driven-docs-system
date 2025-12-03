@@ -1,0 +1,572 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "e2e-test-logging-schema.json",
+  "title": "E2E Test Progress Log",
+  "description": "Schema for spec-driven documentation system E2E test logging",
+  "type": "object",
+  "required": ["test_plan_version", "current_phase", "phase_name", "last_checkpoint", "documents"],
+
+  "properties": {
+    "test_plan_version": {
+      "type": "string",
+      "description": "Version of the test plan being executed"
+    },
+    "current_phase": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Current phase number"
+    },
+    "phase_name": {
+      "type": "string",
+      "description": "Human-readable phase name"
+    },
+    "last_checkpoint": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO8601 timestamp of last update"
+    },
+
+    "documents": {
+      "type": "object",
+      "description": "Per-document status tracking",
+      "additionalProperties": {
+        "$ref": "#/definitions/DocumentStatus"
+      }
+    },
+
+    "commands_executed": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/CommandExecution" }
+    },
+
+    "agents_invoked": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/AgentInvocation" }
+    },
+
+    "review_iterations": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/ReviewIteration" }
+    },
+
+    "issues_encountered": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Issue" }
+    },
+
+    "corrections_applied": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Correction" }
+    },
+
+    "patterns_learned": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/PatternLearning" }
+    },
+
+    "batch_operations": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/BatchOperation" }
+    },
+
+    "sync_results": { "$ref": "#/definitions/SyncResults" },
+    "improve_results": { "$ref": "#/definitions/ImproveResults" },
+    "final_sign_off": { "$ref": "#/definitions/FinalSignOff" },
+    "backport_notes": { "$ref": "#/definitions/BackportNotes" },
+
+    "notes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Chronological free-text notes"
+    }
+  },
+
+  "definitions": {
+    "DocumentStatus": {
+      "type": "object",
+      "required": ["spec", "doc", "review", "spec_path"],
+      "properties": {
+        "spec": { "enum": ["pending", "complete"] },
+        "doc": { "enum": ["pending", "complete"] },
+        "review": { "enum": ["pending", "complete"] },
+        "spec_path": { "type": "string" },
+        "doc_path": { "type": ["string", "null"] },
+        "quality_score": { "type": ["integer", "null"], "minimum": 0, "maximum": 100 },
+        "grade": { "enum": ["A", "B", "C", "D", "F", null] },
+        "line_count": { "type": ["integer", "null"] },
+        "batch_generated": { "type": "boolean" },
+        "review_notes": { "type": "string" }
+      }
+    },
+
+    "CommandExecution": {
+      "type": "object",
+      "required": ["command_id", "command", "timestamp_start", "status"],
+      "properties": {
+        "command_id": {
+          "type": "string",
+          "pattern": "^CMD-[0-9]+$"
+        },
+        "command": { "type": "string" },
+        "args": { "type": "string" },
+        "timestamp_start": { "type": "string", "format": "date-time" },
+        "timestamp_end": { "type": ["string", "null"], "format": "date-time" },
+        "duration_ms": { "type": ["integer", "null"] },
+        "status": { "enum": ["success", "failed", "partial", "in_progress"] },
+        "doc_id": { "type": ["string", "null"] },
+        "agent_spawned": { "type": ["string", "null"] },
+        "result": {
+          "type": "object",
+          "properties": {
+            "type": { "enum": ["generate", "review", "sync", "batch", "status", "improve"] },
+            "output_path": { "type": ["string", "null"] },
+            "output_lines": { "type": ["integer", "null"] },
+            "score": { "type": ["integer", "null"] },
+            "grade": { "type": ["string", "null"] },
+            "blockers": { "type": "integer" },
+            "warnings": { "type": "integer" },
+            "suggestions": { "type": "integer" },
+            "auto_fixes_applied": { "type": "integer" }
+          }
+        },
+        "error": {
+          "type": ["object", "null"],
+          "properties": {
+            "type": { "type": "string" },
+            "message": { "type": "string" },
+            "stack_trace": { "type": ["string", "null"] }
+          }
+        },
+        "triggered_by": { "type": ["string", "null"] },
+        "triggers": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "AgentInvocation": {
+      "type": "object",
+      "required": ["invocation_id", "agent", "model", "doc_id", "timestamp_start", "status"],
+      "properties": {
+        "invocation_id": {
+          "type": "string",
+          "pattern": "^AGT-[0-9]+$"
+        },
+        "agent": { "enum": ["doc-writer", "doc-reviewer", "doc-librarian", "doc-orchestrator"] },
+        "model": { "enum": ["sonnet", "opus", "haiku"] },
+        "doc_id": { "type": "string" },
+        "timestamp_start": { "type": "string", "format": "date-time" },
+        "timestamp_end": { "type": ["string", "null"], "format": "date-time" },
+        "duration_ms": { "type": ["integer", "null"] },
+        "status": { "enum": ["success", "failed", "timeout"] },
+        "iteration": { "type": "integer", "minimum": 1 },
+        "input": {
+          "type": "object",
+          "properties": {
+            "spec_path": { "type": ["string", "null"] },
+            "doc_path": { "type": ["string", "null"] },
+            "config_files_read": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "output": {
+          "type": "object",
+          "properties": {
+            "lines_generated": { "type": ["integer", "null"] },
+            "sections_created": { "type": ["integer", "null"] },
+            "diagrams_created": { "type": ["integer", "null"] }
+          }
+        },
+        "tokens": {
+          "type": "object",
+          "properties": {
+            "input": { "type": ["integer", "null"] },
+            "output": { "type": ["integer", "null"] }
+          }
+        },
+        "triggered_by_command": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "ReviewIteration": {
+      "type": "object",
+      "required": ["iteration_id", "doc_id", "doc_path", "iteration", "timestamp", "score_after", "grade", "passed"],
+      "properties": {
+        "iteration_id": {
+          "type": "string",
+          "pattern": "^REV-[a-z0-9-]+-[0-9]+$"
+        },
+        "doc_id": { "type": "string" },
+        "doc_path": { "type": "string" },
+        "spec_path": { "type": ["string", "null"] },
+        "iteration": { "type": "integer", "minimum": 1 },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "score_before": { "type": ["integer", "null"] },
+        "score_after": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "grade": { "enum": ["A", "B", "C", "D", "F"] },
+        "passed": { "type": "boolean" },
+        "gates_checked": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["gate", "passed", "score"],
+            "properties": {
+              "gate": { "enum": ["spec_completeness", "content_quality", "consistency", "final_approval"] },
+              "passed": { "type": "boolean" },
+              "score": { "type": "number" },
+              "weight": { "type": "number" }
+            }
+          }
+        },
+        "issues_found": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ReviewIssue" }
+        },
+        "iteration_required": { "type": "boolean" },
+        "next_action": { "enum": ["approve", "iterate", "escalate", "manual_review"] }
+      }
+    },
+
+    "ReviewIssue": {
+      "type": "object",
+      "required": ["issue_id", "severity", "category", "description"],
+      "properties": {
+        "issue_id": { "type": "string" },
+        "severity": { "enum": ["blocker", "warning", "suggestion", "info"] },
+        "category": { "enum": ["spec_compliance", "content_quality", "terminology", "style", "structure"] },
+        "rule_id": { "type": ["string", "null"] },
+        "location": {
+          "type": "object",
+          "properties": {
+            "line_start": { "type": ["integer", "null"] },
+            "line_end": { "type": ["integer", "null"] },
+            "section": { "type": ["string", "null"] }
+          }
+        },
+        "description": { "type": "string" },
+        "detected_value": { "type": ["string", "null"] },
+        "expected_value": { "type": ["string", "null"] },
+        "auto_fixable": { "type": "boolean" },
+        "auto_fixed": { "type": "boolean" },
+        "fix_applied": { "type": ["string", "null"] }
+      }
+    },
+
+    "Issue": {
+      "type": "object",
+      "required": ["issue_id", "timestamp_detected", "severity", "category", "description", "status"],
+      "properties": {
+        "issue_id": {
+          "type": "string",
+          "pattern": "^ISS-[0-9]+$"
+        },
+        "timestamp_detected": { "type": "string", "format": "date-time" },
+        "timestamp_resolved": { "type": ["string", "null"], "format": "date-time" },
+        "severity": { "enum": ["blocker", "warning", "info"] },
+        "category": {
+          "enum": ["spec_compliance", "content_quality", "terminology", "style", "system_behavior", "configuration"]
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "phase": { "type": "integer" },
+            "command_id": { "type": "string" },
+            "doc_id": { "type": ["string", "null"] },
+            "review_iteration": { "type": ["string", "null"] }
+          }
+        },
+        "description": { "type": "string" },
+        "evidence": {
+          "type": "object",
+          "properties": {
+            "file": { "type": ["string", "null"] },
+            "line_range": { "type": ["string", "null"] },
+            "content_sample": { "type": ["string", "null"] },
+            "rule_violated": { "type": ["string", "null"] }
+          }
+        },
+        "status": { "enum": ["open", "investigating", "resolved", "wont_fix", "deferred"] },
+        "resolution": {
+          "type": ["object", "null"],
+          "properties": {
+            "type": { "enum": ["document_fix", "config_fix", "system_fix", "false_positive", "by_design"] },
+            "description": { "type": "string" },
+            "correction_id": { "type": ["string", "null"] }
+          }
+        },
+        "root_cause": { "type": ["string", "null"] },
+        "prevention": { "type": ["string", "null"] },
+        "fix_applied": {
+          "type": "object",
+          "description": "Detailed fix information for config/system fixes",
+          "properties": {
+            "file": { "type": "string" },
+            "change": { "type": "string" },
+            "pattern_match": { "type": "string" },
+            "requires_context": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "Correction": {
+      "type": "object",
+      "required": ["correction_id", "timestamp", "issue_id", "type", "target", "change"],
+      "properties": {
+        "correction_id": {
+          "type": "string",
+          "pattern": "^COR-[0-9]+$"
+        },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "issue_id": { "type": "string" },
+        "type": {
+          "enum": ["document_edit", "config_update", "template_fix", "rule_exception", "pattern_addition"]
+        },
+        "target": {
+          "type": "object",
+          "required": ["file"],
+          "properties": {
+            "file": { "type": "string" },
+            "repository": { "type": "string" }
+          }
+        },
+        "change": {
+          "type": "object",
+          "required": ["description"],
+          "properties": {
+            "description": { "type": "string" },
+            "before": { "type": ["string", "null"] },
+            "after": { "type": ["string", "null"] },
+            "diff_summary": { "type": ["string", "null"] },
+            "sections_affected": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "validation": {
+          "type": "object",
+          "properties": {
+            "tested": { "type": "boolean" },
+            "test_result": { "enum": ["pass", "fail", null] },
+            "score_improvement": { "type": ["integer", "null"] }
+          }
+        },
+        "backport_required": { "type": "boolean" },
+        "backport_status": { "enum": ["pending", "applied", "not_applicable"] },
+        "learned_pattern": {
+          "type": ["object", "null"],
+          "properties": {
+            "pattern_id": { "type": ["string", "null"] },
+            "anti_pattern_id": { "type": ["string", "null"] }
+          }
+        }
+      }
+    },
+
+    "PatternLearning": {
+      "type": "object",
+      "required": ["learning_id", "timestamp"],
+      "properties": {
+        "learning_id": {
+          "type": "string",
+          "pattern": "^LRN-[0-9]+$"
+        },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "source": {
+          "type": "object",
+          "properties": {
+            "command_id": { "type": ["string", "null"] },
+            "documents_analyzed": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "corrections_referenced": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "patterns_added": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["pattern_id", "category", "description"],
+            "properties": {
+              "pattern_id": { "type": "string" },
+              "category": { "type": "string" },
+              "description": { "type": "string" },
+              "effectiveness_score": { "type": "number", "minimum": 0, "maximum": 1 },
+              "source_document": { "type": "string" },
+              "example": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "patterns_reinforced": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pattern_id": { "type": "string" },
+              "previous_usage_count": { "type": "integer" },
+              "new_usage_count": { "type": "integer" },
+              "effectiveness_delta": { "type": "number" }
+            }
+          }
+        },
+        "anti_patterns_added": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["anti_pattern_id", "category", "description", "severity"],
+            "properties": {
+              "anti_pattern_id": { "type": "string" },
+              "category": { "type": "string" },
+              "description": { "type": "string" },
+              "severity": { "enum": ["blocker", "warning", "suggestion"] },
+              "detection_pattern": { "type": "string" },
+              "correction": { "type": "string" },
+              "source_issue": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "terminology_added": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "term": { "type": "string" },
+              "definition": { "type": "string" },
+              "source": { "type": "string" }
+            }
+          }
+        },
+        "expertise_version_before": { "type": "string" },
+        "expertise_version_after": { "type": "string" }
+      }
+    },
+
+    "BatchOperation": {
+      "type": "object",
+      "required": ["batch_id", "operation", "timestamp_start", "documents"],
+      "properties": {
+        "batch_id": {
+          "type": "string",
+          "pattern": "^BATCH-[0-9]+$"
+        },
+        "operation": { "enum": ["generate", "review"] },
+        "timestamp_start": { "type": "string", "format": "date-time" },
+        "timestamp_end": { "type": ["string", "null"], "format": "date-time" },
+        "duration_ms": { "type": ["integer", "null"] },
+        "parallel": { "type": "boolean" },
+        "continue_on_error": { "type": "boolean" },
+        "documents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["doc_id", "status"],
+            "properties": {
+              "doc_id": { "type": "string" },
+              "dependency_level": { "type": "integer" },
+              "status": { "enum": ["success", "failed", "skipped"] },
+              "command_id": { "type": "string" },
+              "error": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "summary": {
+          "type": "object",
+          "properties": {
+            "total": { "type": "integer" },
+            "succeeded": { "type": "integer" },
+            "failed": { "type": "integer" },
+            "skipped": { "type": "integer" },
+            "total_lines": { "type": ["integer", "null"] },
+            "average_score": { "type": ["number", "null"] }
+          }
+        }
+      }
+    },
+
+    "SyncResults": {
+      "type": "object",
+      "properties": {
+        "documents_checked": { "type": "integer" },
+        "health_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "terminology_violations": { "type": "integer" },
+        "cross_reference_issues": { "type": "integer" },
+        "style_inconsistencies": { "type": "integer" },
+        "auto_fixed": { "type": "integer" }
+      }
+    },
+
+    "ImproveResults": {
+      "type": "object",
+      "properties": {
+        "patterns_added": { "type": "integer" },
+        "patterns_reinforced": { "type": "integer" },
+        "anti_patterns_added": { "type": "integer" },
+        "terms_added": { "type": "integer" },
+        "conventions_added": { "type": "integer" },
+        "expertise_version": { "type": "string" }
+      }
+    },
+
+    "FinalSignOff": {
+      "type": "object",
+      "properties": {
+        "status": { "enum": ["PRODUCTION_READY", "NEEDS_WORK", "BLOCKED"] },
+        "signed_off_at": { "type": "string", "format": "date-time" },
+        "total_documents": { "type": "integer" },
+        "total_lines": { "type": "integer" },
+        "average_quality_score": { "type": "number" },
+        "all_documents_approved": { "type": "boolean" },
+        "suite_health_score": { "type": "integer" },
+        "commands_tested_count": { "type": "integer" },
+        "agents_tested_count": { "type": "integer" },
+        "issues_resolved_count": { "type": "integer" },
+        "expertise_updates": {
+          "type": "object",
+          "properties": {
+            "patterns_added": { "type": "integer" },
+            "anti_patterns_added": { "type": "integer" },
+            "terms_added": { "type": "integer" }
+          }
+        }
+      }
+    },
+
+    "BackportNotes": {
+      "type": "object",
+      "properties": {
+        "target_repository": { "type": "string" },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "type", "description", "priority", "status"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^BP-[0-9]+$"
+              },
+              "type": { "enum": ["config_update", "expertise_update", "template_fix", "template_suggestion", "bug_fix"] },
+              "description": { "type": "string" },
+              "priority": { "enum": ["critical", "high", "medium", "low"] },
+              "file": { "type": "string" },
+              "status": { "enum": ["pending", "applied", "ready_for_backport", "not_applicable"] }
+            }
+          }
+        }
+      }
+    }
+  }
+}
