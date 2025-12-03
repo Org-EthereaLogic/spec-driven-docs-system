@@ -74,6 +74,14 @@ Run `/doc-status` to see your documentation dashboard. If you see the status out
 |----------|---------|
 | [User Guide](docs/User-Guide/User-Guide.md) | Comprehensive guide to all features |
 
+### Related Documentation
+
+| Document | Purpose |
+|----------|---------|
+| [DIRECTIVES.md](DIRECTIVES.md) | Mandatory anti-shortcut directives for complete implementation |
+| [CLAUDE.md](CLAUDE.md) | Project guidance for Claude Code sessions |
+| [AGENTS.md](AGENTS.md) | Repository guidelines and agent coordination |
+
 ---
 
 ## Key Concepts
@@ -240,6 +248,17 @@ Located at `.claude/docs/expertise/`:
 - `patterns.json`: Effective documentation patterns
 - `anti-patterns.json`: Patterns to avoid
 - `domain-knowledge.json`: Project-specific terminology
+
+---
+
+## Mandatory Directives
+
+This project enforces strict anti-shortcut directives for all AI-generated content. See [DIRECTIVES.md](DIRECTIVES.md) for complete details.
+
+**Key requirements:**
+- Complete implementation only - no placeholders, ellipsis, TODO/FIXME
+- No simulation - all operations must be real, no mocked data
+- Fix implementation, not tests - TDD integrity must be maintained
 
 ---
 
