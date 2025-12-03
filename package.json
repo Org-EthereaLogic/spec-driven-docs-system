@@ -1,0 +1,29 @@
+{
+  "name": "spec-driven-docs-system",
+  "version": "1.0.0",
+  "description": "A Claude Code framework for creating, reviewing, and maintaining technical documentation at scale using a specification-first approach.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint:md": "markdownlint '**/*.md' --ignore node_modules",
+    "lint:md:fix": "markdownlint '**/*.md' --ignore node_modules --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Org-EthereaLogic/spec-driven-docs-system.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Org-EthereaLogic/spec-driven-docs-system/issues"
+  },
+  "homepage": "https://github.com/Org-EthereaLogic/spec-driven-docs-system#readme",
+  "devDependencies": {
+    "markdownlint-cli": "^0.46.0"
+  }
+}
