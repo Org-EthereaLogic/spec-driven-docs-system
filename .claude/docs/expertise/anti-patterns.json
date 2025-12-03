@@ -1,9 +1,20 @@
 {
-  "version": "1.0",
-  "last_updated": "2025-12-01T00:00:00Z",
+  "version": "1.1",
+  "last_updated": "2025-12-03T00:00:00Z",
   "description": "Documentation anti-patterns to avoid",
 
   "anti_patterns": [
+    {
+      "id": "false-positive-protocol-ellipsis",
+      "category": "design-documentation",
+      "description": "Flagging valid Python Protocol/ABC ellipsis syntax as placeholder content",
+      "detection_pattern": "Review flagging '...' in Python code blocks inside Protocol or ABC class definitions",
+      "severity": "blocker",
+      "correction": "Validate context before flagging ellipsis: check if preceded by def statement within 5 lines AND inside class inheriting from Protocol or ABC. Ellipsis is valid PEP 544 syntax for abstract method stubs.",
+      "occurrence_count": 1,
+      "resolution": "Added python_protocol_ellipsis exception to quality-gates.json",
+      "source_document": "enhanced-adws-v1.0/04_software_design_document.md"
+    },
     {
       "id": "vague-parameters",
       "category": "api-documentation",

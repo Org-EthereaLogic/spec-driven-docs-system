@@ -1,42 +1,69 @@
 {
-  "version": "1.0",
-  "last_updated": "2025-12-01T00:00:00Z",
+  "version": "1.1",
+  "last_updated": "2025-12-03T00:00:00Z",
   "description": "Project-specific terminology, conventions, and context",
 
   "terminology": {
     "description": "Canonical terms and their definitions for this project",
-    "terms": {}
+    "terms": {
+      "ADWS": "AI Developer Workflow System - autonomous development workflow orchestration",
+      "ADW ID": "8-character hexadecimal identifier for individual workflow instances",
+      "Isolated Workflow Pattern": "Architecture where each workflow gets dedicated worktree, ports, and state file",
+      "SDLC Phase": "Software Development Lifecycle phase (Plan, Build, Test, Review, Document, Ship)",
+      "ZTE": "Zero-Touch Execution - fully automated workflow from issue to merged PR",
+      "TUI": "Terminal User Interface - interactive dashboard using Textual framework",
+      "Worktree": "Isolated git working directory created for each workflow",
+      "State File": "JSON file at agents/{adw_id}/adw_state.json tracking workflow progress",
+      "LLM Adapter": "Protocol implementation for different AI providers (Anthropic, OpenAI, Gemini)",
+      "Quality Gate": "Automated checkpoint validating document quality before proceeding",
+      "Protocol ellipsis": "Valid Python syntax using '...' in Protocol/ABC abstract method bodies (PEP 544)"
+    }
   },
 
   "conventions": {
     "description": "Project-specific naming and formatting conventions",
-    "class_naming": {},
-    "field_naming": {},
-    "file_naming": {}
+    "class_naming": {
+      "adapters": "{Provider}Adapter (e.g., AnthropicAdapter, OpenAIAdapter)",
+      "state": "ADWState for workflow state dataclass",
+      "protocols": "{Name}Protocol for interface definitions"
+    },
+    "field_naming": {
+      "identifiers": "adw_id for workflow identifier, issue_number for GitHub issue",
+      "paths": "_path suffix for filesystem paths (worktree_path, state_path)",
+      "ports": "_port suffix for network ports (backend_port, frontend_port)"
+    },
+    "file_naming": {
+      "phase_scripts": "adw_{phase}_iso.py for isolated phase executors",
+      "operations": "{domain}_ops.py for operations modules (git_ops, worktree_ops)",
+      "design_docs": "NN_{title}.md with leading number for ordering"
+    }
   },
 
   "project_context": {
     "description": "High-level project context for documentation",
-    "project_name": null,
-    "project_description": null,
-    "primary_language": null,
-    "framework": null,
-    "target_users": []
+    "project_name": "Enhanced ADWS v1.0",
+    "project_description": "Zero-touch execution framework for autonomous AI-native development workflows",
+    "primary_language": "Python 3.11+",
+    "framework": "Pydantic for data validation, Textual for TUI, Claude Code for LLM integration",
+    "target_users": ["Solo AI-native developers", "Development teams using autonomous workflows"]
   },
 
   "forbidden_terms": {
     "description": "Terms that should never be used in this project's documentation",
-    "terms": []
+    "terms": ["repo", "config", "param", "dir", "init"]
   },
 
   "style_overrides": {
     "description": "Project-specific style rule overrides",
-    "overrides": {}
+    "overrides": {
+      "allow_protocol_ellipsis": true,
+      "mermaid_diagram_style": "graph TB with subgraph for layers"
+    }
   },
 
   "metadata": {
     "auto_updated": true,
-    "update_sources": ["code_analysis", "doc_review", "manual_entry"],
+    "update_sources": ["code_analysis", "doc_review", "manual_entry", "enhanced-adws-v1.0-e2e-test"],
     "confidence_threshold": 0.8
   }
 }
