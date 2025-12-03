@@ -40,16 +40,19 @@ The Spec-Driven Docs System is a Claude Code framework that transforms how teams
 ### The Specification-First Approach
 
 Traditional documentation workflow:
+
 ```
 Write → Edit → Edit → Edit → Publish → Maintain
 ```
 
 Specification-first workflow:
+
 ```
 Plan (spec) → Generate → Review → Approve → Maintain (automated)
 ```
 
 By defining requirements upfront in a specification, you enable:
+
 - **Validation before generation** - Catch scope issues early
 - **Automated quality checks** - Consistent review criteria
 - **Reproducible output** - Same spec produces consistent docs
@@ -157,6 +160,7 @@ Let's create a simple user guide to verify the workflow:
 ```
 
 The system will:
+
 1. Explore your codebase for context
 2. Ask clarifying questions about the audience and scope
 3. Create a specification file at `specs/docs/getting-started-guide-spec.md`
@@ -164,6 +168,7 @@ The system will:
 #### 2. Review the Specification
 
 Open the generated spec file to see what will be documented. It includes:
+
 - Document metadata (type, audience, prerequisites)
 - Content outline with sections
 - Source file references
@@ -176,6 +181,7 @@ Open the generated spec file to see what will be documented. It includes:
 ```
 
 The system will:
+
 1. Read the specification
 2. Load the appropriate template
 3. Generate each section
@@ -189,6 +195,7 @@ The system will:
 ```
 
 The review will:
+
 1. Validate against the specification
 2. Check quality gates
 3. Report any issues with severity levels
@@ -219,6 +226,7 @@ If the score is 90+ (Grade A), your document is ready for publication.
 **Purpose:** Create a detailed specification before document generation.
 
 **Syntax:**
+
 ```
 /doc-plan <topic-or-path> [--type <api|design|manual>] [--suite <name>] [--output <path>]
 ```
@@ -239,6 +247,7 @@ If the score is 90+ (Grade A), your document is ready for publication.
 3. **Creates Specification** - Generates structured spec with sections, requirements, and source references
 
 **Example:**
+
 ```
 /doc-plan "User Authentication API" --type api --suite backend-docs
 ```
@@ -254,6 +263,7 @@ If the score is 90+ (Grade A), your document is ready for publication.
 **Purpose:** Generate complete documentation from a specification.
 
 **Syntax:**
+
 ```
 /doc-write <spec-path> [--output <path>] [--suite-id <id>]
 ```
@@ -276,6 +286,7 @@ If the score is 90+ (Grade A), your document is ready for publication.
 6. **Validates Quality** - Self-checks before output
 
 **Quality Standards Enforced:**
+
 - No placeholder text (TODO, TBD, FIXME)
 - No ellipsis indicating incomplete content
 - All code examples syntactically valid
@@ -283,6 +294,7 @@ If the score is 90+ (Grade A), your document is ready for publication.
 - Structure matches template
 
 **Example:**
+
 ```
 /doc-write specs/docs/auth-api-spec.md --output docs/api/
 ```
@@ -298,6 +310,7 @@ If the score is 90+ (Grade A), your document is ready for publication.
 **Purpose:** Validate documentation quality, accuracy, and consistency.
 
 **Syntax:**
+
 ```
 /doc-review <document-path> [--spec <path>] [--suite-id <id>] [--fix]
 ```
@@ -328,11 +341,13 @@ If the score is 90+ (Grade A), your document is ready for publication.
 | **Suggestion** | Optional improvement | Could be clearer, could add examples |
 
 **Quality Score Calculation:**
+
 ```
 Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) × 100
 ```
 
 **Example:**
+
 ```
 /doc-review docs/api/users.md --spec specs/docs/users-api-spec.md --fix
 ```
@@ -346,6 +361,7 @@ Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) �
 **Purpose:** Synchronize terminology and cross-references across a documentation suite.
 
 **Syntax:**
+
 ```
 /doc-sync <suite-id> [--fix]
 ```
@@ -373,6 +389,7 @@ Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) �
 | Style | Inconsistent header case, mixed list styles |
 
 **Example:**
+
 ```
 /doc-sync api-docs --fix
 ```
@@ -386,6 +403,7 @@ Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) �
 **Purpose:** Execute batch operations across a documentation suite.
 
 **Syntax:**
+
 ```
 /doc-batch <suite-id> <operation> [--parallel] [--continue-on-error]
 ```
@@ -409,11 +427,13 @@ Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) �
 | `update` | Update from spec changes | Yes, by affected docs |
 
 **Features:**
+
 - **Dependency Resolution** - Respects document dependencies
 - **Checkpoint-Based** - Progress saved, resumable on failure
 - **Parallel Processing** - Multiple documents simultaneously
 
 **Example:**
+
 ```
 /doc-batch api-docs generate --parallel --continue-on-error
 ```
@@ -427,6 +447,7 @@ Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) �
 **Purpose:** Display documentation suite status and health dashboard.
 
 **Syntax:**
+
 ```
 /doc-status [suite-id]
 ```
@@ -440,18 +461,21 @@ Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) �
 **What It Shows:**
 
 **Suite Overview:**
+
 - Total documents and completion percentage
 - Document status breakdown (pending, writing, review, completed)
 - Average quality score
 - Last activity date
 
 **Health Indicators:**
+
 - Spec coverage percentage
 - Review status counts
 - Consistency health
 - Stale document count
 
 **Example:**
+
 ```
 /doc-status api-docs
 ```
@@ -465,6 +489,7 @@ Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) �
 **Purpose:** Learn from successful documents and update expertise.
 
 **Syntax:**
+
 ```
 /doc-improve
 ```
@@ -478,12 +503,14 @@ Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) �
 5. **Reports Progress** - Learning summary and quality trends
 
 **Pattern Scoring:**
+
 - New patterns start at 0.85 effectiveness
 - +0.02 for each successful use
 - -0.05 for each failure
 - Range: 0.50 to 0.99
 
 **Example:**
+
 ```
 /doc-improve
 ```
@@ -516,6 +543,7 @@ The system uses specialized Claude agents optimized for different documentation 
 **Purpose:** High-level strategy, requirement analysis, and multi-document coordination.
 
 **Responsibilities:**
+
 - Analyze documentation requirements from prompts
 - Create comprehensive plans and suite manifests
 - Coordinate between specialized agents
@@ -523,17 +551,20 @@ The system uses specialized Claude agents optimized for different documentation 
 - Handle escalations from other agents
 
 **Invoked By:**
+
 - `/doc-plan` - For specification creation
 - `/doc-batch` - For multi-document coordination
 - `/doc-improve` - For pattern learning
 
 **Key Behaviors:**
+
 - Explores codebase thoroughly before planning
 - Asks specific questions with options (not open-ended)
 - Creates specifications for exactly what was requested
 - Considers full documentation ecosystem
 
 **Communication Style:**
+
 - Clear, structured guidance
 - Rationale for architectural decisions
 - Proactive risk identification
@@ -546,6 +577,7 @@ The system uses specialized Claude agents optimized for different documentation 
 **Purpose:** Generate complete, high-quality technical documentation from specifications.
 
 **Responsibilities:**
+
 - Transform specifications into complete documents
 - Apply templates precisely
 - Generate and validate code examples
@@ -553,9 +585,11 @@ The system uses specialized Claude agents optimized for different documentation 
 - Produce content requiring minimal review
 
 **Invoked By:**
+
 - `/doc-write` - For document generation
 
 **Quality Commitments:**
+
 - No placeholders (TODO, TBD, FIXME)
 - Complete content in every section
 - Valid, runnable code examples
@@ -570,6 +604,7 @@ The system uses specialized Claude agents optimized for different documentation 
 | **Manual** | Task-oriented writing, procedures, troubleshooting |
 
 **Communication Style:**
+
 - Precise technical language
 - Clear, actionable instructions
 - Logical flow between concepts
@@ -582,6 +617,7 @@ The system uses specialized Claude agents optimized for different documentation 
 **Purpose:** Validate documentation quality, accuracy, and consistency.
 
 **Responsibilities:**
+
 - Verify completeness against specifications
 - Validate technical accuracy
 - Enforce consistency rules
@@ -589,9 +625,11 @@ The system uses specialized Claude agents optimized for different documentation 
 - Generate actionable fix recommendations
 
 **Invoked By:**
+
 - `/doc-review` - For quality validation
 
 **Review Philosophy:**
+
 - **Thorough but Fair** - Identify real issues, not preferences
 - **Specific and Actionable** - Every issue has a fix path
 - **Prioritized** - Focus on what matters most
@@ -606,6 +644,7 @@ The system uses specialized Claude agents optimized for different documentation 
 | Suggestion | Optional | Fix when convenient |
 
 **Communication Style:**
+
 - Clear issue descriptions with locations
 - Constructive, improvement-focused feedback
 - Prioritized recommendations
@@ -618,6 +657,7 @@ The system uses specialized Claude agents optimized for different documentation 
 **Purpose:** Quick consistency checks, cross-reference management, and maintenance.
 
 **Responsibilities:**
+
 - Validate cross-reference links
 - Perform terminology spot-checks
 - Maintain document indexes
@@ -625,22 +665,26 @@ The system uses specialized Claude agents optimized for different documentation 
 - Quick formatting consistency
 
 **Invoked By:**
+
 - `/doc-sync` - For suite synchronization
 - `/doc-status` - For health checks
 
 **Operational Focus:**
+
 - **Speed** - Quick checks that don't block workflows
 - **Breadth** - Scan entire suites efficiently
 - **Precision** - Catch issues before they compound
 - **Maintenance** - Keep infrastructure healthy
 
 **Quick Check Capabilities:**
+
 - Terminology scanning
 - Link validation
 - Structure verification
 - Suite health assessment
 
 **Communication Style:**
+
 - Concise, structured reports
 - Clear pass/fail indicators
 - Specific issue locations
@@ -651,6 +695,7 @@ The system uses specialized Claude agents optimized for different documentation 
 ### Agent Coordination Patterns
 
 #### Sequential Workflow
+
 ```
 /doc-plan → Orchestrator creates spec
      ↓
@@ -662,6 +707,7 @@ The system uses specialized Claude agents optimized for different documentation 
 ```
 
 #### Parallel Batch Workflow
+
 ```
 /doc-batch generate
      ↓
@@ -673,6 +719,7 @@ Results collected and manifest updated
 ```
 
 #### Escalation Flow
+
 ```
 Writer encounters ambiguity
      ↓
@@ -706,6 +753,7 @@ Templates define the required structure, sections, and style guidelines for each
 **Purpose:** Document programmatic interfaces including REST APIs, GraphQL, and other endpoints.
 
 **Target Audience:**
+
 - Backend developers integrating with the API
 - Frontend developers consuming data
 - Third-party developers building integrations
@@ -723,6 +771,7 @@ Templates define the required structure, sections, and style guidelines for each
 | **Changelog** | Version history | Breaking changes, deprecations |
 
 **Per-Endpoint Requirements:**
+
 - HTTP method and path
 - Brief description
 - Parameters (path, query, body)
@@ -730,6 +779,7 @@ Templates define the required structure, sections, and style guidelines for each
 - Error responses
 
 **Style Guidelines:**
+
 - Always include `curl` examples
 - Use tables for 3+ parameters
 - Show complete JSON responses
@@ -743,7 +793,9 @@ Templates define the required structure, sections, and style guidelines for each
 Retrieves a single user by their unique identifier.
 
 ```
+
 GET /users/{id}
+
 ```
 
 **Path Parameters:**
@@ -768,6 +820,7 @@ GET /users/{id}
 |--------|------|-------------|
 | 404 | USER_NOT_FOUND | User does not exist |
 | 401 | UNAUTHORIZED | Invalid authentication |
+
 ```
 
 ---
@@ -813,6 +866,7 @@ graph TD
     D --> E[(Database)]
     C --> F[(Redis Cache)]
 ```
+
 ```
 
 ---
@@ -873,6 +927,7 @@ Changes apply to all new documents of that type.
 ### Understanding Suites
 
 A **suite** is a collection of related documents that are managed together. Suites enable:
+
 - Batch operations across multiple documents
 - Cross-reference management
 - Consistent terminology enforcement
@@ -946,6 +1001,7 @@ cp -r .claude/docs/suites/_example .claude/docs/suites/my-suite
 #### Step 2: Edit the Manifest
 
 Update `manifest.json` with your suite configuration:
+
 - Set `suite_id` and `name`
 - Configure `parallel_limit` and error handling
 - Define your documents (can start empty)
@@ -983,6 +1039,7 @@ Dependencies control execution order in batch operations:
 ```
 
 **Execution Order:**
+
 ```
 Level 0: overview (no dependencies)
 Level 1: auth-guide (depends on level 0)
@@ -1038,6 +1095,7 @@ Each gate must pass before proceeding to the next stage.
 **Purpose:** Ensure spec is complete before writing begins
 
 **Required Checks:**
+
 - [ ] Document type is valid (api, design, manual)
 - [ ] Subject/topic is non-empty
 - [ ] Target audience is defined
@@ -1045,6 +1103,7 @@ Each gate must pass before proceeding to the next stage.
 - [ ] Output path specified
 
 **Recommended Checks:**
+
 - Source files listed
 - Code examples specified
 - Cross-references defined
@@ -1055,6 +1114,7 @@ Each gate must pass before proceeding to the next stage.
 **Purpose:** Ensure content meets quality standards
 
 **Required Checks:**
+
 - [ ] No placeholders (TODO, TBD, FIXME)
 - [ ] No ellipsis indicating incomplete content
 - [ ] Code examples syntactically valid
@@ -1062,6 +1122,7 @@ Each gate must pass before proceeding to the next stage.
 - [ ] Minimum content length (50+ words for major sections)
 
 **Recommended Checks:**
+
 - Examples for complex concepts
 - Consistent terminology
 - Proper heading hierarchy
@@ -1072,6 +1133,7 @@ Each gate must pass before proceeding to the next stage.
 **Purpose:** Ensure document matches project standards
 
 **Required Checks:**
+
 - [ ] Terminology matches glossary
 - [ ] Naming conventions followed
 - [ ] No conflicting statements
@@ -1083,6 +1145,7 @@ Each gate must pass before proceeding to the next stage.
 **Purpose:** Confirm document is ready for publication
 
 **Required Checks:**
+
 - [ ] No blocker issues remaining
 - [ ] All required sections complete
 - [ ] Cross-references validated
@@ -1202,6 +1265,7 @@ Patterns are proven approaches extracted from successful documents:
 ```
 
 **Pattern Scoring:**
+
 - New patterns start at 0.85
 - +0.02 for each successful use
 - -0.05 for each failure
@@ -1273,18 +1337,21 @@ The `/doc-improve` command analyzes recent work and updates expertise:
 ```
 
 **What It Analyzes:**
+
 - Documents modified in last 30 days
 - Review results for each document
 - First-pass success rate
 - Iteration patterns
 
 **What It Updates:**
+
 - Adds new effective patterns
 - Increments usage counts for existing patterns
 - Adds new anti-patterns from failed reviews
 - Updates domain terminology
 
 **Recommended Schedule:**
+
 - Weekly during active documentation
 - After completing a documentation suite
 - After major review cycles
@@ -1668,6 +1735,7 @@ Hooks validate that documents written to `docs/` meet quality standards automati
 **Symptom:** `/doc-plan` or other commands not recognized
 
 **Solution:**
+
 1. Verify `.claude/commands/doc/` directory exists
 2. Check command files are present (doc-plan.md, doc-write.md, etc.)
 3. Restart Claude Code session
@@ -1677,6 +1745,7 @@ Hooks validate that documents written to `docs/` meet quality standards automati
 **Symptom:** `/doc-write` reports spec file missing
 
 **Solution:**
+
 1. Check path is correct: `specs/docs/[slug]-spec.md`
 2. Verify spec was created by `/doc-plan`
 3. Use tab completion or `ls specs/docs/` to find correct filename
@@ -1686,6 +1755,7 @@ Hooks validate that documents written to `docs/` meet quality standards automati
 **Symptom:** Writing fails with template error
 
 **Solution:**
+
 1. Check `.claude/docs/templates/` directory exists
 2. Verify template files: `api-docs.md`, `design-docs.md`, `user-manual.md`
 3. Ensure document type matches: api, design, manual
@@ -1708,6 +1778,7 @@ Hooks validate that documents written to `docs/` meet quality standards automati
 **Symptom:** `/doc-batch` or `/doc-sync` reports suite missing
 
 **Solution:**
+
 1. Verify suite directory: `.claude/docs/suites/[suite-id]/`
 2. Check `manifest.json` exists and is valid JSON
 3. Ensure `suite_id` in manifest matches command argument
@@ -1742,11 +1813,13 @@ Hooks validate that documents written to `docs/` meet quality standards automati
 If generated documentation is incorrect:
 
 1. **Git Restore** (if using version control):
+
    ```bash
    git checkout -- docs/[affected-file].md
    ```
 
 2. **Regenerate from Spec:**
+
    ```bash
    /doc-write [spec-path] --output [original-path]
    ```
@@ -1814,11 +1887,13 @@ If generated documentation is incorrect:
 ### Common Workflows
 
 **Single Document:**
+
 ```
 /doc-plan → /doc-write → /doc-review → (iterate) → Done
 ```
 
 **Suite Batch:**
+
 ```
 Create suite → /doc-plan (multiple) → /doc-batch generate →
 /doc-batch review → /doc-sync → Done
@@ -1872,16 +1947,19 @@ Create suite → /doc-plan (multiple) → /doc-batch generate →
 ### Common Patterns
 
 **Quick Doc Creation:**
+
 ```
 /doc-plan "Topic" --type manual && /doc-write specs/docs/topic-spec.md
 ```
 
 **Full Quality Check:**
+
 ```
 /doc-review docs/file.md --spec specs/docs/file-spec.md --fix
 ```
 
 **Suite Health Check:**
+
 ```
 /doc-status && /doc-sync my-suite --fix
 ```
