@@ -20,6 +20,15 @@
             "command": ".claude/hooks/doc_post_write.py"
           }
         ]
+      },
+      {
+        "matcher": "SlashCommand.*/doc-review.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/doc_post_review.py"
+          }
+        ]
       }
     ]
   }
