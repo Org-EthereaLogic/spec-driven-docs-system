@@ -142,6 +142,13 @@ If suite specified:
 | pending_approval | [N] | Reviewed, awaiting stakeholder approval |
 | approved_final | [N] | Production-ready, publishable |
 
+**Workflow Distribution** (from manifest `workflow_stage` fields):
+```text
+rough_draft:       [████████████████    ] [N] docs
+pending_approval:  [████                ] [N] docs
+approved_final:    [                    ] [N] docs
+```
+
 ### Health Indicators
 
 - **Spec Coverage:** [%] of docs have specs
@@ -165,6 +172,9 @@ If suite specified:
 
 # Review all documents
 /doc-batch [suite-id] review
+
+# Promote document to next workflow stage
+/doc-promote [document-path]
 
 # Sync cross-references
 /doc-sync [suite-id]

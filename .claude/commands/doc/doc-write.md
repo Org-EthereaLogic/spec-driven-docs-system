@@ -235,7 +235,18 @@ Before output, perform comprehensive quality checks:
 2. **Write Document**
    Save the complete document to the output path.
 
-3. **Report Results**
+3. **Update Suite Manifest** (if --suite-id provided)
+   If the document belongs to a suite:
+   ```text
+   Read: $CLAUDE_PROJECT_DIR/.claude/docs/suites/[suite-id]/manifest.json
+   ```
+   Update the document entry:
+   - Set `workflow_stage`: "rough_draft"
+   - Set `workflow_metadata.created_date`: [current ISO date]
+   - Update `metadata.workflow_summary.rough_draft` count
+   Save the updated manifest.
+
+4. **Report Results**
    ```text
    ## Document Generated
 
@@ -259,8 +270,8 @@ Before output, perform comprehensive quality checks:
    Document generated to **rough_draft** stage.
 
    1. **Review:** `/doc-review [document-path] --spec [spec-path]`
-   2. **If Grade A/B:** Move to `spec_driven_docs/pending_approval/`
-   3. **After stakeholder approval:** Move to `spec_driven_docs/approved_final/`
+   2. **If Grade A/B:** `/doc-promote [document-path]` (moves to pending_approval)
+   3. **After stakeholder approval:** `/doc-promote [document-path] --force` (moves to approved_final)
 
    Workflow: rough_draft → pending_approval → approved_final
    ```
