@@ -82,6 +82,23 @@ coverage/
 # Generated documentation (uncomment to exclude from version control)
 # docs/
 
+# =============================================================================
+# Test Artifacts
+# =============================================================================
+
+# Test suite manifests (keep _example as template)
+.claude/docs/suites/*
+!.claude/docs/suites/_example/
+!.claude/docs/suites/README.md
+
+# Test spec files (keep _example as template)
+specs/docs/*
+!specs/docs/_example/
+!specs/docs/README.md
+
+# Test archives (local only, not committed)
+tests/archives/
+
 # Prompt drafts (working files, not final)
 prompt/drafts/
 prompt/enhanced/
