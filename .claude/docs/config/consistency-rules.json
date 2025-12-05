@@ -1,6 +1,28 @@
 {
-  "version": "1.0",
-  "description": "Global consistency rules for technical documentation",
+  "version": "2.0",
+  "description": "Global consistency rules for technical documentation. Rules are derived from CONSTITUTION.md principles and DIRECTIVES.md enforcement levels.",
+
+  "governance": {
+    "constitution": "CONSTITUTION.md",
+    "directives": "DIRECTIVES.md",
+    "description": "This file implements the consistency enforcement layer. See DIRECTIVES.md for priority levels and CONSTITUTION.md for underlying principles."
+  },
+
+  "directive_priorities": {
+    "description": "Mapping of rule categories to directive priority levels",
+    "critical": {
+      "description": "Violations block operations via pre_write hook",
+      "categories": ["forbidden_patterns"]
+    },
+    "important": {
+      "description": "Violations generate warnings via post_write hook",
+      "categories": ["terminology", "style"]
+    },
+    "recommended": {
+      "description": "Guidance only, no automated enforcement",
+      "categories": ["formatting"]
+    }
+  },
 
   "terminology": {
     "description": "Enforced terminology - use the key, avoid the alternatives. Note: Common technical terms with multiple valid meanings (path, run, method, call) are intentionally excluded to prevent false positives.",
@@ -37,7 +59,8 @@
   },
 
   "forbidden_patterns": {
-    "description": "Patterns that must never appear in final documentation",
+    "description": "Patterns that must never appear in final documentation. Priority: Critical (blocks writes).",
+    "principle": "Transparency Over Efficiency (CONSTITUTION.md Section 5)",
     "patterns": [
       "TODO",
       "FIXME",
@@ -45,7 +68,6 @@
       "XXX",
       "HACK",
       "WIP",
-      "...",
       "placeholder",
       "lorem ipsum",
       "example.com",
@@ -56,7 +78,14 @@
       "<your",
       "[your",
       "{your"
-    ]
+    ],
+    "patterns_with_exceptions": {
+      "...": {
+        "description": "Ellipsis is forbidden except in Python Protocol/ABC abstract method bodies (PEP 544)",
+        "exception_context": "Valid when standalone in method body preceded by def, inside Protocol or ABC class",
+        "enforcement": "Contextual validation in doc_pre_write.py"
+      }
+    }
   },
 
   "required_elements": {
