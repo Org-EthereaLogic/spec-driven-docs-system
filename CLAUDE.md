@@ -8,11 +8,15 @@ This is a Claude Code framework for specification-driven technical documentation
 
 ## Core Workflow
 
-```
+```text
 /doc-plan "Topic" --type api|design|manual  → Creates specification in specs/docs/
-/doc-write specs/docs/topic-spec.md         → Generates document to docs/
-/doc-review docs/path/document.md           → Validates quality (A-F grading)
+/doc-write specs/docs/topic-spec.md         → Generates to spec_driven_docs/rough_draft/
+/doc-review spec_driven_docs/rough_draft/...→ Validates quality (A-F grading)
+After review passes                         → Move to pending_approval/
+After stakeholder approval                  → Move to approved_final/
 ```
+
+**Document Workflow:** `rough_draft/` → `pending_approval/` → `approved_final/`
 
 ## Key Commands
 
@@ -47,9 +51,10 @@ Agent definitions: `.claude/agents/`
 
 ## Directory Structure
 
-```
+```text
 .claude/
 ├── agents/              # Agent definitions (doc-orchestrator, doc-writer, etc.)
+├── prompts/             # Conversation archives and prompt templates
 ├── commands/doc/        # Slash command implementations
 │   └── _doc-helpers/    # Internal helper commands
 ├── docs/
@@ -59,7 +64,11 @@ Agent definitions: `.claude/agents/`
 │   └── templates/       # api-docs.md, design-docs.md, user-manual.md
 └── hooks/               # Pre/post write validation (Python)
 specs/docs/              # Document specifications (input to /doc-write)
-docs/                    # Generated documentation output
+spec_driven_docs/        # Generated documentation output
+├── rough_draft/         # Initial generation output
+├── pending_approval/    # Reviewed, awaiting stakeholder approval
+└── approved_final/      # Production-ready documentation
+app_docs/                # End-user documentation (User Guide, tutorials)
 ```
 
 ## Quality System
@@ -101,7 +110,9 @@ After any `edit_file` operation, immediately run `codacy_cli_analyze` on modifie
 1. Plan: `/doc-plan "Feature X API" --type api`
 2. Review spec: Read `specs/docs/feature-x-api-spec.md`
 3. Generate: `/doc-write specs/docs/feature-x-api-spec.md`
-4. Validate: `/doc-review docs/api/feature-x.md --fix`
+4. Validate: `/doc-review spec_driven_docs/rough_draft/api/feature-x.md --fix`
+5. Approve: Move to `spec_driven_docs/pending_approval/` after review passes (Grade A/B)
+6. Publish: Move to `spec_driven_docs/approved_final/` after stakeholder approval
 
 ## Suite Operations
 

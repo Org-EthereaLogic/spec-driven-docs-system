@@ -162,8 +162,9 @@ def main():
     file_path = tool_input.get("file_path", "")
     content = tool_input.get("content", "")
 
-    # Only validate documentation files
-    if not file_path or "/docs/" not in file_path or not file_path.endswith(".md"):
+    # Only validate documentation files (support multiple doc directories)
+    valid_doc_paths = ["/spec_driven_docs/", "/app_docs/", "/docs/"]
+    if not file_path or not any(p in file_path for p in valid_doc_paths) or not file_path.endswith(".md"):
         # Not a docs file, allow write
         print(json.dumps({"continue": True}))
         return
