@@ -43,3 +43,58 @@ Each spec file contains:
 - **Content Outline**: Sections with requirements and source references
 - **Code Examples Required**: What examples to include
 - **Output Configuration**: Where to save the generated document
+
+## User Story Best Practices
+
+When creating specifications with `/doc-plan`, consider including user stories to clarify purpose and audience.
+
+### User Story Format
+
+```text
+As a [role],
+I want [capability],
+So that [benefit].
+```
+
+### Examples
+
+**API Documentation:**
+
+```text
+As a backend developer,
+I want complete API endpoint documentation with request/response examples,
+So that I can integrate the service without guessing parameter formats.
+```
+
+**Design Document:**
+
+```text
+As a system architect,
+I want to understand the trade-offs between sync and async processing,
+So that I can make informed decisions about system design.
+```
+
+**User Manual:**
+
+```text
+As a new user,
+I want step-by-step setup instructions with expected outcomes,
+So that I can start using the product without getting stuck.
+```
+
+### Including in Specifications
+
+Add user stories to the "Target Audience" or "Requirements" section of your spec:
+
+```markdown
+## Target Audience
+
+**Primary:** Backend developers integrating our API
+
+**User Story:**
+As a backend developer,
+I want complete endpoint documentation,
+So that I can implement integrations quickly and correctly.
+```
+
+This helps `/doc-write` generate content with the right level of detail and examples.

@@ -98,9 +98,11 @@ Execute searches in parallel:
 
 1. **Find Recent Documents**
    ```text
-   Glob: $CLAUDE_PROJECT_DIR/docs/**/*.md
+   Glob: $CLAUDE_PROJECT_DIR/spec_driven_docs/approved_final/**/*.md
+   Glob: $CLAUDE_PROJECT_DIR/spec_driven_docs/pending_approval/**/*.md
    Glob: $CLAUDE_PROJECT_DIR/specs/docs/**/*.md
    ```
+   Prioritize approved_final documents for pattern extraction (highest quality).
    Filter to documents modified in last 30 days.
 
 2. **Find Review Results**

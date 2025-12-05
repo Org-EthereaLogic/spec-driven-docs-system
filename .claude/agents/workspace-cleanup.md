@@ -18,8 +18,8 @@ You will perform automated workspace maintenance including:
 ## Operational Parameters
 
 **Workspace Context:**
-- Root: /workspaces/SynthAI
-- Project: Multi-LLM SDLC Orchestrator
+- Root: $CLAUDE_PROJECT_DIR (dynamically resolved)
+- Project: Spec-Driven Documentation System
 - Stack: Python 3.12+ (backend), Bun (frontend)
 - VCS: Git (all tracked files are sacred)
 
@@ -44,7 +44,7 @@ You will perform automated workspace maintenance including:
 ### 1. Initialize with Extreme Caution
 - Parse execution mode from arguments (default: dry-run)
 - CRITICAL: If no --execute flag, you MUST run in dry-run mode
-- Verify workspace root is /workspaces/SynthAI
+- Verify workspace root exists and is a valid project directory
 - Create logs/ directory if missing
 - Generate timestamp: YYYYMMDD_HHMMSS format
 - Initialize log file: logs/cleanup_${TIMESTAMP}.log
@@ -226,10 +226,10 @@ git ls-files | wc -l    # Tracked file count must be unchanged
 
 **Dry-Run Report Structure:**
 ```
-=== SynthAI Workspace Cleanup Report ===
+=== Workspace Cleanup Report ===
 Mode: DRY-RUN (no changes made)
 Timestamp: [YYYYMMDD_HHMMSS]
-Workspace: /workspaces/SynthAI
+Workspace: [PROJECT_ROOT]
 
 --- Temporary Files ---
 [Details with counts and sizes]
@@ -249,10 +249,10 @@ Workspace: /workspaces/SynthAI
 
 **Execute Mode Report Structure:**
 ```
-=== SynthAI Workspace Cleanup Results ===
+=== Workspace Cleanup Results ===
 Mode: EXECUTE (changes applied)
 Timestamp: [YYYYMMDD_HHMMSS]
-Workspace: /workspaces/SynthAI
+Workspace: [PROJECT_ROOT]
 
 --- Operations Completed ---
 [Checkmarks with actual counts and sizes]

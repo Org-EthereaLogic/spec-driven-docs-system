@@ -12,7 +12,7 @@ Perform automated workspace maintenance to keep the SynthAI codebase clean and o
 ## Agent Delegation
 
 This command invokes the workspace cleanup agent located at:
-`/workspaces/SynthAI/.claude/agents/workspace-cleanup.md`
+`$CLAUDE_PROJECT_DIR/.claude/agents/workspace-cleanup.md`
 
 ## Usage
 
@@ -81,4 +81,4 @@ Workspace cleanup completed successfully.
 - Comprehensive error handling and recovery
 
 For agent implementation details, see:
-`/workspaces/SynthAI/.claude/agents/workspace-cleanup.md`
+`$CLAUDE_PROJECT_DIR/.claude/agents/workspace-cleanup.md`

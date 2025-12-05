@@ -228,6 +228,8 @@ Before output, perform comprehensive quality checks:
 1. **Determine Output Path**
    - Use --output if provided
    - Otherwise use spec's output_path
+   - If output_path starts with "docs/", redirect to "spec_driven_docs/rough_draft/" (maintaining subpath)
+   - Default location: `$CLAUDE_PROJECT_DIR/spec_driven_docs/rough_draft/[type]/[name].md`
    - Create parent directories if needed
 
 2. **Write Document**
@@ -254,7 +256,13 @@ Before output, perform comprehensive quality checks:
    - [x] Terminology consistent
 
    ### Next Steps
-   Run `/doc-review [document-path] --spec [spec-path]` to validate.
+   Document generated to **rough_draft** stage.
+
+   1. **Review:** `/doc-review [document-path] --spec [spec-path]`
+   2. **If Grade A/B:** Move to `spec_driven_docs/pending_approval/`
+   3. **After stakeholder approval:** Move to `spec_driven_docs/approved_final/`
+
+   Workflow: rough_draft → pending_approval → approved_final
    ```
 
 ## Iteration Support

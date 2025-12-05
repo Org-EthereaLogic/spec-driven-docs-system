@@ -62,7 +62,7 @@ cp -r specs /path/to/your/project/
 3. **Review the output:**
 
    ```bash
-   /doc-review docs/api/user-authentication.md
+   /doc-review spec_driven_docs/rough_draft/api/user-authentication.md
    ```
 
 ### Verify Installation
@@ -75,7 +75,7 @@ Run `/doc-status` to see your documentation dashboard. If you see the status out
 
 | Document | Purpose |
 |----------|---------|
-| [User Guide](docs/User-Guide/User-Guide.md) | Comprehensive guide to all features |
+| [User Guide](app_docs/User-Guide/User-Guide.md) | Comprehensive guide to all features |
 
 ### Related Documentation
 
@@ -118,7 +118,7 @@ Run `/doc-status` to see your documentation dashboard. If you see the status out
 ```bash
 /doc-plan "Feature X" --type manual
 /doc-write specs/docs/feature-x-spec.md
-/doc-review docs/guides/feature-x.md
+/doc-review spec_driven_docs/rough_draft/guides/feature-x.md
 ```
 
 **Suite Batch Processing:**
@@ -154,7 +154,8 @@ Run `/doc-status` to see your documentation dashboard. If you see the status out
                              ▼
                     ┌─────────────────┐
                     │    Document     │
-                    │    (docs/)      │
+                    │(spec_driven_docs│
+                    │  /rough_draft/) │
                     └────────┬────────┘
                              │
                              ▼
@@ -220,6 +221,7 @@ your-project/
 │   │   ├── doc-reviewer.md
 │   │   ├── doc-librarian.md
 │   │   └── workspace-cleanup.md
+│   ├── prompts/             # Conversation archives and prompt templates
 │   ├── commands/doc/        # Slash command definitions
 │   │   ├── doc-plan.md
 │   │   ├── doc-write.md
@@ -235,9 +237,13 @@ your-project/
 │   │   ├── suites/          # Documentation suite manifests
 │   │   └── templates/       # Document type templates
 │   └── hooks/               # Pre/post write validation
-├── specs/docs/              # Document specifications
-├── docs/                    # Generated documentation
-│   └── User-Guide/          # This user guide
+├── specs/docs/              # Document specifications (input)
+├── spec_driven_docs/        # Generated documentation (output)
+│   ├── rough_draft/         # Initial generation output
+│   ├── pending_approval/    # Reviewed, awaiting stakeholder approval
+│   └── approved_final/      # Production-ready documentation
+├── app_docs/                # End-user documentation
+│   └── User-Guide/          # Framework user guide
 ├── prompt/                  # Prompt engineering resources
 │   └── prompt-engineering-docs/  # Reference documentation
 └── tests/                   # Test plans and utilities
@@ -245,6 +251,18 @@ your-project/
     ├── isolated-test-plan.md
     └── setup-isolated-test.sh
 ```
+
+### Document Workflow
+
+```text
+rough_draft/ → pending_approval/ → approved_final/
+```
+
+| Stage | Description | Audience |
+|-------|-------------|----------|
+| rough_draft | Initial /doc-write output, unreviewed | Doc authors |
+| pending_approval | Passed quality gates, awaiting sign-off | Review team |
+| approved_final | Production-ready, publishable | Public/end-users |
 
 ---
 
@@ -300,7 +318,7 @@ This project enforces strict anti-shortcut directives for all AI-generated conte
 
 ## Getting Help
 
-- **Full Documentation:** [User Guide](docs/User-Guide/User-Guide.md)
+- **Full Documentation:** [User Guide](app_docs/User-Guide/User-Guide.md)
 - **Command Help:** Run any command without arguments for usage information
 - **Quality Issues:** Use `/doc-review <doc> --fix` for auto-fixable issues
 

@@ -134,12 +134,21 @@ If suite specified:
 | [date] | Reviewed | [doc] |
 | [date] | Updated | [doc] |
 
+### Workflow Stage
+
+| Stage | Count | Description |
+|-------|-------|-------------|
+| rough_draft | [N] | Initial generation output |
+| pending_approval | [N] | Reviewed, awaiting stakeholder approval |
+| approved_final | [N] | Production-ready, publishable |
+
 ### Health Indicators
 
 - **Spec Coverage:** [%] of docs have specs
 - **Review Status:** [N] reviewed, [N] pending review
 - **Consistency:** [healthy/needs sync]
 - **Stale Documents:** [N] not updated in 30+ days
+- **Workflow Progress:** [N] in rough_draft, [N] awaiting approval, [N] published
 
 ### Pending Actions
 
