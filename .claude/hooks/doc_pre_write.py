@@ -75,6 +75,72 @@ def check_forbidden_patterns(content: str, rules: dict) -> list[str]:
     return issues
 
 
+def is_valid_protocol_ellipsis(content: str, ellipsis_pos: int) -> bool:
+    """
+    Check if an ellipsis at the given position is valid Protocol/ABC syntax.
+
+    Valid PEP 544 ellipsis must:
+    1. Appear as a standalone statement (just '...' on its own line or after whitespace)
+    2. Be preceded by 'def' within 5 lines
+    3. Be inside a class that inherits from Protocol or ABC
+
+    This is a heuristic check for documentation containing code examples.
+    """
+    lines = content[:ellipsis_pos].split('\n')
+    if not lines:
+        return False
+
+    # Get the line containing the ellipsis
+    current_line_start = content.rfind('\n', 0, ellipsis_pos) + 1
+    current_line_end = content.find('\n', ellipsis_pos)
+    if current_line_end == -1:
+        current_line_end = len(content)
+    current_line = content[current_line_start:current_line_end].strip()
+
+    # Check if ellipsis is standalone (just '...' possibly with whitespace)
+    if current_line != '...':
+        return False
+
+    # Look back up to 10 lines for 'def' and class context
+    lookback_lines = lines[-10:] if len(lines) >= 10 else lines
+    lookback_text = '\n'.join(lookback_lines)
+
+    # Check for 'def' within recent lines (indicates method body)
+    has_def = bool(re.search(r'\bdef\s+\w+', lookback_text))
+    if not has_def:
+        return False
+
+    # Check for Protocol or ABC class context
+    # Look for class definition with Protocol or ABC inheritance
+    has_protocol_context = bool(re.search(
+        r'class\s+\w+\s*\([^)]*\b(Protocol|ABC)\b[^)]*\)',
+        lookback_text
+    ))
+
+    return has_protocol_context
+
+
+def check_ellipsis_patterns(content: str) -> list[str]:
+    """
+    Check for ellipsis patterns that indicate incomplete content.
+
+    Excludes valid Protocol/ABC abstract method ellipsis (PEP 544).
+    """
+    issues = []
+
+    # Find all ellipsis occurrences
+    for match in re.finditer(r'\.\.\.', content):
+        pos = match.start()
+
+        # Check if this is valid Protocol/ABC syntax
+        if not is_valid_protocol_ellipsis(content, pos):
+            # Get line number for better error message
+            line_num = content[:pos].count('\n') + 1
+            issues.append(f"Line {line_num}: Ellipsis '...' detected - may indicate incomplete content")
+
+    return issues
+
+
 def check_placeholder_content(content: str) -> list[str]:
     """Check for placeholder content that shouldn't be in final docs."""
     issues = []
@@ -83,17 +149,22 @@ def check_placeholder_content(content: str) -> list[str]:
         "FIXME",
         "TBD",
         "XXX",
+        "HACK",
+        "WIP",
         "[your",
         "<your",
         "{your",
         "lorem ipsum",
         "example.com",
-        "...",  # Ellipsis often indicates incomplete content
     ]
 
     for placeholder in placeholders:
         if placeholder.lower() in content.lower():
             issues.append(f"Placeholder content detected: '{placeholder}'")
+
+    # Check ellipsis patterns separately with Protocol/ABC exception
+    ellipsis_issues = check_ellipsis_patterns(content)
+    issues.extend(ellipsis_issues)
 
     return issues
 

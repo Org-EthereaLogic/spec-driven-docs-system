@@ -108,3 +108,4 @@ prompt/enhanced/
 
 # Empty placeholder directories (keep .gitkeep files if present)
 chat/
+.chat/testing-notes.md
