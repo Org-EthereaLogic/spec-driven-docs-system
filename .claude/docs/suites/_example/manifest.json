@@ -6,7 +6,7 @@
   "name": "Example Documentation Suite",
   "description": "Template suite demonstrating manifest structure for /doc-batch operations",
   "created": "2025-12-01",
-  "version": "1.0",
+  "version": "1.1",
 
   "configuration": {
     "parallel_limit": 3,
@@ -21,30 +21,54 @@
       "title": "API Reference",
       "type": "api",
       "spec_path": "specs/docs/_example/api-reference-spec.md",
-      "output_path": "docs/api/reference.md",
+      "output_path": "spec_driven_docs/rough_draft/api/reference.md",
       "status": "pending",
       "priority": 1,
-      "dependencies": []
+      "dependencies": [],
+      "workflow_stage": "rough_draft",
+      "workflow_metadata": {
+        "created_date": null,
+        "last_reviewed": null,
+        "promoted_date": null,
+        "quality_score": null,
+        "quality_grade": null
+      }
     },
     {
       "doc_id": "architecture-design",
       "title": "Architecture Design",
       "type": "design",
       "spec_path": "specs/docs/_example/architecture-design-spec.md",
-      "output_path": "docs/design/architecture.md",
+      "output_path": "spec_driven_docs/rough_draft/design/architecture.md",
       "status": "pending",
       "priority": 2,
-      "dependencies": []
+      "dependencies": [],
+      "workflow_stage": "rough_draft",
+      "workflow_metadata": {
+        "created_date": null,
+        "last_reviewed": null,
+        "promoted_date": null,
+        "quality_score": null,
+        "quality_grade": null
+      }
     },
     {
       "doc_id": "user-guide",
       "title": "User Guide",
       "type": "manual",
       "spec_path": "specs/docs/_example/user-guide-spec.md",
-      "output_path": "docs/guides/user-guide.md",
+      "output_path": "spec_driven_docs/rough_draft/guides/user-guide.md",
       "status": "pending",
       "priority": 3,
-      "dependencies": ["api-reference", "architecture-design"]
+      "dependencies": ["api-reference", "architecture-design"],
+      "workflow_stage": "rough_draft",
+      "workflow_metadata": {
+        "created_date": null,
+        "last_reviewed": null,
+        "promoted_date": null,
+        "quality_score": null,
+        "quality_grade": null
+      }
     }
   ],
 
@@ -52,6 +76,11 @@
     "last_batch_run": null,
     "completion_percentage": 0,
     "total_documents": 3,
-    "completed_documents": 0
+    "completed_documents": 0,
+    "workflow_summary": {
+      "rough_draft": 3,
+      "pending_approval": 0,
+      "approved_final": 0
+    }
   }
 }
