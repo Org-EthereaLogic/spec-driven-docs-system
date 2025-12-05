@@ -185,6 +185,14 @@ The system uses specialized Claude agents to scale document processing:
 - `/doc-sync` spawns **doc-librarian** for cross-reference checks
 - `/doc-batch` coordinates multiple agents for parallel processing
 
+### Utility Agents
+
+| Agent | Model | Purpose |
+|-------|-------|---------|
+| **workspace-cleanup** | Haiku | Workspace maintenance, temp file removal, file organization |
+
+The workspace-cleanup agent handles development hygiene tasks separate from documentation workflows.
+
 ---
 
 ## Quality Grades
@@ -210,7 +218,8 @@ your-project/
 │   │   ├── doc-orchestrator.md
 │   │   ├── doc-writer.md
 │   │   ├── doc-reviewer.md
-│   │   └── doc-librarian.md
+│   │   ├── doc-librarian.md
+│   │   └── workspace-cleanup.md
 │   ├── commands/doc/        # Slash command definitions
 │   │   ├── doc-plan.md
 │   │   ├── doc-write.md
@@ -227,8 +236,14 @@ your-project/
 │   │   └── templates/       # Document type templates
 │   └── hooks/               # Pre/post write validation
 ├── specs/docs/              # Document specifications
-└── docs/                    # Generated documentation
-    └── User-Guide/          # This user guide
+├── docs/                    # Generated documentation
+│   └── User-Guide/          # This user guide
+├── prompt/                  # Prompt engineering resources
+│   └── prompt-engineering-docs/  # Reference documentation
+└── tests/                   # Test plans and utilities
+    ├── e2e/logging-spec/    # E2E test logging specifications
+    ├── isolated-test-plan.md
+    └── setup-isolated-test.sh
 ```
 
 ---
@@ -259,6 +274,15 @@ Located at `.claude/docs/expertise/`:
 - `patterns.json`: Effective documentation patterns
 - `anti-patterns.json`: Patterns to avoid
 - `domain-knowledge.json`: Project-specific terminology
+
+### Prompt Engineering Resources
+
+Located at `prompt/prompt-engineering-docs/`:
+
+- `anthropic-prompting-best-practices.md`: Anthropic's official prompting guidelines
+- `agentic-prompt-engineering.md`: Patterns for agentic AI workflows
+
+These resources inform the system's agent prompts and command implementations.
 
 ---
 

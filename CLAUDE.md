@@ -28,12 +28,20 @@ This is a Claude Code framework for specification-driven technical documentation
 
 ## Agent Architecture
 
+### Documentation Agents
+
 | Agent | Model | Purpose |
 |-------|-------|---------|
 | doc-orchestrator | Opus | Strategy, planning, multi-doc coordination |
 | doc-writer | Sonnet | Document generation from specifications |
 | doc-reviewer | Sonnet | Quality validation, consistency enforcement |
 | doc-librarian | Haiku | Quick consistency checks, cross-references |
+
+### Utility Agents
+
+| Agent | Model | Purpose |
+|-------|-------|---------|
+| workspace-cleanup | Haiku | Workspace maintenance, temp file removal |
 
 Agent definitions: `.claude/agents/`
 
