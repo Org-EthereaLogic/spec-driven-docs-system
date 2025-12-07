@@ -57,7 +57,7 @@ Claude 4.x models pay close attention to details and examples as part of their p
 
 ### Long-horizon reasoning and state tracking
 
-Claude 4.5 models excel at long-horizon reasoning tasks with exceptional state tracking capabilities. They maintain orientation across extended sessions by focusing on incremental progress—making steady advances on a few things at a time rather than attempting everything at once. This capability especially emerges over multiple context windows or task iterations, where Claude can work on a complex task, save the state, and continue with a fresh context window.
+Claude 4.5 models excel at long-horizon reasoning tasks with exceptional state tracking capabilities. It maintains orientation across extended sessions by focusing on incremental progress—making steady advances on a few things at a time rather than attempting everything at once. This capability especially emerges over multiple context windows or task iterations, where Claude can work on a complex task, save the state, and continue with a fresh context window.
 
 #### Context awareness and multi-window workflows
 
@@ -193,7 +193,7 @@ On the other hand, if you want the model to be more hesitant by default, less pr
 
 ```text Sample prompt for conservative action
 <do_not_act_before_instructions>
-Do not jump into implementing or changing files unless clearly instructed to make changes. When the user's intent is ambiguous, default to providing information, doing research, and providing recommendations rather than taking action. Only proceed with edits, modifications, or implementations when the user explicitly requests them.
+Do not jump into implementatation or changes files unless clearly instructed to make changes. When the user's intent is ambiguous, default to providing information, doing research, and providing recommendations rather than taking action. Only proceed with edits, modifications, or implementations when the user explicitly requests them.
 </do_not_act_before_instructions>
 ```
 
@@ -275,7 +275,7 @@ The assistant is Claude, created by Anthropic. The current model is Claude Sonne
 For LLM-powered apps that need to specify model strings:
 
 ```text Sample prompt for model string
-When an LLM is needed, please default to Claude Sonnet 4.5 unless the user requests otherwise. Use the current Claude Sonnet 4.5 model string from the official API documentation to avoid stale versions.
+When an LLM is needed, please default to Claude Sonnet 4.5 unless the user requests otherwise. The exact model string for Claude Sonnet 4.5 is claude-sonnet-4-5-20250929.
 ```
 
 ### Thinking sensitivity
