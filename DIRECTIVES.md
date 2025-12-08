@@ -27,9 +27,9 @@ These directives are enforced by hooks. Violations block the operation until res
 
 ### Complete Implementation
 
-**Principle**: Completeness Over Speed (CONSTITUTION.md Section 1)
+**Principle**: Simplicity Over Completeness (CONSTITUTION.md Section 2) with Outcome Focus (Section 1)
 
-**Why this matters**: Incomplete artifacts create compounding technical debt. A placeholder that saves the writer five minutes costs the reviewer an hour and the user receives nothing useful. Every incomplete section blocks the entire document from approval.
+**Why this matters**: Incomplete artifacts create technical debt, but over-complete artifacts create maintenance burden. The goal is publication-ready content that serves the target audience - no more, no less. Placeholders block approval; exhaustive documentation of unlikely edge cases wastes everyone's time.
 
 ALWAYS:
 
@@ -39,13 +39,17 @@ ALWAYS:
 - Include all required template sections with meaningful content
 - Complete each section fully before proceeding to the next
 
-CONTEXT FOR CLAUDE 4.x: Claude models require explicit scope modifiers for comprehensive output. Frame requests specifically:
+SCOPE GUIDANCE: Document what readers need to accomplish their goals. Start with essential information; expand only if specifications explicitly require more.
 
 ```text
-Less effective: "Document the API"
-More effective: "Document the API including all endpoints, request/response
-formats, authentication requirements, error codes, and rate limiting details"
+Less effective: "Document all error codes with recovery steps for each"
+More effective: "Document common error codes users are likely to encounter"
+
+Less effective: "Include complete architecture diagrams with all layers"
+More effective: "Include diagrams that help readers understand the key concepts"
 ```
+
+Specifications describe outcomes, not implementation details. If you find yourself documenting internal class hierarchies or adapter patterns, refocus on what users need to achieve.
 
 **Enforcement**: `doc_pre_write.py` blocks writes containing forbidden patterns (TODO, FIXME, placeholders). See Pattern Reference Tables below.
 
@@ -221,25 +225,33 @@ These directives represent best practices. No automated enforcement; rely on age
 
 ### Simplicity Focus
 
-**Principle**: Simplicity Over Cleverness (CONSTITUTION.md Section 3)
+**Principle**: Simplicity Over Completeness (CONSTITUTION.md Section 2) and Outcome Focus (Section 1)
 
-**Why this matters**: Over-engineering increases maintenance burden without proportional benefit. Every additional section, example, or explanation must be kept current across suite updates. Readers scanning for specific information are slowed by irrelevant content. The right amount of documentation is the minimum that serves the audience.
+**Why this matters**: The SynthAI project expanded from ~150 to ~7,900 lines (40x) because specifications described implementation details rather than outcomes. Over-engineering increases maintenance burden without proportional benefit. Every additional section must be kept current across updates. The right amount of documentation is the minimum that serves the audience.
 
 PREFER:
 
-- Template-defined sections over additional invented sections
+- Minimal template variants for simple features
 - Single responsibility per document (one topic, one audience)
+- Outcome-focused content (what users achieve, not how code works)
 - Standard patterns from `patterns.json` over custom solutions
-- Existing abstractions and terminology over novel inventions
 - Brevity with clarity over exhaustive coverage
 
 AVOID:
 
+- **Specification-as-implementation**: Describing HOW to build rather than WHAT to achieve
+- **Premature exhaustiveness**: Documenting every possible case before knowing which matter
+- **Enterprise pattern contamination**: Applying enterprise patterns to simple tools
 - Features or sections beyond specification requirements
-- Premature optimization of document structure for hypothetical needs
-- Helper documents for one-time references that could be inline
 - Design for future requirements not yet in specifications
 - Verbose explanations when concise ones suffice
+
+SCOPE QUESTIONS (ask before adding content):
+
+- Does this describe a desired outcome or an implementation approach?
+- Will readers use this information to accomplish their goal?
+- Is this section required, or am I adding it "just in case"?
+- Would a minimal implementation satisfy the actual requirement?
 
 ### Context Management
 
@@ -405,7 +417,7 @@ This file defines WHAT rules apply and HOW they are enforced. CONSTITUTION.md de
 When a directive seems unclear or conflicts arise:
 
 1. Reference the corresponding constitutional principle for guidance
-2. Apply the Decision Framework hierarchy (correctness > completeness > simplicity > efficiency)
+2. Apply the Decision Framework hierarchy (correctness > outcome focus > simplicity > completeness > efficiency)
 3. Escalate genuinely ambiguous situations rather than guessing
 
 Both documents work together. Directives operationalize principles; principles provide interpretation guidance.

@@ -11,7 +11,40 @@ This template defines the structure and requirements for design documents. Use t
 
 ---
 
-## Required Sections
+## Minimal Variant
+
+For simple features or small changes, use this reduced structure:
+
+1. **Problem Statement** - What problem are we solving?
+2. **Proposed Solution** - How will we solve it?
+3. **Key Risks** - What could go wrong? (if any)
+
+Skip Alternatives Considered, Implementation Plan phases, and detailed risk matrices for simple features.
+
+### When to Use Minimal Variant
+- Feature can be implemented in a single sprint
+- No significant architectural changes
+- Clear, obvious solution with no meaningful alternatives
+- Low-risk changes
+
+---
+
+## Scope Guidance
+
+**Include only sections relevant to this specific design:**
+- If only one viable solution exists, skip Alternatives Considered or note briefly "No viable alternatives identified"
+- If implementation is straightforward, skip phased rollout plans
+- If feature is low-risk, skip detailed risk matrices
+
+**Anti-Bloat Warning:**
+- Do not add sections for hypothetical future needs
+- Do not describe implementation details beyond what reviewers need
+- Include alternatives only if they were genuinely considered
+- Simple features don't need multi-phase rollout plans
+
+---
+
+## Full Variant Sections
 
 ### 1. Problem Statement
 **Purpose:** Clearly define the problem being solved.
@@ -133,12 +166,14 @@ graph TD
 ---
 
 ### 4. Alternatives Considered
-**Purpose:** Document other approaches and why they were rejected.
+**Purpose:** Document other approaches that were genuinely considered and why they were rejected.
 
-**Must Include:**
-- At least 2 alternative approaches
+**Include when applicable:**
+- Alternative approaches that were seriously evaluated
 - Pros and cons of each
 - Clear reasoning for rejection
+
+**Note:** If only one viable approach exists, state "No viable alternatives identified" and skip this section. Do not invent alternatives to fill a template requirement.
 
 **Example Structure:**
 ```markdown
@@ -342,6 +377,6 @@ Infrastructure or operational cost implications.
 
 ### Length
 - Problem Statement: 1-2 paragraphs
-- Proposed Solution: As detailed as needed
-- Each Alternative: 1-2 paragraphs
-- Aim for completeness over brevity
+- Proposed Solution: As detailed as needed for reviewers to understand
+- Each Alternative: 1-2 paragraphs (only if alternatives were genuinely considered)
+- Aim for clarity over exhaustiveness - include what reviewers need, not everything possible

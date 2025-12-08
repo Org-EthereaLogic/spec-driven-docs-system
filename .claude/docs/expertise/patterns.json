@@ -1,17 +1,48 @@
 {
-  "version": "1.1",
-  "last_updated": "2025-12-03T00:00:00Z",
+  "version": "1.2",
+  "last_updated": "2025-12-08T00:00:00Z",
   "description": "Effective documentation patterns learned from successful documents",
 
   "patterns": [
     {
-      "id": "api-error-documentation",
-      "category": "api-documentation",
-      "description": "Document error responses comprehensively with examples and recovery steps",
+      "id": "outcome-focused-specs",
+      "category": "all",
+      "description": "Describe what success looks like, not how to build it",
+      "effectiveness_score": 0.95,
+      "usage_count": 0,
+      "example": "Instead of 'Implement adapter pattern with 5 provider classes', write 'Users can authenticate via any supported identity provider'",
+      "applies_to": ["api", "design", "manual"],
+      "rationale": "SynthAI expanded 40x because specs described implementation. Outcome focus enables minimal implementations."
+    },
+    {
+      "id": "minimal-viable-docs",
+      "category": "all",
+      "description": "Include only what the reader needs to accomplish their goal",
+      "effectiveness_score": 0.93,
+      "usage_count": 0,
+      "example": "For a simple API: Overview (purpose), Authentication (if needed), 2-3 Core Endpoints. Skip rate limiting, changelog, and edge cases until needed.",
+      "applies_to": ["api", "design", "manual"],
+      "rationale": "More documentation is more to maintain, review, and become stale. Minimal docs serve readers better."
+    },
+    {
+      "id": "scope-bounded-sections",
+      "category": "all",
+      "description": "Each section should justify its existence for the target audience",
       "effectiveness_score": 0.90,
       "usage_count": 0,
-      "example": "For each error code, include: HTTP status, error code, message format, common causes, and specific recovery actions the user can take",
-      "applies_to": ["api"]
+      "example": "Before adding 'Alternatives Considered', ask: Were alternatives actually considered? Will readers benefit from this?",
+      "applies_to": ["api", "design", "manual"],
+      "rationale": "Sections added 'just in case' create bloat without value."
+    },
+    {
+      "id": "api-error-documentation",
+      "category": "api-documentation",
+      "description": "Document common error responses with examples and recovery steps",
+      "effectiveness_score": 0.70,
+      "usage_count": 0,
+      "example": "Document errors users are likely to encounter (400, 401, 404). Skip rare internal errors until they appear in support requests.",
+      "applies_to": ["api"],
+      "note": "Reduced from 0.90 - exhaustive error docs often unnecessary"
     },
     {
       "id": "progressive-disclosure",
@@ -36,11 +67,12 @@
     {
       "id": "code-example-pairs",
       "category": "api-documentation",
-      "description": "Always show request/response pairs for API endpoints",
-      "effectiveness_score": 0.95,
+      "description": "Show representative request/response pairs for API endpoints",
+      "effectiveness_score": 0.75,
       "usage_count": 0,
-      "example": "Show complete curl command with all headers, followed by the JSON response including both success and error cases",
-      "applies_to": ["api"]
+      "example": "Show one clear curl command with the most important headers, followed by a success response. Add error case only if non-obvious.",
+      "applies_to": ["api"],
+      "note": "Reduced from 0.95 - one good example beats exhaustive examples"
     },
     {
       "id": "glossary-first-reference",
@@ -93,22 +125,24 @@
     {
       "id": "test-coverage-matrix",
       "category": "design-documentation",
-      "description": "Include coverage matrix mapping requirements to test cases with counts per priority level",
-      "effectiveness_score": 0.92,
+      "description": "Include coverage summary for complex systems with many test cases",
+      "effectiveness_score": 0.70,
       "usage_count": 1,
-      "example": "Table with columns: Epic | FR Count | Must Tests | Should Tests | Could Tests | Total Tests. Include totals row.",
+      "example": "Simple table showing requirements mapped to test coverage. Only needed for complex systems.",
       "applies_to": ["design"],
-      "source_document": "enhanced-adws-v1.0/05_test_plan.md"
+      "source_document": "enhanced-adws-v1.0/05_test_plan.md",
+      "note": "Reduced from 0.92 - detailed matrices often unnecessary for simple features"
     },
     {
       "id": "layered-architecture-diagram",
       "category": "design-documentation",
-      "description": "Use subgraph elements in Mermaid to show distinct architectural layers with clear boundaries",
-      "effectiveness_score": 0.95,
+      "description": "Use diagrams to clarify complex architectures when needed",
+      "effectiveness_score": 0.75,
       "usage_count": 1,
-      "example": "graph TB with subgraph 'Orchestration Layer', subgraph 'Core Logic Layer', subgraph 'Infrastructure Layer', subgraph 'Data Layer' followed by layer responsibilities table",
+      "example": "One clear diagram showing key relationships. Multiple layered diagrams only for enterprise systems.",
       "applies_to": ["design"],
-      "source_document": "enhanced-adws-v1.0/04_software_design_document.md"
+      "source_document": "enhanced-adws-v1.0/04_software_design_document.md",
+      "note": "Reduced from 0.95 - single clear diagram often sufficient"
     },
     {
       "id": "goal-focused-how-to",

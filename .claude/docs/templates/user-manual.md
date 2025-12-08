@@ -11,7 +11,40 @@ This template defines the structure and requirements for user manuals and guides
 
 ---
 
-## Required Sections
+## Minimal Variant
+
+For simple products or features, use this reduced structure:
+
+1. **Getting Started** - How to set up and first use
+2. **Core Task Guide** - 1-3 how-to guides for primary use cases
+3. **Common Issues** - 2-3 most frequent problems and solutions
+
+Skip Core Concepts, extensive Reference sections, and comprehensive troubleshooting for simple tools.
+
+### When to Use Minimal Variant
+- Product has a single primary use case
+- Target audience is technical and needs minimal handholding
+- MVP or early-stage product
+- Feature within a larger documented product
+
+---
+
+## Scope Guidance
+
+**Include only sections relevant to this specific product:**
+- If there are no keyboard shortcuts, skip that section
+- If there's one configuration option, don't create a full Reference section
+- Troubleshooting can grow organically as issues appear
+
+**Anti-Bloat Warning:**
+- Do not add sections for hypothetical future features
+- Do not document every possible edge case
+- Include only features users actually use
+- Troubleshooting should cover real issues, not theoretical problems
+
+---
+
+## Full Variant Sections
 
 ### 1. Introduction
 **Purpose:** Orient the user and set expectations.

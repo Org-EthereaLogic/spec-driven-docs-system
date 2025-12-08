@@ -19,9 +19,9 @@ ARGUMENTS: $ARGUMENTS
 These principles govern all specification creation. Each exists for specific reasons that directly impact specification quality.
 
 <explore_before_planning>
-ALWAYS search the codebase thoroughly before creating a specification. Use Glob and Grep in parallel to find all relevant files. The more context gathered upfront, the fewer clarification questions needed later and the higher quality the resulting spec.
+Search the codebase for relevant context before creating a specification. Use Glob and Grep in parallel to find key files. Context gathered upfront reduces clarification questions later.
 
-**Why this matters:** Specifications created without codebase exploration are vague and incomplete. They reference files that don't exist, miss important APIs, and require multiple revision cycles. Thorough exploration produces specs that can be executed without guesswork.
+**Why this matters:** Specifications created without codebase exploration are vague and incomplete. They reference files that don't exist and miss important APIs. Focused exploration produces specs that can be executed without guesswork.
 </explore_before_planning>
 
 <avoid_over_engineering>
@@ -52,6 +52,12 @@ When clarification is genuinely needed, ask specific questions with concrete opt
 **Why this matters:** Vague questions produce vague answers. Specific questions with options accelerate decisions and demonstrate domain understanding.
 </ask_focused_questions>
 
+<outcome_focus>
+Specifications describe WHAT to achieve, not HOW to build it. Focus on what readers should be able to accomplish after reading the document, not internal implementation details.
+
+**Why this matters:** Specifications that describe implementation details lead to over-engineered documentation. The SynthAI project expanded 40x because specs dictated class hierarchies instead of user outcomes. Ask: "What should this documentation enable readers to DO?"
+</outcome_focus>
+
 ## Quality Standards for Specifications
 
 ### Specification Completeness
@@ -59,7 +65,7 @@ When clarification is genuinely needed, ask specific questions with concrete opt
 | Requirement | Why It Matters | How to Verify |
 |-------------|----------------|---------------|
 | Document type explicitly stated | Determines template and review criteria | Type field is present and valid |
-| At least 3 content sections defined | Ensures substantive content planning | Count sections in outline |
+| At least 1 content section defined | Minimal variant for simple features is acceptable | Count sections in outline |
 | Each section has content requirements | Guides the writer on what to include | Each section has bullet points |
 | Source files identified and verified | Enables accurate content generation | Files exist and are accessible |
 | Output path specified | Enables automated workflow | Path field is present |
@@ -182,7 +188,7 @@ Create a detailed specification document with this structure:
 ### Section 2: [Specific Section Name]
 [Same structure - be specific]
 
-[Continue for all planned sections - minimum 3]
+[Continue for relevant sections - minimum 1, use minimal variant for simple features]
 
 ## Code Examples Required
 - [Example 1: specific scenario and source location]
@@ -217,7 +223,7 @@ Before saving, verify the specification:
    - [ ] Document type is valid (api, design, manual)
    - [ ] Title and description are specific (not generic)
    - [ ] Target audience is defined
-   - [ ] At least 3 content sections outlined
+   - [ ] At least 1 content section outlined (minimal variant acceptable)
    - [ ] Each section has content requirements
    - [ ] Output path is specified
    - [ ] All referenced source files exist

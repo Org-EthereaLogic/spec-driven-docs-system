@@ -1,9 +1,42 @@
 {
-  "version": "1.1",
-  "last_updated": "2025-12-03T00:00:00Z",
+  "version": "1.2",
+  "last_updated": "2025-12-08T00:00:00Z",
   "description": "Documentation anti-patterns to avoid",
 
   "anti_patterns": [
+    {
+      "id": "specification-as-implementation",
+      "category": "all",
+      "description": "Describing HOW to build rather than WHAT to achieve",
+      "detection_pattern": "Specification contains class names, adapter patterns, internal architecture, or implementation details",
+      "severity": "blocker",
+      "correction": "Rewrite to describe desired outcomes and user-facing behavior. Let implementers choose the approach.",
+      "example_bad": "Implement adapter pattern with base class and 5 provider implementations, each with retry logic and circuit breakers",
+      "example_good": "Users can authenticate via any supported identity provider with automatic retry on transient failures",
+      "rationale": "SynthAI expanded from 150 to 7,900 lines because specs dictated implementation. Outcome focus enables minimal implementations."
+    },
+    {
+      "id": "premature-exhaustiveness",
+      "category": "all",
+      "description": "Documenting every possible case before knowing which matter",
+      "detection_pattern": "Documentation covers ALL error codes, ALL edge cases, ALL configuration options without evidence these are needed",
+      "severity": "warning",
+      "correction": "Start with common cases. Add edge cases when they appear in real usage or support requests.",
+      "example_bad": "Document all 47 possible error codes with recovery steps for each",
+      "example_good": "Document the 5 errors users commonly encounter. Add others as they appear in support tickets.",
+      "rationale": "Comprehensive documentation of hypothetical cases creates maintenance burden without serving readers."
+    },
+    {
+      "id": "enterprise-pattern-contamination",
+      "category": "design-documentation",
+      "description": "Applying enterprise patterns to simple tools",
+      "detection_pattern": "Documentation requires circuit breakers, service registries, rollback managers, audit loggers for non-enterprise use cases",
+      "severity": "warning",
+      "correction": "Match pattern complexity to problem complexity. A simple tool needs simple patterns.",
+      "example_bad": "Implement service registry with weighted scoring, circuit breakers per provider, rollback manager with state restoration",
+      "example_good": "Call the three providers sequentially. If one fails, use try/except and continue with the others.",
+      "rationale": "Enterprise patterns for local development tools create 40x code expansion without proportional benefit."
+    },
     {
       "id": "false-positive-protocol-ellipsis",
       "category": "design-documentation",
