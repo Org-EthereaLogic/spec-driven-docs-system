@@ -1,10 +1,10 @@
 {
-  "version": "1.0",
-  "description": "Quality gate definitions for documentation workflow",
+  "version": "1.1",
+  "description": "Quality gate definitions for documentation workflow - favoring clarity over exhaustiveness",
 
   "gates": {
     "spec_completeness": {
-      "description": "Validates that a specification is complete before writing begins",
+      "description": "Validates that a specification is actionable before writing begins",
       "trigger": "after_spec_generation",
       "required": [
         {
@@ -23,14 +23,19 @@
           "check": "audience is not None"
         },
         {
-          "id": "sections_defined_min_3",
-          "description": "At least 3 sections must be outlined",
-          "check": "len(sections) >= 3"
+          "id": "sections_defined",
+          "description": "At least 1 content section must be outlined (use minimal variant for simple features)",
+          "check": "len(sections) >= 1"
         },
         {
           "id": "output_path_valid",
           "description": "Output path must be specified and valid",
           "check": "output_path matches valid path pattern"
+        },
+        {
+          "id": "outcome_focus",
+          "description": "Specification describes desired outcomes, not implementation details",
+          "check": "no implementation-detail patterns (class names, adapter patterns, internal architecture)"
         }
       ],
       "recommended": [
@@ -100,9 +105,9 @@
           "check": "all internal hrefs have valid targets"
         },
         {
-          "id": "min_content_length",
-          "description": "Substantial sections must have minimum content",
-          "check": "word_count >= 50 for major sections"
+          "id": "scope_appropriate",
+          "description": "Content depth matches feature complexity (simple features = concise docs)",
+          "check": "doc_complexity proportional to feature_complexity"
         }
       ],
       "recommended": [
@@ -168,10 +173,17 @@
   },
 
   "score_calculation": {
-    "required_weight": 0.6,
-    "recommended_weight": 0.2,
-    "project_specific_weight": 0.2,
-    "formula": "(required_pass/required_total * 0.6) + (recommended_pass/recommended_total * 0.2) + (project_pass/project_total * 0.2) * 100"
+    "clarity_weight": 0.4,
+    "required_weight": 0.4,
+    "recommended_weight": 0.1,
+    "project_specific_weight": 0.1,
+    "formula": "(clarity_score * 0.4) + (required_pass/required_total * 0.4) + (recommended_pass/recommended_total * 0.1) + (project_pass/project_total * 0.1) * 100",
+    "clarity_factors": {
+      "conciseness": "Penalize verbose sections that could be shorter",
+      "outcome_focus": "Reward descriptions of what users achieve over how code works",
+      "scope_appropriateness": "Reward documentation complexity that matches feature complexity"
+    },
+    "note": "Changed from completeness-focused (0.6/0.2/0.2) to clarity-focused (0.4/0.4/0.1/0.1) per simplification audit"
   },
 
   "grades": {

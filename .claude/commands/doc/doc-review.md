@@ -51,7 +51,7 @@ When loading context files, read multiple files in parallel. Load the document, 
 
 | Requirement | Why It Matters | How to Verify |
 |-------------|----------------|---------------|
-| Check ALL sections, not just some | Partial reviews miss issues and waste the next reviewer's time | Count sections checked vs sections present |
+| Review each section in the document | Skipping sections misses issues and wastes the next reviewer's time | Count sections checked vs sections present |
 | Provide specific locations for issues | "Has problems" is useless; reviewers need line/section references | Every issue has location field |
 | Include fix suggestion for every issue | Issues without fixes require another analysis pass | Every issue has fix_suggestion field |
 | Classify severity accurately | Wrong severity causes wrong response | Cross-check against severity definitions |
@@ -109,8 +109,8 @@ Unacceptable feedback:
 2. **Section Completeness**
    For each required section:
    - Does it have substantive content?
-   - Does it meet minimum length for section type?
-   - Are all required elements present?
+   - Is the depth appropriate for the section's purpose and feature complexity?
+   - Are the required elements for that section present?
 
 3. **Spec Compliance** (if spec provided)
    - Are all specified sections present?

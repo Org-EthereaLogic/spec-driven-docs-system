@@ -11,7 +11,40 @@ This template defines the structure and requirements for API documentation. Use 
 
 ---
 
-## Required Sections
+## Minimal Variant
+
+For simple APIs with few endpoints, use this reduced structure:
+
+1. **Overview** - Purpose, base URL
+2. **Authentication** - How to authenticate (if applicable)
+3. **Core Endpoints** - 2-3 most commonly used endpoints
+
+Skip Rate Limits, Changelog, and exhaustive error documentation for v1.0. Add them when needed.
+
+### When to Use Minimal Variant
+- API has fewer than 10 endpoints
+- Internal or limited-audience API
+- MVP or early-stage product
+- Simple CRUD operations
+
+---
+
+## Scope Guidance
+
+**Include only sections relevant to this specific API:**
+- If the API has no rate limiting, skip Rate Limits section
+- If there's only one authentication method, keep Authentication brief
+- Document common error codes, not every possible error
+- One representative example per endpoint is sufficient
+
+**Anti-Bloat Warning:**
+- Do not add sections for hypothetical future needs
+- Do not document internal implementation details
+- Do not exhaustively list all error codes if users rarely encounter them
+
+---
+
+## Full Variant Sections
 
 ### 1. Overview
 **Purpose:** Introduce the API, its purpose, and key capabilities.
@@ -78,17 +111,16 @@ Tokens expire after [duration]. To refresh, [instructions].
 ---
 
 ### 3. Endpoints
-**Purpose:** Document each API endpoint comprehensively.
+**Purpose:** Document API endpoints so developers can use them effectively.
 
-**Per-Endpoint Requirements:**
-- HTTP method and path
-- Brief description
-- Parameters (path, query, body)
-- Request headers
-- Request body schema (if applicable)
-- Response schema
-- Example request/response pair
-- Error responses
+**Per-Endpoint Guidance (include what's relevant):**
+- HTTP method and path (required)
+- Brief description (required)
+- Parameters that users need to know about
+- One clear example request/response
+- Common error responses (not exhaustive)
+
+**Note:** Not every endpoint needs all elements. Simple GET endpoints need less than complex POST operations.
 
 **Example Structure:**
 ```markdown
@@ -267,22 +299,22 @@ Query parameter patterns for list endpoints.
 ## Style Guidelines
 
 ### Code Examples
-- Always include `curl` examples
-- Show complete, runnable commands
-- Include all required headers
-- Use realistic example data
+- Include `curl` examples for core endpoints
+- Examples should be runnable (realistic headers and data)
+- One good example is better than many incomplete examples
 
 ### Tables
-- Use tables for 3+ parameters
-- Include Type, Required, Description columns minimum
-- Add Default column when applicable
+- Use tables when there are 3+ parameters
+- Columns: Type, Required, Description (add Default if relevant)
 
 ### Response Examples
-- Show complete JSON responses
-- Include realistic data values
-- Document both success and error cases
+- Show realistic JSON responses
+- Success case is required; error cases are helpful but not mandatory for every endpoint
 
 ### Terminology
 - Use "endpoint" not "route"
 - Use "request" not "call"
 - Use "response" not "return value"
+
+### Scope Principle
+Document what developers need to use the API successfully. Skip implementation details, rare edge cases, and sections that don't apply to this specific API.

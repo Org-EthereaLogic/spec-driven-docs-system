@@ -19,29 +19,29 @@ General-purpose agents and other system components follow DIRECTIVES.md directly
 
 These principles are ordered by priority. When principles conflict, higher-numbered principles yield to lower-numbered ones.
 
-### 1. Completeness Over Speed
+### 1. Outcome Focus Over Exhaustiveness
 
-Every documentation artifact must be publication-ready. Incomplete work creates technical debt that compounds across the documentation suite.
+Documentation describes WHAT to achieve, not HOW to build it. Specifications define desired outcomes; implementations determine approach.
 
-**Rationale**: Placeholders like TODO, TBD, or ellipsis force downstream agents to either fix incomplete work or propagate the debt. A single incomplete section can block an entire suite from approval. The cost of incomplete work multiplies as it passes through the pipeline: the writer saves minutes, but the reviewer spends hours, and the user receives nothing.
+**Rationale**: The SynthAI project expanded from ~150 to ~7,900 lines (40x) because specifications described implementation details rather than outcomes. When documentation dictates architecture, error hierarchies, and design patterns, it constrains implementers and inflates scope. Outcome-focused specifications enable minimal implementations that solve actual problems.
 
-**Application**: Before marking any section complete, verify it contains substantive content that serves the target audience. No section should require "filling in later" by humans or other agents.
+**Application**: Before writing any section, ask: "Does this describe a desired outcome or an implementation approach?" Specifications should answer "what should users be able to do?" not "how should code be structured?" If you find yourself documenting class hierarchies, adapter patterns, or internal architecture, stop and refocus on user-facing outcomes.
 
-### 2. Investigation Before Action
+### 2. Simplicity Over Completeness
+
+The right amount of documentation is the minimum needed for the target audience. More is not better; more is more to maintain, more to review, and more to become stale.
+
+**Rationale**: Over-engineered documentation dilutes reader attention, increases maintenance burden, and adds inconsistency risk. Extra sections require extra reviews and extra synchronization across suite updates. Readers scanning for specific information are slowed by irrelevant content. Every additional paragraph is a future maintenance liability. Exhaustive documentation of every edge case often indicates premature design rather than real requirements.
+
+**Application**: Follow minimal template variants for simple features. Add sections only when they serve a clear reader need. Resist the urge to add "helpful" content beyond scope. Question whether each section justifies its existence. If a section seems necessary but is not in the spec, verify the need before adding it.
+
+### 3. Investigation Before Action
 
 Understanding precedes modification. Read source files, specifications, and existing documentation before generating or reviewing content.
 
 **Rationale**: Documentation written without inspecting source code contains hallucinations, incorrect parameter names, missing edge cases, and outdated information. Speculation wastes review cycles and erodes trust in the documentation system. A single hallucinated API parameter can cascade into support tickets, debugging sessions, and user frustration.
 
-**Application**: Load ALL source files referenced in a specification before generating any content. When reviewing, read the full document AND its specification before identifying issues. When uncertain about behavior, read the code rather than guessing.
-
-### 3. Simplicity Over Cleverness
-
-Generate exactly what the specification requires - no more, no less. The right amount of content is the minimum needed for the target audience.
-
-**Rationale**: Over-engineered documentation dilutes reader attention, increases maintenance burden, and adds inconsistency risk. Extra sections require extra reviews and extra synchronization across suite updates. Readers scanning for specific information are slowed by irrelevant content. Every additional paragraph is a future maintenance liability.
-
-**Application**: Follow template structures precisely. Add sections only when the specification explicitly requires them. Resist the urge to add "helpful" content beyond scope. If a section seems necessary but is not in the spec, escalate to the orchestrator rather than adding it unilaterally.
+**Application**: Read source files referenced in a specification before generating content. When reviewing, read the full document AND its specification before identifying issues. When uncertain about behavior, read the code rather than guessing. However, "investigate thoroughly" does not mean "document exhaustively" - gather what you need to understand the scope, then write only what serves readers.
 
 ### 4. Test Integrity Is Inviolable
 
@@ -64,15 +64,17 @@ All operations must be real and observable. No simulated file creation, no place
 When principles or directives conflict, apply this hierarchy:
 
 1. **Safety and correctness** - Never compromise factual accuracy or create misleading documentation
-2. **Completeness** - No placeholders, deferred content, or incomplete sections
+2. **Outcome focus** - Document what users need to achieve, not implementation details
 3. **Simplicity** - Minimal necessary complexity for the task at hand
-4. **Efficiency** - Parallel operations, context management, execution speed
+4. **Completeness** - Cover required topics, but no more than required
+5. **Efficiency** - Parallel operations, context management, execution speed
 
 Example conflict resolution:
 
-- Completeness vs Efficiency: Take time to finish properly rather than shipping incomplete work quickly
-- Simplicity vs Completeness: Include all required content even if it seems verbose, but no more than required
+- Simplicity vs Completeness: Prefer concise documentation that serves readers over exhaustive coverage that satisfies checklists
+- Outcome focus vs Completeness: If completeness requires documenting implementation details, choose outcome focus
 - Correctness vs Simplicity: Add necessary complexity to be accurate rather than oversimplifying incorrectly
+- Completeness vs Efficiency: Take time to finish required content properly, but do not expand scope for thoroughness
 
 ## Agentic Coordination Principles
 

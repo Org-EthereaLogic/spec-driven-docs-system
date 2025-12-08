@@ -56,8 +56,8 @@ These are non-negotiable requirements. Every document MUST meet these standards.
 |-------------|----------------|---------------|
 | NO placeholders (TODO, TBD, FIXME) | Placeholders signal incomplete work and create reader confusion | Search document for forbidden patterns |
 | NO [your-X] or <your-X> patterns | These are template artifacts that shouldn't appear in output | Regex scan for bracket/angle patterns |
-| ALL code examples syntactically valid | Invalid code wastes reader time and damages credibility | Parse or syntax-check each code block |
-| ALL code examples complete | Truncated examples frustrate readers who try to use them | Verify no trailing ellipsis or "..." |
+| Code examples syntactically valid | Invalid code wastes reader time and damages credibility | Parse or syntax-check each code block |
+| Code examples complete | Truncated examples frustrate readers who try to use them | Verify no trailing ellipsis or "..." |
 | Terminology matches domain-knowledge.json | Consistent terminology reduces cognitive load and prevents confusion | Cross-reference against terminology database |
 
 ### Forbidden Patterns
@@ -92,8 +92,9 @@ Blockers (document rejected if present):
 2. **Validate Specification**
    Ensure spec contains minimum required fields:
    - Type is valid (api, design, manual)
-   - At least 3 sections defined
+   - At least 1 content section defined (minimal variant for simple features is acceptable)
    - Output path specified
+   - Specification describes outcomes, not implementation details
 
    If invalid, report specific validation errors and stop. Do not attempt to generate from incomplete specs - this leads to low-quality output requiring extensive rework.
 
@@ -121,11 +122,11 @@ Execute these reads in parallel for efficiency:
    ```
 
 4. **Load Source Files**
-   Read ALL files listed in spec's "Source Files" section in parallel. Do not skip any - each was included for a reason.
+   Read the files listed in the spec's "Source Files" section in parallel. If a file is missing or clearly out of scope, note the gap rather than expanding scope.
 
 ### Phase 3: Content Generation
 
-Generate the document section by section. For EACH section:
+Generate the document section by section. For relevant sections:
 
 #### Pre-Generation Check
 
@@ -154,25 +155,25 @@ After writing each section, verify:
 ### Phase 4: Document Type Specific Guidelines
 
 **API Documentation:**
-- Include complete request/response examples for every endpoint
+- Include representative request/response examples for key endpoints
 - Use tables for parameter documentation (3+ parameters)
-- Document ALL error codes with descriptions and resolution steps
+- Document common error codes with descriptions and resolution steps
 - Include authentication examples for protected endpoints
-- Show curl and SDK examples where applicable
+- Show curl or SDK examples where helpful
 
 **Design Documents:**
-- Include at least one architecture diagram (Mermaid syntax)
-- Document trade-offs for EACH alternative considered
+- Include architecture diagram (Mermaid syntax) when helpful
+- Document trade-offs for alternatives genuinely considered
 - Be explicit about decisions made and rationale
-- Include implementation phases with concrete deliverables
-- Add risk section with mitigation strategies
+- Include implementation approach with concrete deliverables
+- Add key risks with mitigation strategies (if applicable)
 
 **User Manuals:**
-- Use numbered steps for ALL procedures
-- Include expected outcomes after each step
+- Use numbered steps for procedures
+- Include expected outcomes after key steps
 - Add tips, notes, and warnings using consistent callout formatting
 - Progress from simple to complex (don't start with advanced topics)
-- Include troubleshooting for common issues
+- Include troubleshooting for common issues (when known)
 
 ### Phase 5: Consistency Enforcement
 
@@ -185,7 +186,7 @@ Apply consistency rules throughout the document:
 
 2. **Style Normalization**
    - Use sentence case for headers (capitalize only first word and proper nouns)
-   - Add language hints to ALL code blocks (even plain text: `text`)
+   - Add language hints to the code blocks you include (even plain text: `text`)
    - Use dash (-) for bullet lists, not asterisks
    - Keep heading depth at 4 levels or fewer
 
@@ -201,9 +202,9 @@ Apply consistency rules throughout the document:
 Before output, perform comprehensive quality checks:
 
 1. **Completeness Audit**
-   - [ ] ALL sections from spec are present
-   - [ ] ALL required content is included
-   - [ ] Code examples cover ALL specified scenarios
+   - [ ] Required sections from spec are present
+   - [ ] Essential content is included
+   - [ ] Code examples cover key scenarios
    - [ ] No empty or stub sections
 
 2. **Accuracy Verification**
