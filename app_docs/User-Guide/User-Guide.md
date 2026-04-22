@@ -41,13 +41,13 @@ The Spec-Driven Docs System is a Claude Code framework that transforms how teams
 
 Traditional documentation workflow:
 
-```
+```text
 Write → Edit → Edit → Edit → Publish → Maintain
 ```
 
 Specification-first workflow:
 
-```
+```text
 Plan (spec) → Generate → Review → Approve → Maintain (automated)
 ```
 
@@ -60,7 +60,7 @@ By defining requirements upfront in a specification, you enable:
 
 ### System Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                         USER COMMANDS                            │
 ├─────────┬──────────┬───────────┬─────────┬──────────┬───────────┤
@@ -77,10 +77,12 @@ By defining requirements upfront in a specification, you enable:
      └──────────┴──────────┴──────────┴──────────────────┘
                             │
                             ▼
-               ┌─────────────────────────┐
-               │   DOCUMENT OUTPUTS      │
-               │  specs/ → docs/         │
-               └─────────────────────────┘
+               ┌─────────────────────────────────┐
+               │     DOCUMENT OUTPUTS            │
+               │  specs/docs/ → spec_driven_docs/│
+               │  (rough_draft → pending_approval│
+               │   → approved_final)             │
+               └─────────────────────────────────┘
 ```
 
 ### Who Should Use This System
@@ -116,34 +118,39 @@ cp -r /path/to/spec-driven-docs-system/.claude ./
 # Copy the specs directory for specifications
 cp -r /path/to/spec-driven-docs-system/specs ./
 
-# Create the docs output directory
-mkdir -p docs
+# Create the documentation output directories
+mkdir -p spec_driven_docs/rough_draft
+mkdir -p spec_driven_docs/pending_approval
+mkdir -p spec_driven_docs/approved_final
 ```
 
 #### Step 2: Verify Directory Structure
 
 After installation, your project should have:
 
-```
+```text
 your-project/
 ├── .claude/
-│   ├── agents/           # AI agent definitions
-│   ├── commands/doc/     # Slash commands
+│   ├── agents/               # AI agent definitions
+│   ├── commands/doc/         # Slash commands (8 total)
 │   ├── docs/
-│   │   ├── config/       # Quality gates, consistency rules
-│   │   ├── expertise/    # Patterns, domain knowledge
-│   │   ├── suites/       # Suite manifests
-│   │   └── templates/    # Document templates
-│   └── hooks/            # Validation hooks (optional)
-├── specs/docs/           # Document specifications
-└── docs/                 # Generated documentation
+│   │   ├── config/           # Quality gates, consistency rules
+│   │   ├── expertise/        # Patterns, domain knowledge
+│   │   ├── suites/           # Suite manifests
+│   │   └── templates/        # Document templates
+│   └── hooks/                # Validation hooks (optional)
+├── specs/docs/               # Document specifications (input)
+└── spec_driven_docs/         # Generated documentation (output)
+    ├── rough_draft/          # Initial /doc-write output
+    ├── pending_approval/     # Reviewed, awaiting stakeholder sign-off
+    └── approved_final/       # Production-ready documentation
 ```
 
 #### Step 3: Verify Installation
 
 Run the status command to confirm everything is working:
 
-```
+```text
 /doc-status
 ```
 
@@ -155,7 +162,7 @@ Let's create a simple user guide to verify the workflow:
 
 #### 1. Plan the Document
 
-```
+```text
 /doc-plan "Getting Started Guide" --type manual
 ```
 
@@ -176,7 +183,7 @@ Open the generated spec file to see what will be documented. It includes:
 
 #### 3. Generate the Document
 
-```
+```text
 /doc-write specs/docs/getting-started-guide-spec.md
 ```
 
@@ -186,12 +193,12 @@ The system will:
 2. Load the appropriate template
 3. Generate each section
 4. Apply consistency rules
-5. Output the document to the specified path
+5. Write the document to `spec_driven_docs/rough_draft/` (output paths starting with `docs/` are automatically redirected there)
 
 #### 4. Review the Output
 
-```
-/doc-review docs/guides/getting-started.md --spec specs/docs/getting-started-guide-spec.md
+```text
+/doc-review spec_driven_docs/rough_draft/guides/getting-started.md --spec specs/docs/getting-started-guide-spec.md
 ```
 
 The review will:
@@ -201,7 +208,21 @@ The review will:
 3. Report any issues with severity levels
 4. Provide a quality score (0-100)
 
-If the score is 90+ (Grade A), your document is ready for publication.
+If the score is 90+ (Grade A), your document is ready to promote to the next stage.
+
+#### 5. Promote Through Workflow Stages
+
+```text
+/doc-promote spec_driven_docs/rough_draft/guides/getting-started.md --to pending_approval
+```
+
+Once stakeholders have signed off, promote again to publish:
+
+```text
+/doc-promote spec_driven_docs/pending_approval/guides/getting-started.md --to approved_final
+```
+
+`/doc-promote` verifies that quality gates still pass before each move, and it records the stage transition in the suite manifest (when applicable).
 
 ---
 
@@ -218,6 +239,7 @@ If the score is 90+ (Grade A), your document is ready for publication.
 | `/doc-batch` | Opus | Batch operations | Multiple docs |
 | `/doc-status` | Haiku | View dashboard | Status display |
 | `/doc-improve` | Opus | Learn patterns | Updated expertise |
+| `/doc-promote` | Haiku | Move between workflow stages | Stage transition |
 
 ---
 
@@ -227,7 +249,7 @@ If the score is 90+ (Grade A), your document is ready for publication.
 
 **Syntax:**
 
-```
+```text
 /doc-plan <topic-or-path> [--type <api|design|manual>] [--suite <name>] [--output <path>]
 ```
 
@@ -248,7 +270,7 @@ If the score is 90+ (Grade A), your document is ready for publication.
 
 **Example:**
 
-```
+```text
 /doc-plan "User Authentication API" --type api --suite backend-docs
 ```
 
@@ -264,7 +286,7 @@ If the score is 90+ (Grade A), your document is ready for publication.
 
 **Syntax:**
 
-```
+```text
 /doc-write <spec-path> [--output <path>] [--suite-id <id>]
 ```
 
@@ -295,11 +317,11 @@ If the score is 90+ (Grade A), your document is ready for publication.
 
 **Example:**
 
-```
-/doc-write specs/docs/auth-api-spec.md --output docs/api/
+```text
+/doc-write specs/docs/auth-api-spec.md
 ```
 
-**Output Location:** Path specified in spec or `--output` flag
+**Output Location:** `spec_driven_docs/rough_draft/[type]/[name].md` (paths starting with `docs/` are automatically redirected into `spec_driven_docs/rough_draft/`).
 
 **Next Step:** Run `/doc-review [doc-path]` to validate quality.
 
@@ -311,7 +333,7 @@ If the score is 90+ (Grade A), your document is ready for publication.
 
 **Syntax:**
 
-```
+```text
 /doc-review <document-path> [--spec <path>] [--suite-id <id>] [--fix]
 ```
 
@@ -342,14 +364,14 @@ If the score is 90+ (Grade A), your document is ready for publication.
 
 **Quality Score Calculation:**
 
-```
+```text
 Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) × 100
 ```
 
 **Example:**
 
-```
-/doc-review docs/api/users.md --spec specs/docs/users-api-spec.md --fix
+```text
+/doc-review spec_driven_docs/rough_draft/api/users.md --spec specs/docs/users-api-spec.md --fix
 ```
 
 **Output:** JSON review report + human-readable summary with score.
@@ -362,7 +384,7 @@ Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) �
 
 **Syntax:**
 
-```
+```text
 /doc-sync <suite-id> [--fix]
 ```
 
@@ -390,7 +412,7 @@ Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) �
 
 **Example:**
 
-```
+```text
 /doc-sync api-docs --fix
 ```
 
@@ -404,7 +426,7 @@ Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) �
 
 **Syntax:**
 
-```
+```text
 /doc-batch <suite-id> <operation> [--parallel] [--continue-on-error]
 ```
 
@@ -434,7 +456,7 @@ Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) �
 
 **Example:**
 
-```
+```text
 /doc-batch api-docs generate --parallel --continue-on-error
 ```
 
@@ -448,7 +470,7 @@ Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) �
 
 **Syntax:**
 
-```
+```text
 /doc-status [suite-id]
 ```
 
@@ -476,7 +498,7 @@ Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) �
 
 **Example:**
 
-```
+```text
 /doc-status api-docs
 ```
 
@@ -490,7 +512,7 @@ Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) �
 
 **Syntax:**
 
-```
+```text
 /doc-improve
 ```
 
@@ -511,13 +533,56 @@ Score = (required_pass × 0.6) + (recommended_pass × 0.2) + (patterns × 0.2) �
 
 **Example:**
 
-```
+```text
 /doc-improve
 ```
 
 **Output:** Expertise update report with patterns learned and quality trends.
 
 **Recommended Schedule:** Run weekly during active documentation periods.
+
+---
+
+### /doc-promote
+
+**Purpose:** Move a document between workflow stages (`rough_draft` → `pending_approval` → `approved_final`) after quality gates pass.
+
+**Syntax:**
+
+```text
+/doc-promote <document-path> --to <stage> [--force]
+```
+
+**Parameters:**
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `document-path` | Yes | Path to the document to promote |
+| `--to` | Yes | Target stage: `pending_approval` or `approved_final` |
+| `--force` | No | Skip automatic quality-gate verification (use with care) |
+
+**What It Does:**
+
+1. Verifies the document currently lives in a valid source stage
+2. Runs a quality-gate check appropriate for the target stage
+3. Moves the document (preserving subpath) into the new stage directory
+4. Updates the suite manifest with the stage transition when the document is part of a suite
+5. Reports the new location and any gate findings
+
+**Stage Progression:**
+
+| From | To | Typical Criteria |
+|------|----|-------------------|
+| `rough_draft/` | `pending_approval/` | Grade A or B from `/doc-review`, no blocker issues |
+| `pending_approval/` | `approved_final/` | Stakeholder sign-off recorded, final-approval gate passes |
+
+**Example:**
+
+```text
+/doc-promote spec_driven_docs/rough_draft/api/users.md --to pending_approval
+```
+
+**Output:** Promotion report showing gate results, new path, and any manifest updates.
 
 ---
 
@@ -696,19 +761,21 @@ The system uses specialized Claude agents optimized for different documentation 
 
 #### Sequential Workflow
 
-```
+```text
 /doc-plan → Orchestrator creates spec
      ↓
-/doc-write → Writer generates doc
+/doc-write → Writer generates doc in rough_draft/
      ↓
 /doc-review → Reviewer validates quality
      ↓
 /doc-sync → Librarian checks consistency
+     ↓
+/doc-promote → Librarian moves doc into pending_approval/ then approved_final/
 ```
 
 #### Parallel Batch Workflow
 
-```
+```text
 /doc-batch generate
      ↓
 Orchestrator plans execution order
@@ -720,7 +787,7 @@ Results collected and manifest updated
 
 #### Escalation Flow
 
-```
+```text
 Writer encounters ambiguity
      ↓
 Flags issue in output
@@ -796,7 +863,7 @@ Retrieves a single user by their unique identifier.
 
 GET /users/{id}
 
-```
+```text
 
 **Path Parameters:**
 
@@ -821,7 +888,7 @@ GET /users/{id}
 | 404 | USER_NOT_FOUND | User does not exist |
 | 401 | UNAUTHORIZED | Invalid authentication |
 
-```
+```text
 
 ---
 
@@ -867,7 +934,7 @@ graph TD
     C --> F[(Redis Cache)]
 ```
 
-```
+```text
 
 ---
 
@@ -1010,7 +1077,7 @@ Update `manifest.json` with your suite configuration:
 
 Use `/doc-plan` with the `--suite` flag:
 
-```
+```text
 /doc-plan "API Reference" --type api --suite my-suite
 /doc-plan "User Guide" --type manual --suite my-suite
 ```
@@ -1040,7 +1107,7 @@ Dependencies control execution order in batch operations:
 
 **Execution Order:**
 
-```
+```text
 Level 0: overview (no dependencies)
 Level 1: auth-guide (depends on level 0)
 Level 2: api-reference (depends on level 1)
@@ -1061,7 +1128,7 @@ Documents at the same level can run in parallel.
 
 Health is calculated from multiple factors:
 
-```
+```text
 Health = (completion × 0.4) + (quality × 0.3) + (reviewed × 0.2) + (sync × 0.1)
 ```
 
@@ -1081,7 +1148,7 @@ Health = (completion × 0.4) + (quality × 0.3) + (reviewed × 0.2) + (sync × 0
 
 The quality system enforces standards at every stage of the documentation workflow:
 
-```
+```text
 Spec Quality Gate → Content Quality Gate → Consistency Gate → Final Approval
 ```
 
@@ -1185,7 +1252,7 @@ Preferred terms vs alternatives:
 
 These must never appear in final documentation:
 
-```
+```text
 Blockers:
 - TODO, FIXME, TBD, XXX, HACK, WIP
 - ... (ellipsis indicating incomplete content)
@@ -1197,7 +1264,7 @@ Blockers:
 
 ### Quality Score Calculation
 
-```
+```text
 Score = (required_pass/required_total × 0.6) +
         (recommended_pass/recommended_total × 0.2) +
         (patterns_applied/patterns_applicable × 0.2) × 100
@@ -1234,7 +1301,7 @@ Non-auto-fixable issues require manual intervention or document regeneration.
 
 The system continuously improves by learning from documentation work:
 
-```
+```text
 Successful Documents → Pattern Extraction → Updated Expertise → Better Future Docs
 ```
 
@@ -1332,7 +1399,7 @@ Project-specific terminology and conventions:
 
 The `/doc-improve` command analyzes recent work and updates expertise:
 
-```
+```text
 /doc-improve
 ```
 
@@ -1364,7 +1431,7 @@ The `/doc-improve` command analyzes recent work and updates expertise:
 
 The most common workflow for creating one document:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │ Step 1: Plan the Document                                   │
 │ /doc-plan "REST API for User Management" --type api         │
@@ -1384,12 +1451,12 @@ The most common workflow for creating one document:
 │ Step 3: Generate the Document                               │
 │ /doc-write specs/docs/user-management-api-spec.md           │
 │                                                             │
-│ Output: docs/api/user-management.md                         │
+│ Output: spec_driven_docs/rough_draft/api/user-management.md │
 └─────────────────────────┬───────────────────────────────────┘
                           ▼
 ┌─────────────────────────────────────────────────────────────┐
 │ Step 4: Review Quality                                      │
-│ /doc-review docs/api/user-management.md \                   │
+│ /doc-review spec_driven_docs/rough_draft/api/user-manage... │
 │   --spec specs/docs/user-management-api-spec.md             │
 │                                                             │
 │ Output: Quality score and issue list                        │
@@ -1401,6 +1468,15 @@ The most common workflow for creating one document:
 │   - For auto-fixable: /doc-review ... --fix                 │
 │   - For blockers: /doc-write ... (regenerate)               │
 │   - For complex issues: Manual editing                      │
+└─────────────────────────┬───────────────────────────────────┘
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│ Step 6: Promote Through Stages                              │
+│ /doc-promote spec_driven_docs/rough_draft/api/user-mgt.md \ │
+│   --to pending_approval                                     │
+│ ... stakeholder sign-off ...                                │
+│ /doc-promote spec_driven_docs/pending_approval/api/user-... │
+│   --to approved_final                                       │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -1408,7 +1484,7 @@ The most common workflow for creating one document:
 
 For managing multiple related documents:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │ Step 1: Create Suite                                        │
 │ cp -r .claude/docs/suites/_example .claude/docs/suites/api  │
@@ -1428,7 +1504,7 @@ For managing multiple related documents:
 │                                                             │
 │ - Resolves dependencies                                     │
 │ - Runs parallel where possible                              │
-│ - Updates manifest after each document                      │
+│ - Outputs to spec_driven_docs/rough_draft/                  │
 └─────────────────────────┬───────────────────────────────────┘
                           ▼
 ┌─────────────────────────────────────────────────────────────┐
@@ -1448,7 +1524,15 @@ For managing multiple related documents:
 └─────────────────────────┬───────────────────────────────────┘
                           ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ Step 6: Check Status                                        │
+│ Step 6: Promote Ready Documents                             │
+│ /doc-promote spec_driven_docs/rough_draft/api/auth.md \     │
+│   --to pending_approval                                     │
+│ (Repeat per doc that passes review; promote again to        │
+│  approved_final after stakeholder sign-off.)                │
+└─────────────────────────┬───────────────────────────────────┘
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│ Step 7: Check Status                                        │
 │ /doc-status api                                             │
 │                                                             │
 │ Shows completion, quality scores, next actions              │
@@ -1475,15 +1559,18 @@ You've built a new REST API and need to document it.
 # Verify all endpoints are listed
 # Check source file references
 
-# 3. Generate
+# 3. Generate (writes to spec_driven_docs/rough_draft/)
 /doc-write specs/docs/payment-processing-api-spec.md
 
 # 4. Review
-/doc-review docs/api/payment-processing.md --spec specs/docs/payment-processing-api-spec.md
+/doc-review spec_driven_docs/rough_draft/api/payment-processing.md --spec specs/docs/payment-processing-api-spec.md
 
 # If issues found:
-/doc-review docs/api/payment-processing.md --fix  # Auto-fix
+/doc-review spec_driven_docs/rough_draft/api/payment-processing.md --fix  # Auto-fix
 # or regenerate for major issues
+
+# 5. Promote once review passes (Grade A/B)
+/doc-promote spec_driven_docs/rough_draft/api/payment-processing.md --to pending_approval
 ```
 
 #### Scenario 2: Creating a Design Document
@@ -1499,11 +1586,11 @@ You need to document an architectural decision.
 # - Who are the stakeholders?
 # - What alternatives are being considered?
 
-# 2. Generate
+# 2. Generate (writes to spec_driven_docs/rough_draft/)
 /doc-write specs/docs/event-driven-architecture-spec.md
 
 # 3. Review - design docs often need iteration
-/doc-review docs/design/event-driven-architecture.md
+/doc-review spec_driven_docs/rough_draft/design/event-driven-architecture.md
 
 # Common issues:
 # - Missing alternatives (need at least 2)
@@ -1524,11 +1611,11 @@ You need end-user documentation for a feature.
 # - Technical level? (beginner, intermediate, advanced)
 # - Key tasks to document?
 
-# 2. Generate
+# 2. Generate (writes to spec_driven_docs/rough_draft/)
 /doc-write specs/docs/dashboard-feature-guide-spec.md
 
 # 3. Review - manuals need good structure
-/doc-review docs/guides/dashboard-feature.md
+/doc-review spec_driven_docs/rough_draft/guides/dashboard-feature.md
 
 # Common issues:
 # - Steps not numbered
@@ -1698,22 +1785,22 @@ In `.claude/settings.json`:
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Write",
+        "matcher": "(Write|Edit).*(spec_driven_docs|app_docs|docs)/.*\\.md$",
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/doc_pre_write.py"
+            "command": "python3 .claude/hooks/doc_pre_write.py"
           }
         ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "Write",
+        "matcher": "(Write|Edit).*(spec_driven_docs|app_docs|docs)/.*\\.md$",
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/doc_post_write.py"
+            "command": "python3 .claude/hooks/doc_post_write.py"
           }
         ]
       }
@@ -1722,7 +1809,7 @@ In `.claude/settings.json`:
 }
 ```
 
-Hooks validate that documents written to `docs/` meet quality standards automatically.
+Hooks validate that documents written to `spec_driven_docs/`, `app_docs/`, or `docs/` meet quality standards automatically. The matcher covers both `Write` and `Edit` so auto-fix workflows cannot bypass validation. Hooks are invoked via `python3` so they do not require the executable bit, which is important because git tracks them as `100644` by default.
 
 ---
 
@@ -1760,7 +1847,7 @@ Hooks validate that documents written to `docs/` meet quality standards automati
 2. Verify template files: `api-docs.md`, `design-docs.md`, `user-manual.md`
 3. Ensure document type matches: api, design, manual
 
-#### Quality Gate Failures
+##### Quality Gate Failures
 
 **Symptom:** Review reports blockers or low score
 
@@ -1815,13 +1902,13 @@ If generated documentation is incorrect:
 1. **Git Restore** (if using version control):
 
    ```bash
-   git checkout -- docs/[affected-file].md
+   git checkout -- spec_driven_docs/[affected-file].md
    ```
 
 2. **Regenerate from Spec:**
 
    ```bash
-   /doc-write [spec-path] --output [original-path]
+   /doc-write [spec-path]
    ```
 
 3. **Manual Edit:** Fix specific issues directly in the document
@@ -1843,11 +1930,12 @@ If generated documentation is incorrect:
 |---------|---------|--------------|
 | `/doc-plan <topic>` | Create spec | `/doc-plan "API" --type api` |
 | `/doc-write <spec>` | Generate doc | `/doc-write specs/docs/api-spec.md` |
-| `/doc-review <doc>` | Validate | `/doc-review docs/api/users.md --fix` |
+| `/doc-review <doc>` | Validate | `/doc-review spec_driven_docs/rough_draft/api/users.md --fix` |
 | `/doc-sync <suite>` | Synchronize | `/doc-sync api-docs --fix` |
 | `/doc-batch <suite> <op>` | Batch process | `/doc-batch api-docs generate` |
 | `/doc-status [suite]` | Dashboard | `/doc-status` |
 | `/doc-improve` | Learn patterns | `/doc-improve` |
+| `/doc-promote <doc>` | Move between stages | `/doc-promote <path> --to pending_approval` |
 
 ### Document Types
 
@@ -1888,15 +1976,15 @@ If generated documentation is incorrect:
 
 **Single Document:**
 
-```
-/doc-plan → /doc-write → /doc-review → (iterate) → Done
+```text
+/doc-plan → /doc-write → /doc-review → (iterate) → /doc-promote → Done
 ```
 
 **Suite Batch:**
 
-```
+```text
 Create suite → /doc-plan (multiple) → /doc-batch generate →
-/doc-batch review → /doc-sync → Done
+/doc-batch review → /doc-sync → /doc-promote (each) → Done
 ```
 
 ### File Locations
@@ -1910,7 +1998,9 @@ Create suite → /doc-plan (multiple) → /doc-batch generate →
 | Expertise | `.claude/docs/expertise/` |
 | Suites | `.claude/docs/suites/` |
 | Specifications | `specs/docs/` |
-| Output | `docs/` |
+| Rough Draft Output | `spec_driven_docs/rough_draft/` |
+| Pending Approval | `spec_driven_docs/pending_approval/` |
+| Approved Final | `spec_driven_docs/approved_final/` |
 
 ### Glossary
 
@@ -1948,19 +2038,19 @@ Create suite → /doc-plan (multiple) → /doc-batch generate →
 
 **Quick Doc Creation:**
 
-```
+```text
 /doc-plan "Topic" --type manual && /doc-write specs/docs/topic-spec.md
 ```
 
 **Full Quality Check:**
 
-```
-/doc-review docs/file.md --spec specs/docs/file-spec.md --fix
+```text
+/doc-review spec_driven_docs/rough_draft/file.md --spec specs/docs/file-spec.md --fix
 ```
 
 **Suite Health Check:**
 
-```
+```text
 /doc-status && /doc-sync my-suite --fix
 ```
 
