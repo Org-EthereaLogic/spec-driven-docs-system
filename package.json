@@ -24,6 +24,6 @@
   },
   "homepage": "https://github.com/Org-EthereaLogic/spec-driven-docs-system#readme",
   "devDependencies": {
-    "markdownlint-cli": "^0.46.0"
+    "markdownlint-cli": "^0.48.0"
   }
 }
