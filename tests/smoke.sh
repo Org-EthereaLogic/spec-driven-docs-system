@@ -82,9 +82,6 @@ done
 # ---------------------------------------------------------------------
 section "Hook Execution"
 
-HOOK_TMP=$(mktemp -d)
-trap 'rm -rf "$HOOK_TMP"' EXIT
-
 run_hook() {
     local hook_path="$1"
     local file_path="$2"
