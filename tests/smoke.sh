@@ -7,7 +7,8 @@
 #   2. Hook execution tests (pre-write blocking, protocol ellipsis allowed)
 #   3. Markdown lint (lint:md)
 #
-# Exits non-zero on the first failure. Designed for CI and local `npm test`.
+# Runs all checks, prints a summary, and exits non-zero if any check fails.
+# Designed for CI and local `npm test`.
 
 set -u
 
