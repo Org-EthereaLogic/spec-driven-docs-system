@@ -308,7 +308,7 @@ Create a professional presentation on [topic]. Include thoughtful design element
 
 Claude Opus 4.5 has improved vision capabilities compared to previous Claude models. It performs better on image processing and data extraction tasks, particularly when there are multiple images present in context. These improvements carry over to computer use, where the model can more reliably interpret screenshots and UI elements. You can also use Claude Opus 4.5 to analyze videos by breaking them up into frames.
 
-One technique we've found effective to further boost performance is to give Claude Opus 4.5 a crop tool or [skill](/docs/en/agents-and-tools/agent-skills/overview). We've seen consistent uplift on image evaluations when Claude is able to "zoom" in on relevant regions of an image. We've put together a cookbook for the crop tool [here](https://github.com/anthropics/claude-cookbooks/blob/main/multimodal/crop_tool.ipynb).
+One technique we've found effective to further boost performance is to give Claude Opus 4.5 a crop tool or [skill](/docs/en/agents-and-tools/agent-skills/overview). We've seen consistent uplift on image evaluations when Claude is able to "zoom" in on relevant regions of an image. See the [crop tool cookbook](https://github.com/anthropics/claude-cookbooks/blob/main/multimodal/crop_tool.ipynb) for a full implementation.
 
 ### Optimize parallel tool calling
 
@@ -386,7 +386,7 @@ Interpret creatively and make unexpected choices that feel genuinely designed fo
 </frontend_aesthetics>
 ```
 
-You can also refer to the full skill [here](https://github.com/anthropics/claude-code/blob/main/plugins/frontend-design/skills/frontend-design/SKILL.md).
+You can also refer to the [full frontend-design skill definition](https://github.com/anthropics/claude-code/blob/main/plugins/frontend-design/skills/frontend-design/SKILL.md) on GitHub.
 
 ### Avoid focusing on passing tests and hard-coding
 

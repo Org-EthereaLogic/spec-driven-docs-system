@@ -379,7 +379,7 @@ These require explicit logging calls:
 
 ## 5. Data Relationships
 
-```
+```text
 ┌─────────────────┐
 │ commands_executed│
 └────────┬────────┘

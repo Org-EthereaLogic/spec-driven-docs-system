@@ -33,7 +33,7 @@ This test plan validates the spec-driven-docs-system by:
 
 ### 2.1 Directory Structure
 
-```
+```text
 /tmp/spec-docs-test/                 # Isolated test root
 ├── .claude/                         # Copied from framework
 │   ├── agents/
@@ -137,6 +137,7 @@ A self-contained user manual for "Task Manager CLI":
 | 1.3 | `/doc-status` | Shows empty suite status (no active suites) |
 
 **Pass Criteria:**
+
 - [ ] All framework directories present
 - [ ] Config files readable
 - [ ] Templates accessible
@@ -153,6 +154,7 @@ A self-contained user manual for "Task Manager CLI":
 | 2.3 | `/doc-status task-manager` | Shows 1 document pending |
 
 **Manifest Validation Checklist:**
+
 - [ ] `spec_path` uses relative path (no `/Users/...`)
 - [ ] `output_path` uses relative path (e.g., `docs/api/reference.md`)
 - [ ] No hardcoded machine-specific paths
@@ -170,6 +172,7 @@ A self-contained user manual for "Task Manager CLI":
 | 3.4 | `/doc-write specs/docs/task-manager/design-spec.md` | Design doc generated |
 
 **Quality Validation:**
+
 - [ ] All documents generated without errors
 - [ ] No TODO/FIXME/TBD markers
 - [ ] Code examples syntactically valid
@@ -186,6 +189,7 @@ A self-contained user manual for "Task Manager CLI":
 | 4.3 | Repeat for design doc | All docs pass review |
 
 **Review Validation:**
+
 - [ ] Quality gates execute correctly
 - [ ] Scores calculated accurately
 - [ ] Issues identified with locations
@@ -202,6 +206,7 @@ A self-contained user manual for "Task Manager CLI":
 | 5.3 | `/doc-batch task-manager review` | All docs reviewed |
 
 **Batch Validation:**
+
 - [ ] Parallel generation works
 - [ ] Dependency ordering respected
 - [ ] Continue-on-error functions correctly
@@ -217,6 +222,7 @@ A self-contained user manual for "Task Manager CLI":
 | 6.2 | `/doc-sync task-manager --fix` | Auto-fixes applied |
 
 **Sync Validation:**
+
 - [ ] Terminology consistency checked
 - [ ] Cross-references validated
 - [ ] Style consistency enforced
@@ -232,6 +238,7 @@ A self-contained user manual for "Task Manager CLI":
 | 7.2 | Verify expertise files | New patterns added |
 
 **Learning Validation:**
+
 - [ ] Good patterns identified
 - [ ] Anti-patterns detected (if any)
 - [ ] Usage counts updated
@@ -255,6 +262,7 @@ cd /tmp/relocated-test
 ```
 
 **Pass Criteria:**
+
 - [ ] All commands work from new location
 - [ ] No broken path references
 - [ ] Documents still accessible
@@ -276,6 +284,7 @@ cd /tmp/fresh-install/spec-docs-test
 ```
 
 **Pass Criteria:**
+
 - [ ] Project functions after archive/extract
 - [ ] No missing dependencies
 - [ ] All relative paths resolve
@@ -289,18 +298,21 @@ cd /tmp/fresh-install/spec-docs-test
 Create these files in `source/` directory:
 
 **api-spec.md** (~200 lines):
+
 - REST API specification
 - 5 endpoints with full details
 - Auth requirements
 - Error codes
 
 **design-spec.md** (~300 lines):
+
 - System architecture
 - Component descriptions
 - Data flow diagrams
 - Technology decisions
 
 **user-guide-spec.md** (~150 lines):
+
 - Installation steps
 - Basic usage
 - Common tasks
@@ -378,6 +390,7 @@ claude
 ### 8.3 Recording Results
 
 Update `test_progress.json` after each phase with:
+
 - Commands executed
 - Issues encountered
 - Corrections applied
