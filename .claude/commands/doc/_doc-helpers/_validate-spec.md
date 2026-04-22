@@ -79,9 +79,6 @@ Clearly separate required checks (blocking) from recommended checks (advisory). 
 ## Content Outline
 ### Section 1
 **Purpose:** [To be determined]  <- Vague, needs specifics
-
-### Section 2: Something
-<- Missing content requirements
 ```
 
 **Errors this would produce:**
@@ -89,8 +86,8 @@ Clearly separate required checks (blocking) from recommended checks (advisory). 
 2. Invalid document type 'documentation'. Must be one of: api, design, manual
 3. Missing target audience. Add '**Audience:**' to Metadata section
 4. Section 1 has vague name '[TBD]'. Use specific section name
-5. Section 2 lacks content requirements. Add bullet points
-6. Only 2 sections defined. Minimum 3 required
+5. Section 1 lacks content requirements. Add bullet points
+6. No content sections defined. Add at least one section (use a minimal variant for simple features)
 7. Missing output path. Add '**Output Path:**' to Output Configuration
 
 ## Instructions
@@ -114,9 +111,10 @@ Perform these validation checks:
 - [ ] **Output path set:** Output path/filename is configured
 
 #### Content Requirements (Blocking)
-- [ ] **Sections defined:** At least 3 content sections are outlined
+- [ ] **Sections defined:** At least 1 content section is outlined (use minimal variant for simple features; richer specs may include more)
 - [ ] **Section details:** Each section has purpose and content requirements
 - [ ] **No placeholder titles:** Section names are specific (not "[Section Name]" or "TBD")
+- [ ] **Outcome focus:** Sections describe desired outcomes, not implementation details (no class names, adapter patterns, or internal architecture)
 
 #### Quality Indicators (Advisory)
 - [ ] **Source files listed:** Source files to reference are identified
@@ -177,9 +175,10 @@ Provide specific, actionable error messages:
 | title_present | "Missing document title. Add title after 'Document Specification:'" |
 | audience_defined | "Missing target audience. Add '**Audience:**' field to Metadata section." |
 | output_path_set | "Missing output path. Add '**Output Path:**' to Output Configuration section." |
-| sections_defined | "Only [N] sections defined. Minimum 3 required. Add more content sections." |
+| sections_defined | "No content sections defined. Add at least one section (use a minimal variant for simple features)." |
 | section_details_complete | "Section '[name]' lacks content requirements. Add bullet points describing what to include." |
 | no_placeholder_titles | "Section '[name]' has placeholder name. Replace with specific descriptive title." |
+| outcome_focus | "Section '[name]' describes implementation details (e.g., class names or internal architecture). Rewrite to describe user-facing outcomes." |
 
 ## Error Handling
 
