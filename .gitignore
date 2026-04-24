@@ -100,7 +100,7 @@ specs/docs/*
 tests/archives/
 
 # Prompt drafts (working files, not final)
-prompt/drafts/
+prompt/draft/
 prompt/enhanced/
 
 # VSCode AI instructions (auto-generated)
@@ -109,3 +109,6 @@ prompt/enhanced/
 # Empty placeholder directories (keep .gitkeep files if present)
 chat/
 .chat/testing-notes.md
+
+# Snyk Security Extension - AI Rules (auto-generated)
+.github/instructions/snyk_rules.instructions.md
