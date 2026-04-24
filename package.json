@@ -2,10 +2,6 @@
   "name": "spec-driven-docs-system",
   "version": "1.0.0",
   "description": "A Claude Code framework for creating, reviewing, and maintaining technical documentation at scale using a specification-first approach.",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
   "scripts": {
     "test": "bash tests/smoke.sh",
     "test:smoke": "bash tests/smoke.sh",
@@ -16,9 +12,17 @@
     "type": "git",
     "url": "git+https://github.com/Org-EthereaLogic/spec-driven-docs-system.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "claude-code",
+    "documentation",
+    "spec-driven",
+    "technical-writing",
+    "ai-agents",
+    "automation",
+    "slash-commands"
+  ],
+  "author": "EthereaLogic",
+  "license": "MIT",
   "type": "commonjs",
   "bugs": {
     "url": "https://github.com/Org-EthereaLogic/spec-driven-docs-system/issues"

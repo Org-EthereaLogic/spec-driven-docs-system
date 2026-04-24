@@ -201,8 +201,9 @@ The system uses specialized Claude agents to scale document processing:
 | Agent | Model | Purpose |
 |-------|-------|---------|
 | **workspace-cleanup** | Haiku | Workspace maintenance, temp file removal, file organization |
+| **prompt-enhance-agent** | Sonnet | Transforms vague prompts into clear, actionable, publication-ready prompts |
 
-The workspace-cleanup agent handles development hygiene tasks separate from documentation workflows.
+Utility agents handle development hygiene and prompt-engineering tasks separate from the documentation workflow.
 
 ---
 
@@ -230,6 +231,7 @@ your-project/
 │   │   ├── doc-writer.md
 │   │   ├── doc-reviewer.md
 │   │   ├── doc-librarian.md
+│   │   ├── prompt-enhance-agent.md
 │   │   └── workspace-cleanup.md
 │   ├── prompts/             # Conversation archives and prompt templates
 │   ├── commands/doc/        # Slash command definitions

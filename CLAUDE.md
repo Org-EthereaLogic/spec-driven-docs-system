@@ -47,6 +47,7 @@ After stakeholder approval                  → Move to approved_final/
 | Agent | Model | Purpose |
 |-------|-------|---------|
 | workspace-cleanup | Haiku | Workspace maintenance, temp file removal |
+| prompt-enhance-agent | Sonnet | Prompt clarity and structure enhancement |
 
 Agent definitions: `.claude/agents/`
 
