@@ -196,4 +196,3 @@ echo "  4. Follow test plan phases"
 echo ""
 echo "Test plan: $FRAMEWORK_ROOT/tests/isolated-test-plan.md"
 echo ""
-EOF

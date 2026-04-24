@@ -209,7 +209,7 @@ They're like the AI's personality and rule book combined.
 
 **Example:**
 
-```
+```text
 You are a Python tutor. Always explain code step by step. 
 Never write code longer than 10 lines without explaining it. 
 If a user asks about other languages, politely redirect to Python.
@@ -235,7 +235,7 @@ User prompts ask the AI to do specific tasks. They work within the rules set by 
 
 **Example:**
 
-```
+```text
 Write a function that reverses a string. Use a for loop and explain each line.
 ```
 
@@ -293,7 +293,7 @@ Not all prompt sections make sense for system prompts. Here's what to use and wh
 
 **Tool Usage Instructions:**
 
-```
+```text
 When working with files:
 1. Always use Read before Edit
 2. Create parent directories before writing files
@@ -302,7 +302,7 @@ When working with files:
 
 **Behavioral Boundaries:**
 
-```
+```text
 If asked to do something harmful or unethical, politely decline and explain why.
 Never execute commands that could damage the system.
 Always confirm before making destructive changes.
@@ -310,7 +310,7 @@ Always confirm before making destructive changes.
 
 **Output Formatting:**
 
-```
+```text
 Structure responses as:
 - Brief summary of what you'll do
 - Execute the task
