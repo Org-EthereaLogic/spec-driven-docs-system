@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Claude Code framework for specification-driven technical documentation. It provides 7 slash commands, 4 specialized AI agents, and 3 document templates for creating, reviewing, and maintaining documentation at scale.
+This is a Claude Code framework for specification-driven technical documentation. It provides 8 slash commands, 4 specialized AI agents, and 3 document templates for creating, reviewing, and maintaining documentation at scale.
 
 ## Core Workflow
 
@@ -29,6 +29,7 @@ After stakeholder approval                  → Move to approved_final/
 | `/doc-batch` | Batch operations: `generate`, `review` with `--parallel` |
 | `/doc-status` | View documentation dashboard |
 | `/doc-improve` | Learn patterns from successful documents |
+| `/doc-promote` | Move documents between workflow stages with quality gate verification |
 
 ## Agent Architecture
 
@@ -89,6 +90,7 @@ app_docs/                # End-user documentation (User Guide, tutorials)
 ## Codacy Integration
 
 When editing files, run Codacy analysis:
+
 - Provider: `gh`
 - Organization: `Org-EthereaLogic`
 - Repository: `spec-driven-docs-system`
@@ -117,7 +119,8 @@ After any `edit_file` operation, immediately run `codacy_cli_analyze` on modifie
 ## Suite Operations
 
 Suites group related documents for batch processing:
-```
+
+```text
 /doc-batch my-suite generate --parallel   # Generate all docs
 /doc-batch my-suite review                # Review all docs
 /doc-sync my-suite --fix                  # Fix consistency issues

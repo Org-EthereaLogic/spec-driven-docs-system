@@ -8,7 +8,7 @@ A Claude Code framework for creating, reviewing, and maintaining technical docum
 
 **Spec-Driven Docs System** is a documentation framework that runs within Claude Code. It provides:
 
-- **7 slash commands** for the complete documentation lifecycle
+- **8 slash commands** for the complete documentation lifecycle
 - **4 specialized AI agents** optimized for different documentation tasks
 - **3 document templates** for API, design, and user manual documentation
 - **Quality gates and consistency rules** for professional-grade output
@@ -20,6 +20,7 @@ A Claude Code framework for creating, reviewing, and maintaining technical docum
 2. WRITE   →  /doc-write generates the document from the spec
 3. REVIEW  →  /doc-review validates quality and consistency
 4. ITERATE →  Fix issues or regenerate until approved
+5. PROMOTE →  /doc-promote moves the document through workflow stages
 ```
 
 The specification-first approach ensures documentation quality by defining requirements before generation, enabling validation at every step.
@@ -65,6 +66,12 @@ cp -r specs /path/to/your/project/
    /doc-review spec_driven_docs/rough_draft/api/user-authentication.md
    ```
 
+4. **Promote the document through the workflow:**
+
+   ```bash
+   /doc-promote spec_driven_docs/rough_draft/api/user-authentication.md --to pending_approval
+   ```
+
 ### Verify Installation
 
 Run `/doc-status` to see your documentation dashboard. If you see the status output, the system is ready.
@@ -91,7 +98,7 @@ Run `/doc-status` to see your documentation dashboard. If you see the status out
 
 | Concept | Description |
 |---------|-------------|
-| **Commands** | 7 slash commands for planning, writing, reviewing, syncing, batching, status, and learning |
+| **Commands** | 8 slash commands for planning, writing, reviewing, syncing, batching, status, learning, and promoting |
 | **Agents** | 4 specialized AI agents: Orchestrator (Opus), Writer (Sonnet), Reviewer (Sonnet), Librarian (Haiku) |
 | **Templates** | 3 document types: API documentation, design documents, user manuals |
 | **Quality System** | 4 quality gates, consistency rules, terminology enforcement, scoring (A-F grades) |
@@ -105,11 +112,12 @@ Run `/doc-status` to see your documentation dashboard. If you see the status out
 |---------|---------|---------|
 | `/doc-plan` | Create document specification | `/doc-plan "REST API" --type api` |
 | `/doc-write` | Generate document from spec | `/doc-write specs/docs/api-spec.md` |
-| `/doc-review` | Validate document quality | `/doc-review docs/api/users.md --fix` |
+| `/doc-review` | Validate document quality | `/doc-review spec_driven_docs/rough_draft/api/users.md --fix` |
 | `/doc-sync` | Synchronize suite consistency | `/doc-sync my-suite` |
 | `/doc-batch` | Batch operations across suite | `/doc-batch my-suite generate` |
 | `/doc-status` | View documentation dashboard | `/doc-status my-suite` |
 | `/doc-improve` | Learn from successful docs | `/doc-improve` |
+| `/doc-promote` | Move doc between workflow stages | `/doc-promote <path> --to pending_approval` |
 
 ### Common Workflows
 
@@ -119,6 +127,7 @@ Run `/doc-status` to see your documentation dashboard. If you see the status out
 /doc-plan "Feature X" --type manual
 /doc-write specs/docs/feature-x-spec.md
 /doc-review spec_driven_docs/rough_draft/guides/feature-x.md
+/doc-promote spec_driven_docs/rough_draft/guides/feature-x.md --to pending_approval
 ```
 
 **Suite Batch Processing:**
@@ -185,6 +194,7 @@ The system uses specialized Claude agents to scale document processing:
 - `/doc-review` spawns **doc-reviewer** for quality validation
 - `/doc-sync` spawns **doc-librarian** for cross-reference checks
 - `/doc-batch` coordinates multiple agents for parallel processing
+- `/doc-promote` checks quality gates and moves documents between `rough_draft/`, `pending_approval/`, and `approved_final/`
 
 ### Utility Agents
 
@@ -230,6 +240,7 @@ your-project/
 │   │   ├── doc-sync.md
 │   │   ├── doc-status.md
 │   │   ├── doc-improve.md
+│   │   ├── doc-promote.md
 │   │   └── _doc-helpers/
 │   ├── docs/
 │   │   ├── config/          # Quality gates, consistency rules
@@ -330,6 +341,19 @@ This project enforces strict anti-shortcut directives for all AI-generated conte
 | Template not found | Check `.claude/docs/templates/` directory |
 | Quality gate failures | Run `/doc-review <doc>` to see specific issues |
 | Suite not found | Verify suite manifest in `.claude/docs/suites/` |
+
+---
+
+## Running Tests
+
+The repository includes a lightweight smoke suite that verifies configuration integrity and hook behavior:
+
+```bash
+npm test          # JSON validation + hook execution tests + markdownlint
+npm run lint:md   # Markdown style check only
+```
+
+CI runs the same commands plus the isolated install smoke test (`tests/setup-isolated-test.sh`) on every push and pull request.
 
 ---
 

@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  smoke:
+    name: Smoke Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run smoke tests (JSON + hooks + markdownlint)
+        run: npm test
+
+  isolated-install:
+    name: Isolated Install Smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run isolated install script
+        run: bash tests/setup-isolated-test.sh /tmp/spec-docs-ci
+
+      - name: Verify isolated install contents
+        run: |
+          test -d /tmp/spec-docs-ci/.claude/commands/doc
+          test -d /tmp/spec-docs-ci/specs/docs
+          test -f /tmp/spec-docs-ci/source/task-manager-overview.md
+          test -f /tmp/spec-docs-ci/test_progress.json

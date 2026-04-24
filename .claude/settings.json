@@ -2,22 +2,22 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Write.*docs/.*\\.md$",
+        "matcher": "(Write|Edit).*(spec_driven_docs|app_docs|docs)/.*\\.md$",
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/doc_pre_write.py"
+            "command": "python3 .claude/hooks/doc_pre_write.py"
           }
         ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "Write.*docs/.*\\.md$",
+        "matcher": "(Write|Edit).*(spec_driven_docs|app_docs|docs)/.*\\.md$",
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/doc_post_write.py"
+            "command": "python3 .claude/hooks/doc_post_write.py"
           }
         ]
       },
@@ -26,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/doc_post_review.py"
+            "command": "python3 .claude/hooks/doc_post_review.py"
           }
         ]
       }
