@@ -1,364 +1,170 @@
 # Spec-Driven Technical Document Creation System
 
-A Claude Code framework for creating, reviewing, and maintaining technical documentation at scale using a specification-first approach.
+![Spec-Driven Docs System banner](app_docs/assets/readme-banner.svg)
 
----
+Specification-first documentation workflows for Claude Code.
 
-## Essential Understanding
+[User guide](app_docs/User-Guide/User-Guide.md) |
+[Quick start](#quick-start) |
+[Workflow](#workflow) |
+[Command reference](#command-reference)
 
-**Spec-Driven Docs System** is a documentation framework that runs within Claude Code. It provides:
+[![CI](https://github.com/Org-EthereaLogic/spec-driven-docs-system/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Org-EthereaLogic/spec-driven-docs-system/actions/workflows/ci.yml)
+![License: MIT](https://img.shields.io/badge/license-MIT-0f766e.svg)
+![Workflow: spec first](https://img.shields.io/badge/workflow-spec--first-0f172a.svg)
+![Commands: 8](https://img.shields.io/badge/commands-8-1d4ed8.svg)
+![Agents: 4](https://img.shields.io/badge/agents-4-b45309.svg)
 
-- **8 slash commands** for the complete documentation lifecycle
-- **4 specialized AI agents** optimized for different documentation tasks
-- **3 document templates** for API, design, and user manual documentation
-- **Quality gates and consistency rules** for professional-grade output
+Spec-Driven Docs System helps teams plan documentation before they write it. Instead of starting
+with a blank page, you capture scope in a specification, generate a first draft with specialized
+agents, review it against explicit quality gates, and promote only approved documents into the
+final stage.
 
-### How It Works
+## Why teams use it
 
-```text
-1. PLAN    →  /doc-plan creates a specification from your topic
-2. WRITE   →  /doc-write generates the document from the spec
-3. REVIEW  →  /doc-review validates quality and consistency
-4. ITERATE →  Fix issues or regenerate until approved
-5. PROMOTE →  /doc-promote moves the document through workflow stages
+- Start from a specification, not an empty markdown file.
+- Use one command set for planning, drafting, review, synchronization, and promotion.
+- Keep API docs, design docs, and manuals aligned through shared templates and terminology rules.
+- Separate drafts from review-ready and approved documents with an explicit publication pipeline.
+
+## At a glance
+
+- 8 slash commands for the full documentation lifecycle
+- 4 specialized agents for planning, writing, reviewing, and cross-reference work
+- 3 document templates for API docs, design docs, and user manuals
+- 4 quality gates that score completeness, quality, consistency, and approval readiness
+
+## Workflow
+
+```mermaid
+flowchart LR
+  A["/doc-plan<br>capture scope"] --> B["Specification<br>specs/docs/"]
+  B --> C["/doc-write<br>generate draft"]
+  C --> D["rough_draft"]
+  D --> E["/doc-review<br>quality gates"]
+  E --> F["pending_approval"]
+  F --> G["approved_final"]
+  E --> H["/doc-sync<br>suite consistency"]
+  E --> I["/doc-improve<br>learn from patterns"]
 ```
 
-The specification-first approach ensures documentation quality by defining requirements before generation, enabling validation at every step.
+The repository itself contains the framework. To use it inside another project, copy the Claude
+Code assets and the specification templates into that project root.
 
----
+## In practice
 
-## Quick Start (5 Minutes)
+![CLI workflow preview](app_docs/assets/readme-cli-preview.svg)
+
+This preview mirrors the repository's documented flow: plan a specification in `specs/docs/`,
+generate a draft into `spec_driven_docs/rough_draft/`, review it against quality gates, and only
+then move it forward.
+
+## Quick start
 
 ### Prerequisites
 
-- Claude Code CLI installed and configured
-- A project directory for your documentation
+- Claude Code CLI installed and authenticated
+- A project root where the framework will live
 
-### Installation
-
-Copy the framework files to your project:
+### Install into a project
 
 ```bash
-# Copy the .claude configuration directory
-cp -r .claude /path/to/your/project/
-
-# Copy the specs directory for document specifications
-cp -r specs /path/to/your/project/
+cp -r /path/to/spec-driven-docs-system/.claude /path/to/project/
+cp -r /path/to/spec-driven-docs-system/specs /path/to/project/
+mkdir -p /path/to/project/spec_driven_docs/rough_draft
+mkdir -p /path/to/project/spec_driven_docs/pending_approval
+mkdir -p /path/to/project/spec_driven_docs/approved_final
 ```
 
-### Your First Document
+If you are evaluating the framework from this repository directly, those directories are already
+present.
 
-1. **Plan your document:**
+### Generate a first document
 
-   ```bash
-   /doc-plan "User Authentication API" --type api
-   ```
+```text
+/doc-plan "User authentication API" --type api
+/doc-write specs/docs/user-authentication-api-spec.md
+/doc-review spec_driven_docs/rough_draft/api/user-authentication.md
+/doc-promote spec_driven_docs/rough_draft/api/user-authentication.md --to pending_approval
+```
 
-2. **Generate the document:**
+Run `/doc-status` at any point to inspect current document state and blockers.
 
-   ```bash
-   /doc-write specs/docs/user-authentication-api-spec.md
-   ```
+## What you get
 
-3. **Review the output:**
+### Documentation types
 
-   ```bash
-   /doc-review spec_driven_docs/rough_draft/api/user-authentication.md
-   ```
+- API documentation with required sections such as overview, authentication, endpoints, and error
+  handling
+- Design documents with problem framing, proposed solution, alternatives, and implementation plan
+- User manuals with introduction, getting started, core concepts, and how-to guides
 
-4. **Promote the document through the workflow:**
+### Agent roles
 
-   ```bash
-   /doc-promote spec_driven_docs/rough_draft/api/user-authentication.md --to pending_approval
-   ```
+- `doc-orchestrator` plans document scope and coordinates complex workflows
+- `doc-writer` generates documents from approved specifications
+- `doc-reviewer` applies quality gates and consistency checks
+- `doc-librarian` keeps suites, references, and terminology aligned
 
-### Verify Installation
+### Quality controls
 
-Run `/doc-status` to see your documentation dashboard. If you see the status output, the system is ready.
+- Consistency rules enforce terminology, heading style, and formatting expectations
+- Quality gates evaluate completeness, content quality, consistency, and approval readiness
+- Promotion keeps output separated across `rough_draft`, `pending_approval`, and `approved_final`
 
----
-
-## Documentation
-
-| Document | Purpose |
-|----------|---------|
-| [User Guide](app_docs/User-Guide/User-Guide.md) | Comprehensive guide to all features |
-
-### Related Documentation
-
-| Document | Purpose |
-|----------|---------|
-| [DIRECTIVES.md](DIRECTIVES.md) | Mandatory anti-shortcut directives for complete implementation |
-| [CLAUDE.md](CLAUDE.md) | Project guidance for Claude Code sessions |
-| [AGENTS.md](AGENTS.md) | Repository guidelines and agent coordination |
-
----
-
-## Key Concepts
-
-| Concept | Description |
-|---------|-------------|
-| **Commands** | 8 slash commands for planning, writing, reviewing, syncing, batching, status, learning, and promoting |
-| **Agents** | 4 specialized AI agents: Orchestrator (Opus), Writer (Sonnet), Reviewer (Sonnet), Librarian (Haiku) |
-| **Templates** | 3 document types: API documentation, design documents, user manuals |
-| **Quality System** | 4 quality gates, consistency rules, terminology enforcement, scoring (A-F grades) |
-| **Suites** | Organize related documents for batch operations and cross-reference management |
-
----
-
-## Command Reference
+## Command reference
 
 | Command | Purpose | Example |
-|---------|---------|---------|
-| `/doc-plan` | Create document specification | `/doc-plan "REST API" --type api` |
-| `/doc-write` | Generate document from spec | `/doc-write specs/docs/api-spec.md` |
-| `/doc-review` | Validate document quality | `/doc-review spec_driven_docs/rough_draft/api/users.md --fix` |
-| `/doc-sync` | Synchronize suite consistency | `/doc-sync my-suite` |
-| `/doc-batch` | Batch operations across suite | `/doc-batch my-suite generate` |
-| `/doc-status` | View documentation dashboard | `/doc-status my-suite` |
-| `/doc-improve` | Learn from successful docs | `/doc-improve` |
-| `/doc-promote` | Move doc between workflow stages | `/doc-promote <path> --to pending_approval` |
+| --- | --- | --- |
+| `/doc-plan` | Create a specification from a topic | `/doc-plan "Payments API" --type api` |
+| `/doc-write` | Generate a document from a specification | `/doc-write specs/docs/payments-api-spec.md` |
+| `/doc-review` | Validate quality and apply low-risk fixes | `/doc-review spec_driven_docs/rough_draft/api/payments.md --fix` |
+| `/doc-sync` | Align terminology and links across a suite | `/doc-sync platform-docs --fix` |
+| `/doc-batch` | Run generate or review across a suite | `/doc-batch platform-docs generate --parallel` |
+| `/doc-status` | Show current status and blockers | `/doc-status platform-docs` |
+| `/doc-improve` | Learn from successful document patterns | `/doc-improve` |
+| `/doc-promote` | Move a document to the next stage | `/doc-promote <path> --to pending_approval` |
 
-### Common Workflows
-
-**Single Document:**
-
-```bash
-/doc-plan "Feature X" --type manual
-/doc-write specs/docs/feature-x-spec.md
-/doc-review spec_driven_docs/rough_draft/guides/feature-x.md
-/doc-promote spec_driven_docs/rough_draft/guides/feature-x.md --to pending_approval
-```
-
-**Suite Batch Processing:**
-
-```bash
-/doc-batch api-docs generate --parallel
-/doc-batch api-docs review
-/doc-sync api-docs --fix
-```
-
----
-
-## How Everything Connects
+## Repository layout
 
 ```text
-                    ┌─────────────────┐
-                    │   /doc-plan     │
-                    │  (Orchestrator) │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │  Specification  │
-                    │   (specs/docs/) │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │   /doc-write    │
-                    │    (Writer)     │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │    Document     │
-                    │(spec_driven_docs│
-                    │  /rough_draft/) │
-                    └────────┬────────┘
-                             │
-                             ▼
-┌─────────────┐     ┌─────────────────┐     ┌─────────────┐
-│  /doc-sync  │◄────│   /doc-review   │────►│ /doc-improve│
-│ (Librarian) │     │   (Reviewer)    │     │(Orchestrator│
-└─────────────┘     └─────────────────┘     └─────────────┘
-```
-
----
-
-## Agent Architecture
-
-The system uses specialized Claude agents to scale document processing:
-
-| Agent | Model | Purpose |
-|-------|-------|---------|
-| **doc-orchestrator** | Opus | Strategy, requirement analysis, multi-document coordination |
-| **doc-writer** | Sonnet | Technical document generation from specifications |
-| **doc-reviewer** | Sonnet | Quality validation, accuracy checking, consistency enforcement |
-| **doc-librarian** | Haiku | Quick consistency checks, cross-references, index maintenance |
-
-### Agent Integration
-
-- `/doc-plan` spawns **doc-orchestrator** for requirement gathering
-- `/doc-write` spawns **doc-writer** for content generation
-- `/doc-review` spawns **doc-reviewer** for quality validation
-- `/doc-sync` spawns **doc-librarian** for cross-reference checks
-- `/doc-batch` coordinates multiple agents for parallel processing
-- `/doc-promote` checks quality gates and moves documents between `rough_draft/`, `pending_approval/`, and `approved_final/`
-
-### Utility Agents
-
-| Agent | Model | Purpose |
-|-------|-------|---------|
-| **workspace-cleanup** | Haiku | Workspace maintenance, temp file removal, file organization |
-| **prompt-enhance-agent** | Sonnet | Transforms vague prompts into clear, actionable, publication-ready prompts |
-
-Utility agents handle development hygiene and prompt-engineering tasks separate from the documentation workflow.
-
----
-
-## Quality Grades
-
-Documents are scored on a 0-100 scale:
-
-| Grade | Score | Status |
-|-------|-------|--------|
-| A | 90-100 | Approved |
-| B | 80-89 | Approved with notes |
-| C | 70-79 | Iteration recommended |
-| D | 60-69 | Iteration required |
-| F | <60 | Blocked |
-
----
-
-## Project Structure
-
-```text
-your-project/
-├── .claude/
-│   ├── agents/              # AI agent definitions
-│   │   ├── doc-orchestrator.md
-│   │   ├── doc-writer.md
-│   │   ├── doc-reviewer.md
-│   │   ├── doc-librarian.md
-│   │   ├── prompt-enhance-agent.md
-│   │   └── workspace-cleanup.md
-│   ├── prompts/             # Conversation archives and prompt templates
-│   ├── commands/doc/        # Slash command definitions
-│   │   ├── doc-plan.md
-│   │   ├── doc-write.md
-│   │   ├── doc-review.md
-│   │   ├── doc-batch.md
-│   │   ├── doc-sync.md
-│   │   ├── doc-status.md
-│   │   ├── doc-improve.md
-│   │   ├── doc-promote.md
-│   │   └── _doc-helpers/
-│   ├── docs/
-│   │   ├── config/          # Quality gates, consistency rules
-│   │   ├── expertise/       # Patterns, anti-patterns, domain knowledge
-│   │   ├── suites/          # Documentation suite manifests
-│   │   └── templates/       # Document type templates
-│   └── hooks/               # Pre/post write validation
-├── specs/docs/              # Document specifications (input)
-├── spec_driven_docs/        # Generated documentation (output)
-│   ├── rough_draft/         # Initial generation output
-│   ├── pending_approval/    # Reviewed, awaiting stakeholder approval
-│   └── approved_final/      # Production-ready documentation
+.
+├── .claude/                 # Commands, agents, hooks, templates, and quality rules
+├── specs/docs/              # Input specifications
+├── spec_driven_docs/        # Generated output by workflow stage
+│   ├── rough_draft/
+│   ├── pending_approval/
+│   └── approved_final/
 ├── app_docs/                # End-user documentation
-│   └── User-Guide/          # Framework user guide
-├── prompt/                  # Prompt engineering resources
-│   └── prompt-engineering-docs/  # Reference documentation
-└── tests/                   # Test plans and utilities
-    ├── e2e/logging-spec/    # E2E test logging specifications
-    ├── isolated-test-plan.md
-    └── setup-isolated-test.sh
+├── prompt/                  # Prompt engineering references
+└── tests/                   # Smoke and isolated installation checks
 ```
 
-### Document Workflow
+## Learn more
 
-```text
-rough_draft/ → pending_approval/ → approved_final/
-```
+- [User guide](app_docs/User-Guide/User-Guide.md) for the full workflow and command details
+- [AGENTS.md](AGENTS.md) for repository conventions and command summaries
+- [CLAUDE.md](CLAUDE.md) for framework architecture and agent overview
+- [DIRECTIVES.md](DIRECTIVES.md) for the mandatory implementation directives enforced by the system
 
-| Stage | Description | Audience |
-|-------|-------------|----------|
-| rough_draft | Initial /doc-write output, unreviewed | Doc authors |
-| pending_approval | Passed quality gates, awaiting sign-off | Review team |
-| approved_final | Production-ready, publishable | Public/end-users |
-
----
-
-## Configuration
-
-### Consistency Rules
-
-Located at `.claude/docs/config/consistency-rules.json`:
-
-- Terminology enforcement (preferred terms vs alternatives)
-- Style rules (header case, list style, code blocks)
-- Forbidden patterns (placeholders, incomplete markers)
-
-### Quality Gates
-
-Located at `.claude/docs/config/quality-gates.json`:
-
-- Spec completeness checks
-- Content quality validation
-- Consistency verification
-- Final approval criteria
-
-### Expertise Store
-
-Located at `.claude/docs/expertise/`:
-
-- `patterns.json`: Effective documentation patterns
-- `anti-patterns.json`: Patterns to avoid
-- `domain-knowledge.json`: Project-specific terminology
-
-### Prompt Engineering Resources
-
-Located at `prompt/prompt-engineering-docs/`:
-
-- `anthropic-prompting-best-practices.md`: Anthropic's official prompting guidelines
-- `agentic-prompt-engineering.md`: Patterns for agentic AI workflows
-
-These resources inform the system's agent prompts and command implementations.
-
----
-
-## Mandatory Directives
-
-This project enforces strict anti-shortcut directives for all AI-generated content. See [DIRECTIVES.md](DIRECTIVES.md) for complete details.
-
-**Key requirements:**
-
-- Complete implementation only - no placeholders, ellipsis, TODO/FIXME
-- No simulation - all operations must be real, no mocked data
-- Fix implementation, not tests - TDD integrity must be maintained
-
----
-
-## Getting Help
-
-- **Full Documentation:** [User Guide](app_docs/User-Guide/User-Guide.md)
-- **Command Help:** Run any command without arguments for usage information
-- **Quality Issues:** Use `/doc-review <doc> --fix` for auto-fixable issues
-
-### Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| Command not found | Ensure `.claude/commands/doc/` exists |
-| Template not found | Check `.claude/docs/templates/` directory |
-| Quality gate failures | Run `/doc-review <doc>` to see specific issues |
-| Suite not found | Verify suite manifest in `.claude/docs/suites/` |
-
----
-
-## Running Tests
-
-The repository includes a lightweight smoke suite that verifies configuration integrity and hook behavior:
+## Validation
 
 ```bash
-npm test          # JSON validation + hook execution tests + markdownlint
-npm run lint:md   # Markdown style check only
+npm test
+npm run lint:md
 ```
 
-CI runs the same commands plus the isolated install smoke test (`tests/setup-isolated-test.sh`) on every push and pull request.
+The smoke suite validates JSON configuration, hooks, and markdown quality. The isolated
+installation check lives in `tests/setup-isolated-test.sh`.
 
----
+## Public checks
+
+- GitHub Actions runs the `CI` workflow on pushes and pull requests to `main`.
+- The `Smoke Tests` job runs `npm test`, which covers JSON validation, hook execution, and
+  markdownlint.
+- The `Isolated Install Smoke` job verifies the framework can be copied into a clean directory and
+  still exposes the expected commands, specifications, and source material.
 
 ## License
 
-MIT
+Released under the [MIT](LICENSE) license.
