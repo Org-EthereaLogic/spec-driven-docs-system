@@ -1,0 +1,93 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Release Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Smoke tests (JSON + hooks + markdownlint)
+        run: npm test
+
+      - name: End-to-end workflow tests
+        run: npm run test:e2e
+
+  security:
+    name: Security Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Dependency vulnerability audit
+        run: |
+          set +e
+          npm audit --audit-level=moderate 2>&1 | tee /tmp/audit.txt
+          AUDIT_EXIT=$?
+          set -e
+          if [ $AUDIT_EXIT -ne 0 ]; then
+            if grep -qE "403|ECONNREFUSED|ENOTFOUND|ETIMEDOUT" /tmp/audit.txt; then
+              echo "::error title=Dependency Audit::npm registry unreachable — vulnerability status must be confirmed before release"
+              exit 1
+            else
+              cat /tmp/audit.txt
+              exit $AUDIT_EXIT
+            fi
+          fi
+
+      - name: Secret scanning
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    name: Publish GitHub Release
+    needs: [validate, security]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            --title "Release ${{ github.ref_name }}" \
+            --generate-notes \
+            --verify-tag
