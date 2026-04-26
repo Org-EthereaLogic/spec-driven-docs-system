@@ -1,0 +1,5 @@
+title = "gitleaks config"
+
+[allowlist]
+  description = "YOUR_TOKEN is a documentation placeholder in API templates, not a real credential"
+  regexes = ['''YOUR_TOKEN''']
