@@ -59,7 +59,7 @@ c) **Configuration inheritance**: Support base configs
 
 **Current State:**
 
-- 3 templates (api-docs, design-docs, user-manual)
+- 6 templates (api-docs, design-docs, user-manual, adr, rfc, openapi)
 - Static files, no customization
 - No guidance on when to use each
 

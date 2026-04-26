@@ -135,9 +135,9 @@ promotion into `pending_approval/`.
 
 | Concept | Description |
 |---------|-------------|
-| **Commands** | 8 slash commands for the full workflow |
+| **Commands** | 11 slash commands for the full workflow |
 | **Agents** | 4 specialized AI agents with distinct roles |
-| **Templates** | 3 document types: API docs, design docs, manuals |
+| **Templates** | 6 document types: API docs, design docs, user manuals, ADRs, RFCs, OpenAPI |
 | **Quality system** | 4 gates with A-F grading and consistency enforcement |
 | **Suites** | Group docs for batch operations |
 
