@@ -332,10 +332,10 @@ Create these files in `source/` directory:
 
 ### 7.1 Functional Requirements
 
-- [ ] All 7 slash commands execute without error
+- [ ] All 11 slash commands execute without error
 - [ ] All 4 agent types spawn correctly
 - [ ] All 4 quality gates function
-- [ ] All 3 document templates work
+- [ ] All 6 document templates work
 
 ### 7.2 Path Portability
 
