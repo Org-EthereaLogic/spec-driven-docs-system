@@ -6,62 +6,36 @@
 """
 Post-write consistency check hook for documentation files.
 
-This hook runs after Write tool operations on documentation files.
-It performs consistency checks and flags potential issues for review.
+Runs after Write tool operations on documentation files. Performs consistency
+checks and surfaces issues for review (cannot block).
 
 Hook Type: PostToolUse
-Matcher: Write.*docs/.*\\.md$
+Matcher: (Write|Edit).*(spec_driven_docs|app_docs|docs)/.*\\.md$
 """
 
 import json
-import os
 import re
+import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).parent))
 
-def get_tool_input() -> dict:
-    """Read tool input from environment."""
-    tool_input_str = os.environ.get("CLAUDE_TOOL_INPUT", "{}")
-    try:
-        return json.loads(tool_input_str)
-    except json.JSONDecodeError:
-        return {}
-
-
-def get_tool_result() -> dict:
-    """Read tool result from environment."""
-    result_str = os.environ.get("CLAUDE_TOOL_RESULT", "{}")
-    try:
-        return json.loads(result_str)
-    except json.JSONDecodeError:
-        return {}
+from hook_utils import (  # noqa: E402
+    get_project_dir,
+    get_tool_input,
+    get_tool_result,
+    is_documentation_file,
+    load_consistency_rules,
+)
 
 
-def get_project_dir() -> Path:
-    """Get the Claude project directory."""
-    return Path(os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd()))
-
-
-def load_consistency_rules(project_dir: Path) -> dict:
-    """Load consistency rules configuration."""
-    rules_path = project_dir / ".claude" / "docs" / "config" / "consistency-rules.json"
-    if rules_path.exists():
-        try:
-            with open(rules_path) as f:
-                return json.load(f)
-        except (json.JSONDecodeError, IOError):
-            pass
-    return {}
-
-
-def check_terminology(content: str, rules: dict) -> list[str]:
+def check_terminology(content: str, rules: dict) -> list:
     """Check content for terminology violations."""
     issues = []
     terminology = rules.get("terminology", {}).get("enforced_terms", {})
 
     for correct_term, forbidden_variants in terminology.items():
         for variant in forbidden_variants:
-            # Case-insensitive search with word boundaries
             pattern = r'\b' + re.escape(variant) + r'\b'
             if re.search(pattern, content, re.IGNORECASE):
                 issues.append(
@@ -71,36 +45,30 @@ def check_terminology(content: str, rules: dict) -> list[str]:
     return issues
 
 
-def check_internal_links(content: str, file_path: str) -> list[str]:
+def check_internal_links(content: str, file_path: str) -> list:
     """Check that internal markdown links are valid."""
     issues = []
     project_dir = get_project_dir()
 
-    # Find all markdown links
     link_pattern = r'\[([^\]]+)\]\(([^)]+)\)'
     matches = re.findall(link_pattern, content)
 
     for link_text, link_target in matches:
-        # Skip external links
         if link_target.startswith(('http://', 'https://', 'mailto:')):
             continue
-
-        # Skip anchor-only links
         if link_target.startswith('#'):
             continue
 
-        # Resolve relative path
         current_dir = Path(file_path).parent
         target_path = current_dir / link_target.split('#')[0]
 
-        # Check if target file exists
         if not target_path.exists() and not (project_dir / link_target.split('#')[0]).exists():
             issues.append(f"Broken link: [{link_text}]({link_target})")
 
     return issues
 
 
-def check_header_hierarchy(content: str) -> list[str]:
+def check_header_hierarchy(content: str) -> list:
     """Check that header levels don't skip (e.g., h1 to h3)."""
     issues = []
     lines = content.split('\n')
@@ -108,48 +76,30 @@ def check_header_hierarchy(content: str) -> list[str]:
     current_level = 0
     for i, line in enumerate(lines, 1):
         if line.startswith('#'):
-            # Count the header level
             level = len(line) - len(line.lstrip('#'))
             if level > 6:
-                continue  # Not a valid header
-
-            # Check for skipped levels
+                continue
             if current_level > 0 and level > current_level + 1:
                 issues.append(
                     f"Line {i}: Header hierarchy skipped from h{current_level} to h{level}"
                 )
-
             current_level = level
 
     return issues
 
 
 def check_document_consistency(file_path: str, content: str) -> dict:
-    """
-    Perform post-write consistency checks on documentation.
-
-    Returns:
-        dict with 'issues' and 'suggestions' keys
-    """
+    """Perform post-write consistency checks on documentation."""
     project_dir = get_project_dir()
     rules = load_consistency_rules(project_dir)
 
     issues = []
     suggestions = []
 
-    # Check terminology
-    term_issues = check_terminology(content, rules)
-    issues.extend(term_issues)
+    issues.extend(check_terminology(content, rules))
+    issues.extend(check_internal_links(content, file_path))
+    suggestions.extend(check_header_hierarchy(content))
 
-    # Check internal links
-    link_issues = check_internal_links(content, file_path)
-    issues.extend(link_issues)
-
-    # Check header hierarchy
-    header_issues = check_header_hierarchy(content)
-    suggestions.extend(header_issues)  # Header issues are suggestions, not blocking
-
-    # Check for very long paragraphs (potential readability issue)
     paragraphs = content.split('\n\n')
     for i, para in enumerate(paragraphs, 1):
         word_count = len(para.split())
@@ -164,7 +114,7 @@ def check_document_consistency(file_path: str, content: str) -> dict:
     }
 
 
-def format_feedback(issues: list[str], suggestions: list[str]) -> str:
+def format_feedback(issues: list, suggestions: list) -> str:
     """Format issues and suggestions into feedback string."""
     parts = []
 
@@ -191,29 +141,18 @@ def main():
     file_path = tool_input.get("file_path", "")
     content = tool_input.get("content", "")
 
-    # Only check documentation files (support multiple doc directories)
-    valid_doc_paths = ["/spec_driven_docs/", "/app_docs/", "/docs/"]
-    if not file_path or not any(p in file_path for p in valid_doc_paths) or not file_path.endswith(".md"):
-        # Not a docs file, no feedback needed
+    if not is_documentation_file(file_path):
         return
 
-    # Check if write was successful
     result_str = str(tool_result)
     if "error" in result_str.lower() or "failed" in result_str.lower():
-        # Write failed, don't add more feedback
         return
 
-    # Perform consistency check
     result = check_document_consistency(file_path, content)
 
-    # Only provide feedback if there are issues or suggestions
     if result["issues"] or result["suggestions"]:
         feedback = format_feedback(result["issues"], result["suggestions"])
-
-        # PostToolUse hooks can provide feedback but don't block
-        print(json.dumps({
-            "feedback": feedback
-        }))
+        print(json.dumps({"feedback": feedback}))
 
 
 if __name__ == "__main__":

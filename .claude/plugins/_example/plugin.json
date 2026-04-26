@@ -1,0 +1,15 @@
+{
+  "name": "doc-example",
+  "version": "1.0.0",
+  "type": "command",
+  "entry_point": "doc-custom.md",
+  "description": "Example plugin skeleton demonstrating the plugin manifest format and file structure",
+  "author": "EthereaLogic",
+  "compatibility": {
+    "min_system_version": "1.0"
+  },
+  "installs": [
+    "doc-custom.md"
+  ],
+  "requires": []
+}

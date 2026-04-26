@@ -43,6 +43,42 @@ This registry catalogs available document templates and provides metadata for te
   - Troubleshooting matrix
   - Quick start guides
 
+### adr (template variant)
+- **File:** `adr.md`
+- **Type ID:** `adr`
+- **Description:** Architecture Decision Record - captures a single decision with context and consequences
+- **Target Audience:** Engineering team, future maintainers, technical reviewers
+- **Required Sections:** Status, Context, Decision, Consequences, Alternatives Considered
+- **Key Features:**
+  - Short format (300-800 words)
+  - Status field with defined values (Proposed, Accepted, Deprecated, Superseded)
+  - Filename convention: `ADR-NNN-short-title.md`
+  - Write-once historical record (amend by superseding)
+
+### rfc (template variant)
+- **File:** `rfc.md`
+- **Type ID:** `rfc`
+- **Description:** Request for Comments - formal proposal for substantial changes
+- **Target Audience:** Technical stakeholders, team leads, anyone affected by the change
+- **Required Sections:** Abstract, Motivation, Detailed Design, Drawbacks, Alternatives, Unresolved Questions
+- **Key Features:**
+  - Standalone Abstract section
+  - Mandatory Drawbacks analysis
+  - Filename convention: `RFC-NNNN-short-title.md`
+  - Status workflow: Draft → Under Review → Accepted/Rejected/Withdrawn
+
+### openapi (template variant)
+- **File:** `openapi.md`
+- **Type ID:** `openapi`
+- **Description:** Schema-first API reference in OpenAPI conceptual style
+- **Target Audience:** External developers, integration teams, developer portal maintainers
+- **Required Sections:** Overview, Authentication, Operations, Schemas, Errors, Rate Limits
+- **Key Features:**
+  - Schema-first format
+  - Strict per-operation structure
+  - Reusable schema definitions
+  - Runnable examples required
+
 ---
 
 ## Template Selection Guide
@@ -52,9 +88,11 @@ This registry catalogs available document templates and provides metadata for te
 | REST API endpoints | api-docs | `api` |
 | GraphQL schema | api-docs | `api` |
 | Authentication flows | api-docs | `api` |
+| Public developer portal API reference | openapi | `openapi` |
 | System architecture | design-docs | `design` |
 | Feature design | design-docs | `design` |
-| Technical RFC | design-docs | `design` |
+| A single architectural choice already made | adr | `adr` |
+| A formal proposal still under discussion | rfc | `rfc` |
 | User guide | user-manual | `manual` |
 | Admin guide | user-manual | `manual` |
 | Tutorial | user-manual | `manual` |
@@ -113,6 +151,7 @@ Templates are versioned alongside the documentation system:
 | Version | Date | Changes |
 |---------|------|---------|
 | 1.0 | 2025-12-01 | Initial templates: api-docs, design-docs, user-manual |
+| 1.1 | 2026-04-25 | Added template variants: adr, rfc, openapi |
 
 ---
 
@@ -123,3 +162,5 @@ The template system is designed for extension:
 - **Domain-specific templates** can be added (e.g., `security-review.md`, `runbook.md`)
 - **Project-specific templates** can override defaults by placing in project's `.claude/docs/templates/`
 - **Template inheritance** is supported by referencing a base template and overriding sections
+- **Template variants** (adr, rfc, openapi) are selected via `generation_config.template_variant` in suite manifests; the value must match a registered `type_id`
+- **Quality enforcement** for variants is configured in `quality-gates.json` under `quality_profiles` keyed by `type_id`

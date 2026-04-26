@@ -30,6 +30,9 @@ After stakeholder approval                  → Move to approved_final/
 | `/doc-status` | View documentation dashboard |
 | `/doc-improve` | Learn patterns from successful documents |
 | `/doc-promote` | Move documents between workflow stages with quality gate verification |
+| `/doc-flow` | Auto-orchestrate full pipeline (plan → write → review → promote) with smart model selection and daily caching |
+| `/doc-config` | View and manage configuration (`list`, `get`, `set`, `validate`) |
+| `/doc-interactive` | Guided step-by-step documentation creation using AskUserQuestion at each decision point |
 
 ## Agent Architecture
 
@@ -57,14 +60,16 @@ Agent definitions: `.claude/agents/`
 .claude/
 ├── agents/              # Agent definitions (doc-orchestrator, doc-writer, etc.)
 ├── prompts/             # Conversation archives and prompt templates
+├── plugins/             # Plugin extensions (commands, agents, templates, hooks)
+│   └── _example/        # Example plugin skeleton
 ├── commands/doc/        # Slash command implementations
 │   └── _doc-helpers/    # Internal helper commands
 ├── docs/
-│   ├── config/          # quality-gates.json, consistency-rules.json
+│   ├── config/          # quality-gates.json (with quality_profiles), consistency-rules.json
 │   ├── expertise/       # patterns.json, anti-patterns.json, domain-knowledge.json
 │   ├── suites/          # Documentation suite manifests
-│   └── templates/       # api-docs.md, design-docs.md, user-manual.md
-└── hooks/               # Pre/post write validation (Python)
+│   └── templates/       # api-docs.md, design-docs.md, user-manual.md, adr.md, rfc.md, openapi.md
+└── hooks/               # Pre/post write validation (Python); shared utilities in hook_utils.py
 specs/docs/              # Document specifications (input to /doc-write)
 spec_driven_docs/        # Generated documentation output
 ├── rough_draft/         # Initial generation output
@@ -77,7 +82,9 @@ app_docs/                # End-user documentation (User Guide, tutorials)
 
 - **4 Quality Gates:** spec_completeness → content_quality → consistency → final_approval
 - **Grading:** A (90-100 approved), B (80-89 approved with notes), C (70-79 iterate), D (60-69 required), F (<60 blocked)
-- **Hooks:** `doc_pre_write.py` blocks writes with forbidden patterns; `doc_post_write.py` runs post-validation
+- **Quality Profiles:** Per-doc-type thresholds in `quality-gates.json` → `quality_profiles` (api 85, design 80, manual 75, adr 80, rfc 82)
+- **Hooks:** `doc_pre_write.py` blocks writes with forbidden patterns; `doc_post_write.py` runs post-validation; `doc_post_review.py` suggests promotion on passing review
+- **Shared utilities:** `hook_utils.py` provides common config loading, environment parsing, and structured feedback formatting
 
 ## Mandatory Directives (from DIRECTIVES.md)
 

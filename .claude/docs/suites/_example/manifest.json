@@ -6,13 +6,18 @@
   "name": "Example Documentation Suite",
   "description": "Template suite demonstrating manifest structure for /doc-batch operations",
   "created": "2025-12-01",
-  "version": "1.1",
+  "version": "1.2",
 
   "configuration": {
     "parallel_limit": 3,
     "continue_on_error": true,
     "auto_fix_enabled": true,
     "max_iterations": 3
+  },
+
+  "suite_relationships": {
+    "depends_on_suites": [],
+    "description": "Other suite IDs that must be complete before this suite can start. Empty array means no inter-suite dependencies."
   },
 
   "documents": [
@@ -32,6 +37,18 @@
         "promoted_date": null,
         "quality_score": null,
         "quality_grade": null
+      },
+      "relationships": {
+        "references": [],
+        "referenced_by": ["user-guide"],
+        "supersedes": null,
+        "superseded_by": null,
+        "related": ["architecture-design"]
+      },
+      "generation_config": {
+        "model_override": null,
+        "quality_profile": "api",
+        "template_variant": null
       }
     },
     {
@@ -50,6 +67,18 @@
         "promoted_date": null,
         "quality_score": null,
         "quality_grade": null
+      },
+      "relationships": {
+        "references": [],
+        "referenced_by": ["user-guide"],
+        "supersedes": null,
+        "superseded_by": null,
+        "related": ["api-reference"]
+      },
+      "generation_config": {
+        "model_override": null,
+        "quality_profile": "design",
+        "template_variant": null
       }
     },
     {
@@ -68,6 +97,18 @@
         "promoted_date": null,
         "quality_score": null,
         "quality_grade": null
+      },
+      "relationships": {
+        "references": ["api-reference", "architecture-design"],
+        "referenced_by": [],
+        "supersedes": null,
+        "superseded_by": null,
+        "related": []
+      },
+      "generation_config": {
+        "model_override": null,
+        "quality_profile": "manual",
+        "template_variant": null
       }
     }
   ],

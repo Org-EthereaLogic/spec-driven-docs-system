@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec-driven-docs-system/schema/manifest.schema.json",
+  "title": "Suite Manifest",
+  "description": "Schema for documentation suite manifests under .claude/docs/suites/<suite-id>/manifest.json",
+  "type": "object",
+  "required": ["suite_id", "name", "description", "version", "configuration", "documents"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "_comment": { "type": "string" },
+    "suite_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_-]+$",
+      "description": "Unique suite identifier in kebab-case"
+    },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "created": { "type": "string" },
+    "version": { "type": "string" },
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "parallel_limit": { "type": "integer", "minimum": 1, "maximum": 20 },
+        "continue_on_error": { "type": "boolean" },
+        "auto_fix_enabled": { "type": "boolean" },
+        "max_iterations": { "type": "integer", "minimum": 0, "maximum": 10 }
+      }
+    },
+    "suite_relationships": {
+      "type": "object",
+      "properties": {
+        "depends_on_suites": { "type": "array", "items": { "type": "string" } },
+        "description": { "type": "string" }
+      }
+    },
+    "documents": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Document" }
+    },
+    "metadata": { "type": "object" }
+  },
+  "$defs": {
+    "Document": {
+      "type": "object",
+      "required": ["doc_id", "title", "type", "spec_path", "output_path", "status", "workflow_stage"],
+      "properties": {
+        "doc_id": { "type": "string", "pattern": "^[a-z0-9_-]+$" },
+        "title": { "type": "string" },
+        "type": { "enum": ["api", "design", "manual", "adr", "rfc", "openapi"] },
+        "spec_path": { "type": "string" },
+        "output_path": { "type": "string" },
+        "status": { "enum": ["pending", "writing", "review", "completed", "failed"] },
+        "priority": { "type": "integer" },
+        "dependencies": { "type": "array", "items": { "type": "string" } },
+        "workflow_stage": { "enum": ["rough_draft", "pending_approval", "approved_final"] },
+        "workflow_metadata": { "type": "object" },
+        "relationships": { "$ref": "#/$defs/Relationships" },
+        "generation_config": { "$ref": "#/$defs/GenerationConfig" }
+      }
+    },
+    "Relationships": {
+      "type": "object",
+      "properties": {
+        "references": { "type": "array", "items": { "type": "string" } },
+        "referenced_by": { "type": "array", "items": { "type": "string" } },
+        "supersedes": { "oneOf": [{ "type": "string" }, { "type": "null" }] },
+        "superseded_by": { "oneOf": [{ "type": "string" }, { "type": "null" }] },
+        "related": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "GenerationConfig": {
+      "type": "object",
+      "properties": {
+        "model_override": {
+          "oneOf": [{ "enum": ["haiku", "sonnet", "opus"] }, { "type": "null" }]
+        },
+        "quality_profile": {
+          "oneOf": [{ "enum": ["api", "design", "manual", "adr", "rfc"] }, { "type": "null" }]
+        },
+        "template_variant": {
+          "oneOf": [{ "enum": ["api", "design", "manual", "adr", "rfc", "openapi"] }, { "type": "null" }]
+        }
+      }
+    }
+  }
+}
