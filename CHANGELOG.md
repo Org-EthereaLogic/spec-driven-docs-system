@@ -10,8 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - CI/release: replaced `gitleaks-action` binary-download workaround with
-  official action (`gitleaks/gitleaks-action@v2.3.9`, SHA-pinned) now that a
-  paid license is configured via `GITLEAKS_LICENSE` repository secret
+  the official `gitleaks/gitleaks-action` (SHA-pinned in the workflow;
+  corresponds to `v2.3.9`) now that a paid license is configured via
+  `GITLEAKS_LICENSE` repository secret
 - CI: added `workflow_dispatch` trigger to `ci.yml` to allow manual runs from
   the GitHub Actions UI
 - CI: removed unsupported `config-path` input from `gitleaks-action` — the
