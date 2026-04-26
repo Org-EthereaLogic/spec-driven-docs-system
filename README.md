@@ -61,17 +61,15 @@ cp -r specs /path/to/your/project/
 
 1. **Plan your document:**
 
-   ```bash
-   /doc-plan "User Authentication API" --type api
-   ```
+## In practice
 
-2. **Generate the document:**
+![CLI workflow preview](app_docs/assets/readme-cli-preview.svg)
 
-   ```bash
-   /doc-write specs/docs/user-authentication-api-spec.md
-   ```
+This preview mirrors the repository's documented flow: plan a specification in `specs/docs/`,
+generate a draft into `spec_driven_docs/rough_draft/`, review it against quality gates, and only
+then move it forward.
 
-3. **Review the output:**
+## Quick start
 
    ```bash
    /doc-review spec_driven_docs/rough_draft/api/user-authentication.md
@@ -134,55 +132,29 @@ Run `/doc-status` to see your documentation dashboard. If you see status output,
 
 **Single document:**
 
-```bash
-/doc-plan "Feature X" --type manual
-/doc-write specs/docs/feature-x-spec.md
-/doc-review spec_driven_docs/rough_draft/guides/feature-x.md
-/doc-promote spec_driven_docs/rough_draft/guides/feature-x.md --to pending_approval
-```
+- Claude Code CLI installed and authenticated
+- A project root where the framework will live
 
 **Suite batch processing:**
 
 ```bash
-/doc-batch api-docs generate --parallel
-/doc-batch api-docs review
-/doc-sync api-docs --fix
+cp -r /path/to/spec-driven-docs-system/.claude /path/to/project/
+cp -r /path/to/spec-driven-docs-system/specs /path/to/project/
+mkdir -p /path/to/project/spec_driven_docs/rough_draft
+mkdir -p /path/to/project/spec_driven_docs/pending_approval
+mkdir -p /path/to/project/spec_driven_docs/approved_final
 ```
 
----
+If you are evaluating the framework from this repository directly, those directories are already
+present.
 
 ## How everything connects
 
 ```text
-                    ┌─────────────────┐
-                    │   /doc-plan     │
-                    │  (Orchestrator) │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │  Specification  │
-                    │   (specs/docs/) │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │   /doc-write    │
-                    │    (Writer)     │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │    Document     │
-                    │(spec_driven_docs│
-                    │  /rough_draft/) │
-                    └────────┬────────┘
-                             │
-                             ▼
-┌─────────────┐     ┌─────────────────┐     ┌─────────────┐
-│  /doc-sync  │◄────│   /doc-review   │────►│ /doc-improve│
-│ (Librarian) │     │   (Reviewer)    │     │(Orchestrator│
-└─────────────┘     └─────────────────┘     └─────────────┘
+/doc-plan "User authentication API" --type api
+/doc-write specs/docs/user-authentication-api-spec.md
+/doc-review spec_driven_docs/rough_draft/api/user-authentication.md
+/doc-promote spec_driven_docs/rough_draft/api/user-authentication.md --to pending_approval
 ```
 
 ---
@@ -210,18 +182,18 @@ The system uses specialized Claude agents to scale document processing:
 
 ### Utility agents
 
-| Agent | Model | Purpose |
-|-------|-------|---------|
-| **workspace-cleanup** | Haiku | Workspace maintenance, temp file removal, file organization |
-| **prompt-enhance-agent** | Sonnet | Transforms vague prompts into clear, actionable, publication-ready prompts |
+### Agent roles
 
-Utility agents handle development hygiene and prompt-engineering tasks separate from the documentation workflow.
+- `doc-orchestrator` plans document scope and coordinates complex workflows
+- `doc-writer` generates documents from approved specifications
+- `doc-reviewer` applies quality gates and consistency checks
+- `doc-librarian` keeps suites, references, and terminology aligned
 
----
+### Quality controls
 
 ## Quality grades
 
-Documents are scored on a 0-100 scale:
+## Command reference
 
 | Grade | Score | Status |
 |-------|-------|--------|
@@ -236,37 +208,13 @@ Documents are scored on a 0-100 scale:
 ## Project structure
 
 ```text
-your-project/
-├── .claude/
-│   ├── agents/              # AI agent definitions
-│   │   ├── doc-orchestrator.md
-│   │   ├── doc-writer.md
-│   │   ├── doc-reviewer.md
-│   │   ├── doc-librarian.md
-│   │   ├── prompt-enhance-agent.md
-│   │   └── workspace-cleanup.md
-│   ├── prompts/             # Conversation archives and prompt templates
-│   ├── commands/doc/        # Slash command definitions
-│   │   ├── doc-plan.md
-│   │   ├── doc-write.md
-│   │   ├── doc-review.md
-│   │   ├── doc-batch.md
-│   │   ├── doc-sync.md
-│   │   ├── doc-status.md
-│   │   ├── doc-improve.md
-│   │   ├── doc-promote.md
-│   │   └── _doc-helpers/
-│   ├── docs/
-│   │   ├── config/          # Quality gates, consistency rules
-│   │   ├── expertise/       # Patterns, anti-patterns, domain knowledge
-│   │   ├── suites/          # Documentation suite manifests
-│   │   └── templates/       # Document type templates
-│   └── hooks/               # Pre/post write validation
-├── specs/docs/              # Document specifications (input)
-├── spec_driven_docs/        # Generated documentation (output)
-│   ├── rough_draft/         # Initial generation output
-│   ├── pending_approval/    # Reviewed, awaiting stakeholder approval
-│   └── approved_final/      # Production-ready documentation
+.
+├── .claude/                 # Commands, agents, hooks, templates, and quality rules
+├── specs/docs/              # Input specifications
+├── spec_driven_docs/        # Generated output by workflow stage
+│   ├── rough_draft/
+│   ├── pending_approval/
+│   └── approved_final/
 ├── app_docs/                # End-user documentation
 │   └── User-Guide/          # Framework user guide
 ├── prompt/                  # Prompt engineering resources

@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" role="img" aria-labelledby="title desc">
+  <title id="title">Spec-Driven Docs System</title>
+  <desc id="desc">
+    A banner for the Spec-Driven Docs System showing a specification-first documentation workflow.
+  </desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#08121f" />
+      <stop offset="55%" stop-color="#0b3140" />
+      <stop offset="100%" stop-color="#14532d" />
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a" stop-opacity="0.92" />
+      <stop offset="100%" stop-color="#1e293b" stop-opacity="0.92" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#020617" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <rect width="1280" height="640" rx="36" fill="url(#bg)" />
+  <circle cx="1120" cy="130" r="180" fill="#38bdf8" opacity="0.08" />
+  <circle cx="180" cy="560" r="220" fill="#f59e0b" opacity="0.08" />
+  <circle cx="890" cy="500" r="120" fill="#22c55e" opacity="0.08" />
+  <path d="M0 520C180 450 340 470 520 540S860 650 1280 500V640H0Z" fill="#ffffff" opacity="0.05" />
+
+  <rect x="84" y="72" width="188" height="36" rx="18" fill="#ffffff" opacity="0.12" />
+  <text x="110" y="96" fill="#d1fae5" font-size="18" font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif" letter-spacing="2.4">
+    CLAUDE CODE FRAMEWORK
+  </text>
+
+  <text x="84" y="198" fill="#f8fafc" font-size="72" font-weight="700"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    Spec-Driven Docs System
+  </text>
+  <text x="84" y="252" fill="#cbd5e1" font-size="28"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    Plan requirements, generate drafts, review with quality gates,
+  </text>
+  <text x="84" y="292" fill="#cbd5e1" font-size="28"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    and promote only approved documentation.
+  </text>
+
+  <g filter="url(#shadow)">
+    <rect x="84" y="360" width="126" height="78" rx="20" fill="#0f172a" opacity="0.86" />
+    <rect x="226" y="360" width="126" height="78" rx="20" fill="#0f172a" opacity="0.86" />
+    <rect x="368" y="360" width="126" height="78" rx="20" fill="#0f172a" opacity="0.86" />
+    <rect x="510" y="360" width="126" height="78" rx="20" fill="#0f172a" opacity="0.86" />
+  </g>
+
+  <text x="114" y="394" fill="#86efac" font-size="18" font-weight="600"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    COMMANDS
+  </text>
+  <text x="118" y="424" fill="#f8fafc" font-size="34" font-weight="700"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    8
+  </text>
+
+  <text x="266" y="394" fill="#7dd3fc" font-size="18" font-weight="600"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    AGENTS
+  </text>
+  <text x="270" y="424" fill="#f8fafc" font-size="34" font-weight="700"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    4
+  </text>
+
+  <text x="398" y="394" fill="#fcd34d" font-size="18" font-weight="600"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    TEMPLATES
+  </text>
+  <text x="412" y="424" fill="#f8fafc" font-size="34" font-weight="700"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    3
+  </text>
+
+  <text x="542" y="394" fill="#a7f3d0" font-size="18" font-weight="600"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    GATES
+  </text>
+  <text x="558" y="424" fill="#f8fafc" font-size="34" font-weight="700"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    4
+  </text>
+
+  <g filter="url(#shadow)">
+    <rect x="788" y="118" width="388" height="404" rx="28" fill="#ffffff" opacity="0.08" />
+
+    <rect x="828" y="158" width="308" height="62" rx="18" fill="url(#card)" stroke="#34d399" stroke-opacity="0.4" />
+    <rect x="828" y="252" width="308" height="62" rx="18" fill="url(#card)" stroke="#38bdf8" stroke-opacity="0.4" />
+    <rect x="828" y="346" width="308" height="62" rx="18" fill="url(#card)" stroke="#f59e0b" stroke-opacity="0.4" />
+    <rect x="828" y="440" width="308" height="62" rx="18" fill="url(#card)" stroke="#86efac" stroke-opacity="0.4" />
+  </g>
+
+  <path d="M980 220V252" stroke="url(#accent)" stroke-width="6" stroke-linecap="round" />
+  <path d="M980 314V346" stroke="url(#accent)" stroke-width="6" stroke-linecap="round" />
+  <path d="M980 408V440" stroke="url(#accent)" stroke-width="6" stroke-linecap="round" />
+
+  <circle cx="870" cy="189" r="10" fill="#34d399" />
+  <circle cx="870" cy="283" r="10" fill="#38bdf8" />
+  <circle cx="870" cy="377" r="10" fill="#f59e0b" />
+  <circle cx="870" cy="471" r="10" fill="#86efac" />
+
+  <text x="900" y="186" fill="#f8fafc" font-size="24" font-weight="700"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    Plan
+  </text>
+  <text x="900" y="210" fill="#cbd5e1" font-size="16"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    Capture scope in a specification
+  </text>
+
+  <text x="900" y="280" fill="#f8fafc" font-size="24" font-weight="700"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    Write
+  </text>
+  <text x="900" y="304" fill="#cbd5e1" font-size="16"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    Generate the first draft from the spec
+  </text>
+
+  <text x="900" y="374" fill="#f8fafc" font-size="24" font-weight="700"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    Review
+  </text>
+  <text x="900" y="398" fill="#cbd5e1" font-size="16"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    Apply quality gates and consistency checks
+  </text>
+
+  <text x="900" y="468" fill="#f8fafc" font-size="24" font-weight="700"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    Promote
+  </text>
+  <text x="900" y="492" fill="#cbd5e1" font-size="16"
+    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
+    Move approved docs into the next stage
+  </text>
+</svg>
