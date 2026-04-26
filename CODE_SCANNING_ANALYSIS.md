@@ -137,8 +137,10 @@ The implicit string concatenation warning may be:
            "Line 2"
      
      # Use explicit concatenation:
-     msg = "Line 1" + \
-           "Line 2"
+     msg = (
+         "Line 1" +
+         "Line 2"
+     )
      ```
 
 3. **Configure CodeQL if needed:**
