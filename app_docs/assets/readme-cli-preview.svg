@@ -1,147 +1,93 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
-  <title id="title">Spec-Driven Docs workflow preview</title>
-  <desc id="desc">
-    A terminal-style preview of the documented spec-driven workflow from planning through review,
-    with the repository's public checks shown alongside it.
-  </desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Spec-driven documentation workflow preview</title>
+  <desc id="desc">A clean visual walkthrough of the plan, write, review, and promote stages used in this repository.</desc>
+
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#08111b" />
-      <stop offset="55%" stop-color="#10253c" />
-      <stop offset="100%" stop-color="#0f5132" />
+      <stop offset="0%" stop-color="#0b1220" />
+      <stop offset="100%" stop-color="#111c33" />
     </linearGradient>
-    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0f172a" stop-opacity="0.94" />
-      <stop offset="100%" stop-color="#1e293b" stop-opacity="0.94" />
-    </linearGradient>
-    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0%" stop-color="#38bdf8" />
       <stop offset="100%" stop-color="#34d399" />
     </linearGradient>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#020617" flood-opacity="0.35" />
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#020617" flood-opacity="0.45" />
     </filter>
   </defs>
 
-  <rect width="1280" height="760" rx="34" fill="url(#bg)" />
-  <circle cx="1090" cy="118" r="180" fill="#38bdf8" opacity="0.08" />
-  <circle cx="160" cy="650" r="190" fill="#f59e0b" opacity="0.08" />
-  <path d="M0 622C160 560 352 568 520 632S916 748 1280 640V760H0Z" fill="#ffffff" opacity="0.04" />
+  <rect width="1200" height="720" fill="url(#bg)" rx="28" />
 
-  <text x="84" y="84" fill="#d1fae5" font-size="18" font-weight="700"
-    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif" letter-spacing="2.2">
-    IN ACTION
+  <text x="70" y="86" fill="#dbeafe" font-size="18" font-family="Inter, Segoe UI, Arial, sans-serif" letter-spacing="1.5">
+    SPEC-FIRST DOCUMENTATION SYSTEM
   </text>
-  <text x="84" y="136" fill="#f8fafc" font-size="44" font-weight="700"
-    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
-    Typical spec-driven session
+  <text x="70" y="132" fill="#f8fafc" font-size="44" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">
+    Typical command workflow
   </text>
-  <text x="84" y="176" fill="#cbd5e1" font-size="22"
-    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
-    The README flow, shown as a terminal walkthrough with actual repository stages.
+  <text x="70" y="166" fill="#94a3b8" font-size="21" font-family="Inter, Segoe UI, Arial, sans-serif">
+    Plan requirements, generate drafts, validate quality gates, then promote through stages.
   </text>
 
   <g filter="url(#shadow)">
-    <rect x="84" y="220" width="714" height="438" rx="26" fill="#020617" opacity="0.96" />
-    <rect x="84" y="220" width="714" height="48" rx="26" fill="#111827" opacity="0.96" />
-    <circle cx="118" cy="244" r="7" fill="#fb7185" />
-    <circle cx="142" cy="244" r="7" fill="#fbbf24" />
-    <circle cx="166" cy="244" r="7" fill="#34d399" />
-    <text x="364" y="250" fill="#94a3b8" font-size="16"
-      font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
-      Claude Code workflow preview
+    <rect x="70" y="210" width="760" height="440" rx="18" fill="#0a1120" stroke="#1e293b" />
+    <rect x="70" y="210" width="760" height="44" rx="18" fill="#111827" />
+    <circle cx="98" cy="232" r="6" fill="#fb7185" />
+    <circle cx="118" cy="232" r="6" fill="#fbbf24" />
+    <circle cx="138" cy="232" r="6" fill="#34d399" />
+    <text x="342" y="238" fill="#93a4bd" font-size="14" font-family="Inter, Segoe UI, Arial, sans-serif">
+      CLI session preview
     </text>
   </g>
 
-  <text x="118" y="316" fill="#34d399" font-size="20" font-weight="700"
-    font-family="IBM Plex Mono, SFMono-Regular, Menlo, monospace">
+  <text x="102" y="295" fill="#22d3ee" font-size="20" font-weight="700" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">
     $ /doc-plan "User authentication API" --type api
   </text>
-  <text x="148" y="352" fill="#cbd5e1" font-size="18"
-    font-family="IBM Plex Mono, SFMono-Regular, Menlo, monospace">
-    creates specs/docs/user-authentication-api-spec.md
+  <text x="132" y="326" fill="#cbd5e1" font-size="17" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">
+    -> specs/docs/user-authentication-api-spec.md
   </text>
 
-  <text x="118" y="412" fill="#38bdf8" font-size="20" font-weight="700"
-    font-family="IBM Plex Mono, SFMono-Regular, Menlo, monospace">
+  <text x="102" y="382" fill="#60a5fa" font-size="20" font-weight="700" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">
     $ /doc-write specs/docs/user-authentication-api-spec.md
   </text>
-  <text x="148" y="448" fill="#cbd5e1" font-size="18"
-    font-family="IBM Plex Mono, SFMono-Regular, Menlo, monospace">
-    writes spec_driven_docs/rough_draft/api/user-authentication.md
+  <text x="132" y="413" fill="#cbd5e1" font-size="17" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">
+    -> spec_driven_docs/rough_draft/api/user-authentication.md
   </text>
 
-  <text x="118" y="508" fill="#fbbf24" font-size="20" font-weight="700"
-    font-family="IBM Plex Mono, SFMono-Regular, Menlo, monospace">
+  <text x="102" y="470" fill="#fbbf24" font-size="20" font-weight="700" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">
     $ /doc-review spec_driven_docs/rough_draft/api/user-authentication.md --fix
   </text>
-  <text x="148" y="544" fill="#cbd5e1" font-size="18"
-    font-family="IBM Plex Mono, SFMono-Regular, Menlo, monospace">
-    checks spec completeness, content quality, consistency, and final approval
+  <text x="132" y="501" fill="#cbd5e1" font-size="17" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">
+    -> checks completeness, content quality, consistency, and final approval
   </text>
 
-  <rect x="118" y="580" width="160" height="34" rx="17" fill="#052e16" />
-  <rect x="290" y="580" width="150" height="34" rx="17" fill="#082f49" />
-  <rect x="452" y="580" width="128" height="34" rx="17" fill="#451a03" />
-  <rect x="592" y="580" width="150" height="34" rx="17" fill="#14532d" />
+  <rect x="102" y="548" width="165" height="34" rx="17" fill="#052e2b" stroke="#14b8a6" stroke-opacity="0.45" />
+  <rect x="282" y="548" width="170" height="34" rx="17" fill="#082f49" stroke="#38bdf8" stroke-opacity="0.45" />
+  <rect x="467" y="548" width="146" height="34" rx="17" fill="#422006" stroke="#f59e0b" stroke-opacity="0.45" />
+  <rect x="628" y="548" width="172" height="34" rx="17" fill="#14532d" stroke="#22c55e" stroke-opacity="0.45" />
 
-  <text x="138" y="602" fill="#86efac" font-size="15" font-weight="700"
-    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
-    SPEC COMPLETE
-  </text>
-  <text x="314" y="602" fill="#7dd3fc" font-size="15" font-weight="700"
-    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
-    QUALITY CHECKED
-  </text>
-  <text x="480" y="602" fill="#fcd34d" font-size="15" font-weight="700"
-    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
-    CONSISTENT
-  </text>
-  <text x="618" y="602" fill="#bbf7d0" font-size="15" font-weight="700"
-    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
-    READY TO PROMOTE
-  </text>
+  <text x="121" y="570" fill="#99f6e4" font-size="13" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">SPEC COMPLETE</text>
+  <text x="302" y="570" fill="#7dd3fc" font-size="13" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">QUALITY VERIFIED</text>
+  <text x="489" y="570" fill="#fcd34d" font-size="13" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">CONSISTENT</text>
+  <text x="649" y="570" fill="#bbf7d0" font-size="13" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">READY TO PROMOTE</text>
 
   <g filter="url(#shadow)">
-    <rect x="846" y="220" width="350" height="438" rx="28" fill="url(#panel)" />
+    <rect x="860" y="210" width="270" height="440" rx="18" fill="#0f172a" stroke="#1e293b" />
   </g>
 
-  <text x="884" y="280" fill="#f8fafc" font-size="30" font-weight="700"
-    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
-    Stage movement
-  </text>
-  <text x="884" y="314" fill="#cbd5e1" font-size="18"
-    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
-    Planning creates the specification, writing creates the draft,
-  </text>
-  <text x="884" y="338" fill="#cbd5e1" font-size="18"
-    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
-    and review decides whether promotion can happen.
-  </text>
+  <text x="890" y="262" fill="#f8fafc" font-size="29" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">Stage movement</text>
+  <text x="890" y="294" fill="#94a3b8" font-size="16" font-family="Inter, Segoe UI, Arial, sans-serif">Promotion is unlocked after review.</text>
 
-  <rect x="884" y="374" width="274" height="56" rx="18" fill="#0f172a" stroke="#38bdf8" stroke-opacity="0.55" />
-  <rect x="884" y="462" width="274" height="56" rx="18" fill="#0f172a" stroke="#fbbf24" stroke-opacity="0.55" />
-  <rect x="884" y="550" width="274" height="56" rx="18" fill="#0f172a" stroke="#34d399" stroke-opacity="0.55" />
+  <rect x="890" y="334" width="210" height="54" rx="14" fill="#111827" stroke="#38bdf8" stroke-opacity="0.6" />
+  <rect x="890" y="430" width="210" height="54" rx="14" fill="#111827" stroke="#fbbf24" stroke-opacity="0.6" />
+  <rect x="890" y="526" width="210" height="54" rx="14" fill="#111827" stroke="#22c55e" stroke-opacity="0.6" />
 
-  <path d="M1021 430V462" stroke="url(#accent)" stroke-width="6" stroke-linecap="round" />
-  <path d="M1021 518V550" stroke="url(#accent)" stroke-width="6" stroke-linecap="round" />
+  <path d="M995 388v42" stroke="url(#accent)" stroke-width="5" stroke-linecap="round" />
+  <path d="M995 484v42" stroke="url(#accent)" stroke-width="5" stroke-linecap="round" />
 
-  <text x="918" y="408" fill="#f8fafc" font-size="22" font-weight="700"
-    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
-    specs/docs/
-  </text>
-  <text x="918" y="492" fill="#f8fafc" font-size="22" font-weight="700"
-    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
-    rough_draft/
-  </text>
-  <text x="918" y="580" fill="#f8fafc" font-size="22" font-weight="700"
-    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
-    pending_approval -> approved_final
-  </text>
+  <text x="925" y="366" fill="#e2e8f0" font-size="19" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">specs/docs/</text>
+  <text x="920" y="462" fill="#e2e8f0" font-size="19" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">rough_draft/</text>
+  <text x="904" y="558" fill="#e2e8f0" font-size="19" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">pending -> approved</text>
 
-  <rect x="884" y="628" width="274" height="22" rx="11" fill="#082f49" opacity="0.9" />
-  <text x="904" y="644" fill="#7dd3fc" font-size="14" font-weight="700"
-    font-family="IBM Plex Sans, Avenir Next, Segoe UI, sans-serif">
-    PUBLIC CI: smoke tests + isolated install check
-  </text>
+  <rect x="890" y="604" width="210" height="24" rx="12" fill="#082f49" />
+  <text x="906" y="621" fill="#bae6fd" font-size="12" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">CI: smoke tests + markdown lint</text>
 </svg>
