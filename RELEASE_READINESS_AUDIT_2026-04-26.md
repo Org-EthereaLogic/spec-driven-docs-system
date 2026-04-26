@@ -73,7 +73,7 @@ beta usage, or controlled adoption, but not fully prepared for a formal release 
 ### High priority
 
 1. **Dependency vulnerability scanning is not operational in this environment**
-   - `npm audit` failed due registry endpoint access (`403 Forbidden`), so vulnerability status is unknown from this run.
+   - `npm audit` failed due to registry endpoint access (`403 Forbidden`), so vulnerability status is unknown from this run.
    - Add CI-integrated dependency scanning (Dependabot and/or additional scanners) so release gating does not depend on
      local network conditions.
 
