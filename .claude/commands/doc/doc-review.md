@@ -100,14 +100,28 @@ Unacceptable feedback:
 
 ### Phase 2: Structural Review
 
-1. **Template Compliance**
-   Compare document structure against template:
-   - Are all required sections present?
+1. **Select Quality Profile**
+   Look up the active profile in `quality_profiles.profiles[doc_type]`. If the
+   spec declares `quality_profile`, prefer that. The profile contributes:
+   - `required_sections`: section names that should appear
+   - `section_aliases`: per-required-section list of alternative names that
+     also satisfy the requirement (e.g. "Getting Started" is satisfied by
+     "Quickstart", "Install", "Installation", "Setup", or "First steps")
+   - `min_score`, `required_gates`, and any per-type enforcement flags
+
+2. **Template Compliance**
+   Compare document structure against the profile's required sections:
+   - Each required section is satisfied if the document has either the
+     canonical name OR any alias listed in `section_aliases`. Match case
+     insensitively and accept reasonable variations (singular/plural, hyphen
+     vs space, "Quick start" vs "Quickstart").
    - Is section order correct?
    - Is heading hierarchy valid (no skipped levels)?
+   - Profiles with empty `required_sections` (e.g. `quickstart`) defer to
+     `section_intent` as guidance only, not as a hard requirement.
 
-2. **Section Completeness**
-   For each required section:
+3. **Section Completeness**
+   For each required section (or its accepted alias):
    - Does it have substantive content?
    - Is the depth appropriate for the section's purpose and feature complexity?
    - Are the required elements for that section present?
