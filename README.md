@@ -38,6 +38,16 @@ validation at every step.
 
 ---
 
+## In practice
+
+![CLI workflow preview](app_docs/assets/readme-cli-preview.svg)
+
+This preview mirrors the repository's documented flow: plan a specification in `specs/docs/`,
+generate a draft into `spec_driven_docs/rough_draft/`, review it against quality gates, and only
+then move it forward.
+
+---
+
 ## Quick start (5 minutes)
 
 ### Prerequisites
@@ -61,15 +71,17 @@ cp -r specs /path/to/your/project/
 
 1. **Plan your document:**
 
-## In practice
+   ```bash
+   /doc-plan "User Authentication API" --type api
+   ```
 
-![CLI workflow preview](app_docs/assets/readme-cli-preview.svg)
+2. **Generate the document:**
 
-This preview mirrors the repository's documented flow: plan a specification in `specs/docs/`,
-generate a draft into `spec_driven_docs/rough_draft/`, review it against quality gates, and only
-then move it forward.
+   ```bash
+   /doc-write specs/docs/user-authentication-api-spec.md
+   ```
 
-## Quick start
+3. **Review the output:**
 
    ```bash
    /doc-review spec_driven_docs/rough_draft/api/user-authentication.md
@@ -132,29 +144,55 @@ Run `/doc-status` to see your documentation dashboard. If you see status output,
 
 **Single document:**
 
-- Claude Code CLI installed and authenticated
-- A project root where the framework will live
+```bash
+/doc-plan "Feature X" --type manual
+/doc-write specs/docs/feature-x-spec.md
+/doc-review spec_driven_docs/rough_draft/guides/feature-x.md
+/doc-promote spec_driven_docs/rough_draft/guides/feature-x.md --to pending_approval
+```
 
 **Suite batch processing:**
 
 ```bash
-cp -r /path/to/spec-driven-docs-system/.claude /path/to/project/
-cp -r /path/to/spec-driven-docs-system/specs /path/to/project/
-mkdir -p /path/to/project/spec_driven_docs/rough_draft
-mkdir -p /path/to/project/spec_driven_docs/pending_approval
-mkdir -p /path/to/project/spec_driven_docs/approved_final
+/doc-batch api-docs generate --parallel
+/doc-batch api-docs review
+/doc-sync api-docs --fix
 ```
 
-If you are evaluating the framework from this repository directly, those directories are already
-present.
+---
 
 ## How everything connects
 
 ```text
-/doc-plan "User authentication API" --type api
-/doc-write specs/docs/user-authentication-api-spec.md
-/doc-review spec_driven_docs/rough_draft/api/user-authentication.md
-/doc-promote spec_driven_docs/rough_draft/api/user-authentication.md --to pending_approval
+                    ┌─────────────────┐
+                    │   /doc-plan     │
+                    │  (Orchestrator) │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │  Specification  │
+                    │   (specs/docs/) │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │   /doc-write    │
+                    │    (Writer)     │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │    Document     │
+                    │(spec_driven_docs│
+                    │  /rough_draft/) │
+                    └────────┬────────┘
+                             │
+                             ▼
+┌─────────────┐     ┌─────────────────┐     ┌─────────────┐
+│  /doc-sync  │◄────│   /doc-review   │────►│ /doc-improve│
+│ (Librarian) │     │   (Reviewer)    │     │(Orchestrator│
+└─────────────┘     └─────────────────┘     └─────────────┘
 ```
 
 ---
@@ -182,18 +220,16 @@ The system uses specialized Claude agents to scale document processing:
 
 ### Utility agents
 
-### Agent roles
+| Agent | Model | Purpose |
+|-------|-------|---------|
+| **workspace-cleanup** | Haiku | Workspace maintenance, temp file removal, file organization |
+| **prompt-enhance-agent** | Sonnet | Transforms vague prompts into clear, actionable prompts |
 
-- `doc-orchestrator` plans document scope and coordinates complex workflows
-- `doc-writer` generates documents from approved specifications
-- `doc-reviewer` applies quality gates and consistency checks
-- `doc-librarian` keeps suites, references, and terminology aligned
+Utility agents handle development hygiene and prompt-engineering tasks separate from the documentation workflow.
 
-### Quality controls
+---
 
 ## Quality grades
-
-## Command reference
 
 | Grade | Score | Status |
 |-------|-------|--------|
