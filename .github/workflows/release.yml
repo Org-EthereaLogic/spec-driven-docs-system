@@ -55,8 +55,9 @@ jobs:
       - name: Dependency vulnerability audit
         run: |
           set +e
+          set -o pipefail
           npm audit --audit-level=moderate 2>&1 | tee /tmp/audit.txt
-          AUDIT_EXIT=$?
+          AUDIT_EXIT=${PIPESTATUS[0]}
           set -e
           if [ $AUDIT_EXIT -ne 0 ]; then
             if grep -qE "403|ECONNREFUSED|ENOTFOUND|ETIMEDOUT" /tmp/audit.txt; then
@@ -69,7 +70,7 @@ jobs:
           fi
 
       - name: Secret scanning
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
