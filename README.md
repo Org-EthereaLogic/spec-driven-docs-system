@@ -99,6 +99,10 @@ cp -r specs /path/to/your/project/
 
 Run `/doc-status` to see your documentation dashboard. If you see status output, the system is ready.
 
+For a local clone-based end-to-end check, run `npm run test:e2e`. This test clones the repository into a temporary
+directory, installs dependencies, runs the smoke suite, generates three sample documents, runs the hooks, and verifies
+promotion into `pending_approval/`.
+
 ---
 
 ## Documentation

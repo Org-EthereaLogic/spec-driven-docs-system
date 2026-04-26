@@ -6,7 +6,8 @@
     "test": "bash tests/smoke.sh",
     "test:smoke": "bash tests/smoke.sh",
     "lint:md": "markdownlint '**/*.md' --ignore node_modules",
-    "lint:md:fix": "markdownlint '**/*.md' --ignore node_modules --fix"
+    "lint:md:fix": "markdownlint '**/*.md' --ignore node_modules --fix",
+    "test:e2e": "bash tests/e2e_clone_and_flow.sh"
   },
   "repository": {
     "type": "git",
