@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Claude Code framework for specification-driven technical documentation. It provides 8 slash commands, 4 specialized AI agents, and 3 document templates for creating, reviewing, and maintaining documentation at scale.
+This is a Claude Code framework for specification-driven technical documentation. It provides 11 slash commands, 4 specialized AI agents, and 6 document templates for creating, reviewing, and maintaining documentation at scale.
 
 ## Core Workflow
 
