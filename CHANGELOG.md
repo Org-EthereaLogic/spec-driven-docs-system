@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- CI/release: replaced `gitleaks-action` binary-download workaround with
+  official action (`gitleaks/gitleaks-action@v2.3.9`, SHA-pinned) now that a
+  paid license is configured via `GITLEAKS_LICENSE` repository secret
+- CI: added `workflow_dispatch` trigger to `ci.yml` to allow manual runs from
+  the GitHub Actions UI
+- CI: removed unsupported `config-path` input from `gitleaks-action` — the
+  action auto-discovers `.gitleaks.toml` from the repository root
+- Docs: corrected stale counts in `CLAUDE.md`, `README.md`,
+  `tests/isolated-test-plan.md`, and `IMPROVEMENT_OPPORTUNITIES.md`
+  (8→11 slash commands, 3→6 document templates)
+
+### Dependencies
+
+- Bump `actions/checkout` 4→6, `actions/setup-node` 4→6,
+  `actions/setup-python` 5→6 (Dependabot, PRs \#18–20)
+
 ## [1.0.0] - 2026-04-26
 
 ### Added
