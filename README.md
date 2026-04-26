@@ -40,7 +40,9 @@ validation at every step.
 
 ## In practice
 
-![CLI workflow preview](app_docs/assets/readme-cli-preview.svg)
+<p align="center">
+  <img src="app_docs/assets/readme-cli-preview.svg" alt="CLI workflow preview" width="960" />
+</p>
 
 This preview mirrors the repository's documented flow: plan a specification in `specs/docs/`,
 generate a draft into `spec_driven_docs/rough_draft/`, review it against quality gates, and only
