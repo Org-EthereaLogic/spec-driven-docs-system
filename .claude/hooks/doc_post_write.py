@@ -29,18 +29,63 @@ from hook_utils import (  # noqa: E402
 )
 
 
+def _strip_code_regions(content: str) -> str:
+    """Return content with code regions blanked out for prose-only checks.
+
+    Strips fenced code blocks (``` and ~~~), inline code spans (any number of
+    backticks), and Markdown link targets `](target)`. Replaces stripped
+    regions with whitespace of equal length so line numbers and surrounding
+    offsets are preserved.
+
+    The link-target strip prevents file paths embedded in links (e.g.
+    `[config](~/.config/notesctl)`) from being terminology-checked.
+    """
+
+    def _blank(match):
+        return re.sub(r'[^\n]', ' ', match.group(0))
+
+    fenced_re = re.compile(
+        r'(?ms)^[ \t]{0,3}(`{3,}|~{3,}).*?(?:^[ \t]{0,3}\1\s*$|\Z)'
+    )
+    inline_re = re.compile(r'(`+)(?:(?!\1).)+?\1', re.DOTALL)
+    link_target_re = re.compile(r'\]\(([^)]+)\)')
+
+    cleaned = fenced_re.sub(_blank, content)
+    cleaned = inline_re.sub(_blank, cleaned)
+    cleaned = link_target_re.sub(_blank, cleaned)
+    return cleaned
+
+
 def check_terminology(content: str, rules: dict) -> list:
-    """Check content for terminology violations."""
+    """Check prose for terminology violations.
+
+    Inspects only prose - code blocks, inline code, and Markdown link targets
+    are blanked out first so CLI command names (`notesctl login`) and file
+    paths (`~/.config/notesctl/config.toml`) are not flagged as forbidden
+    variants of enforced terms. Each issue includes a line number and a
+    snippet so the user can judge verb-vs-noun ambiguity (e.g. "Route all
+    events" is a verb usage, not a violation).
+    """
     issues = []
     terminology = rules.get("terminology", {}).get("enforced_terms", {})
+    prose = _strip_code_regions(content)
+    lines = prose.split('\n')
 
     for correct_term, forbidden_variants in terminology.items():
         for variant in forbidden_variants:
-            pattern = r'\b' + re.escape(variant) + r'\b'
-            if re.search(pattern, content, re.IGNORECASE):
-                issues.append(
-                    f"Terminology: Use '{correct_term}' instead of '{variant}'"
-                )
+            pattern = re.compile(r'\b' + re.escape(variant) + r'\b', re.IGNORECASE)
+            seen_lines = set()
+            for i, line in enumerate(lines, 1):
+                if pattern.search(line):
+                    if i in seen_lines:
+                        continue
+                    seen_lines.add(i)
+                    snippet = line.strip()
+                    if len(snippet) > 80:
+                        snippet = snippet[:77] + "..."
+                    issues.append(
+                        f"Terminology (line {i}): Use '{correct_term}' instead of '{variant}' - \"{snippet}\""
+                    )
 
     return issues
 

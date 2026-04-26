@@ -69,6 +69,14 @@ cp -r .claude /path/to/your/project/
 cp -r specs /path/to/your/project/
 ```
 
+If you cloned this repository directly to evaluate it, install the dev
+dependencies before running tests:
+
+```bash
+npm install     # required before npm test (installs markdownlint-cli)
+npm test        # runs the smoke suite (JSON, hooks, markdown lint)
+```
+
 ### Try it now
 
 1. **Plan your document:**

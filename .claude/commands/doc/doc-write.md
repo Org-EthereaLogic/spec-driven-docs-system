@@ -184,11 +184,22 @@ Apply consistency rules throughout the document:
 
    **Why:** Consistent terminology reduces cognitive load. If the same concept is called "route" in one place and "endpoint" in another, readers waste mental energy reconciling these terms.
 
-2. **Style Normalization**
-   - Use sentence case for headers (capitalize only first word and proper nouns)
-   - Add language hints to the code blocks you include (even plain text: `text`)
-   - Use dash (-) for bullet lists, not asterisks
-   - Keep heading depth at 4 levels or fewer
+2. **Style Normalization (Markdownlint-clean output)**
+   The generated document must pass the project's `npm run lint:md` without
+   manual cleanup. Apply these rules during generation, not as an afterthought:
+   - Use sentence case for headers (capitalize only first word and proper nouns).
+   - Add language hints to **every** fenced code block. For HTTP method+path
+     blocks use `http`. For raw text or expected CLI output use `text`. Never
+     emit a bare ```` ``` ```` opener (MD040).
+   - Use dash (-) for bullet lists, not asterisks (MD004).
+   - Keep heading depth at 4 levels or fewer.
+   - Surround every list with a blank line above and below (MD032). A list
+     immediately following bold-label prose like `**Content Requirements:**`
+     still needs a blank line between the label and the first bullet.
+   - Surround every fenced code block with a blank line above and below (MD031).
+   - Do not skip heading levels (no `#` directly to `###`); promote or insert
+     an intermediate level instead (MD001).
+   - Trim trailing whitespace and end the file with a single newline (MD009, MD047).
 
 3. **Forbidden Pattern Removal**
    Final scan to ensure none of these appear:
@@ -206,6 +217,16 @@ Before output, perform comprehensive quality checks:
    - [ ] Essential content is included
    - [ ] Code examples cover key scenarios
    - [ ] No empty or stub sections
+
+1a. **Markdownlint Self-Check**
+   Before writing the final file, scan the buffer for the most common lint
+   violations and fix them in place:
+   - [ ] Every fenced code block has a language hint (MD040)
+   - [ ] Every list is preceded and followed by a blank line (MD032)
+   - [ ] Every fenced code block is preceded and followed by a blank line (MD031)
+   - [ ] Heading levels do not skip (MD001)
+   - [ ] No trailing whitespace; file ends in a single newline (MD009, MD047)
+   - [ ] Bullet lists use `-`, not `*` (MD004)
 
 2. **Accuracy Verification**
    - [ ] Code examples match actual source file patterns
