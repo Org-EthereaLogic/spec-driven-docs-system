@@ -203,6 +203,64 @@ else
     fail "post-write-hook: flags terminology violations" "$output"
 fi
 
+# Test 5a: post-write hook does NOT flag forbidden terms inside code blocks,
+# inline code, or Markdown link targets. CLI command names and file paths
+# are legitimate uses that must not produce noise.
+code_safe_doc="# CLI Quickstart
+
+This page documents the notesctl CLI. Run \`notesctl login\` to authenticate
+with your bearer token. The CLI stores the token at \`~/.config/notesctl/config.toml\`
+with mode 600. To re-authenticate, rerun \`notesctl login\` and paste a fresh token.
+
+\`\`\`bash
+notesctl login
+notesctl new --title \"Demo\" --body \"Hello\"
+\`\`\`
+
+For details, see [config](~/.config/notesctl/config.toml)."
+output=$(run_hook .claude/hooks/doc_post_write.py "$DOC_PATH" "$code_safe_doc" 2>&1 || true)
+if echo "$output" | python3 -c "
+import json, sys
+try:
+    if not sys.stdin.read().strip():
+        sys.exit(0)
+    sys.stdin.seek(0)
+    d = json.load(sys.stdin)
+    fb = d.get('feedback', '').lower()
+    has_login_violation = ('use \\'authenticate\\' instead of \\'login\\'' in fb)
+    has_config_violation = ('use \\'configuration\\' instead of \\'config\\'' in fb)
+    sys.exit(1 if (has_login_violation or has_config_violation) else 0)
+except Exception:
+    sys.exit(0)
+" 2>/dev/null; then
+    pass "post-write-hook: ignores terminology in code/inline/links"
+else
+    fail "post-write-hook: ignores terminology in code/inline/links" "$output"
+fi
+
+# Test 5b: pre-write hook allows ellipsis inside fenced code blocks.
+# Code-comment elision (e.g. '# ... existing logic ...') is a common
+# documentation pattern and must not block writes.
+code_ellipsis_doc="# Event Bus Example
+
+The example below shows a publisher that omits unrelated business logic
+inline. Ellipsis appears only inside a fenced code block as a comment
+and must not block the write. This document has enough prose to clear
+the minimum word-count threshold and exists solely to exercise the
+ellipsis-in-code regression test added during the end-to-end review.
+
+\`\`\`python
+def place_order(order_id: int, total_cents: int) -> None:
+    # ... core order logic ...
+    publish(OrderPlaced(order_id=order_id))
+\`\`\`"
+output=$(run_hook .claude/hooks/doc_pre_write.py "$DOC_PATH" "$code_ellipsis_doc")
+if echo "$output" | python3 -c "import json,sys; d=json.load(sys.stdin); sys.exit(0 if d.get('continue') is True else 1)"; then
+    pass "pre-write-hook: allows ellipsis inside code-block comments"
+else
+    fail "pre-write-hook: allows ellipsis inside code-block comments" "$output"
+fi
+
 # ---------------------------------------------------------------------
 # 2b. Post-Review Hook Tests
 # ---------------------------------------------------------------------
@@ -288,15 +346,24 @@ fi
 # ---------------------------------------------------------------------
 section "Markdown Lint"
 
-if command -v npx >/dev/null 2>&1; then
-    if npm run --silent lint:md >/dev/null 2>&1; then
+if ! command -v npx >/dev/null 2>&1; then
+    fail "markdownlint: npx not available" "install Node.js"
+elif ! npx --no-install markdownlint --version >/dev/null 2>&1; then
+    fail "markdownlint: dependency not installed" "run 'npm install' first"
+else
+    lint_output=$(npm run --silent lint:md 2>&1)
+    lint_exit=$?
+    if [ $lint_exit -eq 0 ]; then
         pass "markdownlint: all files clean"
     else
-        issue_count=$(npm run --silent lint:md 2>&1 | grep -c ':[0-9]' || true)
-        fail "markdownlint: $issue_count issues found" "run 'npm run lint:md' for details"
+        issue_count=$(echo "$lint_output" | grep -c ':[0-9]\+ ' || true)
+        if [ "$issue_count" -eq 0 ]; then
+            fail "markdownlint: lint command failed unexpectedly" \
+                 "run 'npm run lint:md' to see the error"
+        else
+            fail "markdownlint: $issue_count issue(s) found" "run 'npm run lint:md' for details"
+        fi
     fi
-else
-    fail "markdownlint: npx not available" "install Node.js"
 fi
 
 # ---------------------------------------------------------------------
