@@ -18,15 +18,18 @@ Two code scanning warnings were identified:
 ## Warning #1: Workflow Does Not Contain Permissions
 
 ### Issue
+
 The GitHub Actions workflow (`.github/workflows/ci.yml`) was missing explicit `permissions` declarations. This is a security best practice that minimizes the attack surface by restricting workflow permissions to only what's needed.
 
 **Why this matters:**
+
 - Workflows without explicit permissions inherit the default GitHub permissions
 - Default permissions are often broader than necessary
 - Explicit permissions follow the principle of least privilege
 - Helps prevent privilege escalation if workflow secrets are compromised
 
 ### Root Cause
+
 The CI workflow had no `permissions` key defined at the workflow or job level.
 
 ### Fix Applied ✅
@@ -34,6 +37,7 @@ The CI workflow had no `permissions` key defined at the workflow or job level.
 **File:** `.github/workflows/ci.yml`
 
 **Change:**
+
 ```yaml
 # BEFORE (lines 1-9)
 name: CI
@@ -62,12 +66,14 @@ jobs:
 ```
 
 ### Explanation
+
 - `permissions: contents: read` allows the workflow to read repository contents (needed for `actions/checkout@v4`)
 - This is the minimum required permission for the current jobs
 - The workflow does NOT write to the repository, push commits, or create releases
 - No other permissions are needed
 
 ### Verification
+
 The fix has been applied and verified. The workflow now explicitly declares its minimal permission requirements.
 
 ---
@@ -75,9 +81,11 @@ The fix has been applied and verified. The workflow now explicitly declares its 
 ## Warning #2: Implicit String Concatenation Across Multiple Lines
 
 ### Investigation Status
+
 **Finding:** Could not locate the specific instance of implicit string concatenation in the codebase.
 
 ### What is Implicit String Concatenation?
+
 In Python, adjacent string literals are automatically concatenated:
 
 ```python
@@ -91,6 +99,7 @@ result = "This is a long " \
 ```
 
 CodeQL flags this because:
+
 - It can be unintentional (typo or copy-paste error)
 - It's hard to spot in code review
 - Using explicit concatenation is clearer and less error-prone
@@ -131,6 +140,7 @@ The implicit string concatenation warning may be:
 
 2. **If you find the instance:**
    - Convert implicit concatenation to explicit concatenation:
+
      ```python
      # Instead of implicit:
      msg = "Line 1" \
@@ -152,10 +162,12 @@ The implicit string concatenation warning may be:
 ## Next Steps
 
 ### Immediate Actions
+
 - ✅ Commit the workflow permissions fix
 - Review the exact warning location in GitHub's Code Scanning interface
 
 ### To See Detailed Warning Information
+
 1. Go to: **Repository → Security tab → Code scanning**
 2. Click on the warning to see:
    - Exact file and line number
@@ -163,9 +175,11 @@ The implicit string concatenation warning may be:
    - Recommended fix
 
 ### Prevention
+
 - Enable branch protection rules to require code scanning to pass
 - Review warnings in Code Scanning before merging PRs
 - Run CodeQL analysis locally using:
+
   ```bash
   codeql database create /tmp/db --language=python --source-root=.
   codeql database analyze /tmp/db --format=sarif-latest --output=results.sarif
@@ -182,8 +196,8 @@ The implicit string concatenation warning may be:
 ## Validation
 
 The workflow permissions fix:
+
 - ✅ Follows GitHub security best practices
 - ✅ Uses minimal required permissions
 - ✅ Is compatible with current workflow jobs
 - ✅ Will resolve the "Workflow does not contain permissions" warning
-
