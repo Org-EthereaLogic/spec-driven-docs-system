@@ -132,7 +132,7 @@ Tokens expire after [duration]. To refresh, [instructions].
 
 Retrieves a single [resource] by ID.
 
-\`\`\`
+\`\`\`http
 GET /resources/{id}
 \`\`\`
 
