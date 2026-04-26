@@ -1,19 +1,29 @@
-# Spec-Driven Technical Document Creation System
+# Spec-driven technical document creation system
 
-A Claude Code framework for creating, reviewing, and maintaining technical documentation at scale using a specification-first approach.
+[![Tests](https://img.shields.io/badge/tests-smoke%20suite-blue)](tests/smoke.sh)
+[![Markdown lint](https://img.shields.io/badge/markdownlint-enabled-brightgreen)](package.json)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Spec-first workflow](https://img.shields.io/badge/workflow-spec--first-purple)](specs/docs/README.md)
+[![Claude Code](https://img.shields.io/badge/platform-Claude%20Code-orange)](CLAUDE.md)
+
+Create high-quality technical documentation faster with a spec-first workflow for Claude Code.
+
+Most documentation projects fail for a predictable reason: teams jump straight into writing, then discover gaps in scope,
+voice, structure, and consistency late in review. This framework solves that by making planning mandatory, generating from
+explicit specs, and enforcing quality gates before promotion.
+
+In the first 5 minutes, you can plan a document, generate a draft, and run quality review with built-in slash commands.
 
 ---
 
-## Essential Understanding
+## Why teams use this project
 
-**Spec-Driven Docs System** is a documentation framework that runs within Claude Code. It provides:
+- Reduce rewrite cycles by defining requirements before generation.
+- Standardize output across API docs, design docs, and manuals.
+- Catch quality and consistency issues early with automated review gates.
+- Scale documentation work using specialized AI agents for each phase.
 
-- **8 slash commands** for the complete documentation lifecycle
-- **4 specialized AI agents** optimized for different documentation tasks
-- **3 document templates** for API, design, and user manual documentation
-- **Quality gates and consistency rules** for professional-grade output
-
-### How It Works
+## How it works
 
 ```text
 1. PLAN    →  /doc-plan creates a specification from your topic
@@ -23,11 +33,12 @@ A Claude Code framework for creating, reviewing, and maintaining technical docum
 5. PROMOTE →  /doc-promote moves the document through workflow stages
 ```
 
-The specification-first approach ensures documentation quality by defining requirements before generation, enabling validation at every step.
+The specification-first approach ensures documentation quality by defining requirements before generation, enabling
+validation at every step.
 
 ---
 
-## Quick Start (5 Minutes)
+## Quick start (5 minutes)
 
 ### Prerequisites
 
@@ -46,7 +57,7 @@ cp -r .claude /path/to/your/project/
 cp -r specs /path/to/your/project/
 ```
 
-### Your First Document
+### Try it now
 
 1. **Plan your document:**
 
@@ -72,9 +83,9 @@ cp -r specs /path/to/your/project/
    /doc-promote spec_driven_docs/rough_draft/api/user-authentication.md --to pending_approval
    ```
 
-### Verify Installation
+### Verify installation
 
-Run `/doc-status` to see your documentation dashboard. If you see the status output, the system is ready.
+Run `/doc-status` to see your documentation dashboard. If you see status output, the system is ready.
 
 ---
 
@@ -83,8 +94,10 @@ Run `/doc-status` to see your documentation dashboard. If you see the status out
 | Document | Purpose |
 |----------|---------|
 | [User Guide](app_docs/User-Guide/User-Guide.md) | Comprehensive guide to all features |
+| [FAQ](FAQ.md) | Common questions about setup, workflow, and quality gates |
+| [Contributing](CONTRIBUTING.md) | Contribution workflow, standards, and quality expectations |
 
-### Related Documentation
+### Related documentation
 
 | Document | Purpose |
 |----------|---------|
@@ -94,19 +107,17 @@ Run `/doc-status` to see your documentation dashboard. If you see the status out
 
 ---
 
-## Key Concepts
+## Key concepts
 
 | Concept | Description |
 |---------|-------------|
 | **Commands** | 8 slash commands for planning, writing, reviewing, syncing, batching, status, learning, and promoting |
 | **Agents** | 4 specialized AI agents: Orchestrator (Opus), Writer (Sonnet), Reviewer (Sonnet), Librarian (Haiku) |
 | **Templates** | 3 document types: API documentation, design documents, user manuals |
-| **Quality System** | 4 quality gates, consistency rules, terminology enforcement, scoring (A-F grades) |
+| **Quality system** | 4 quality gates, consistency rules, terminology enforcement, scoring (A-F grades) |
 | **Suites** | Organize related documents for batch operations and cross-reference management |
 
----
-
-## Command Reference
+## Command reference
 
 | Command | Purpose | Example |
 |---------|---------|---------|
@@ -119,9 +130,9 @@ Run `/doc-status` to see your documentation dashboard. If you see the status out
 | `/doc-improve` | Learn from successful docs | `/doc-improve` |
 | `/doc-promote` | Move doc between workflow stages | `/doc-promote <path> --to pending_approval` |
 
-### Common Workflows
+### Common workflows
 
-**Single Document:**
+**Single document:**
 
 ```bash
 /doc-plan "Feature X" --type manual
@@ -130,7 +141,7 @@ Run `/doc-status` to see your documentation dashboard. If you see the status out
 /doc-promote spec_driven_docs/rough_draft/guides/feature-x.md --to pending_approval
 ```
 
-**Suite Batch Processing:**
+**Suite batch processing:**
 
 ```bash
 /doc-batch api-docs generate --parallel
@@ -140,7 +151,7 @@ Run `/doc-status` to see your documentation dashboard. If you see the status out
 
 ---
 
-## How Everything Connects
+## How everything connects
 
 ```text
                     ┌─────────────────┐
@@ -176,7 +187,7 @@ Run `/doc-status` to see your documentation dashboard. If you see the status out
 
 ---
 
-## Agent Architecture
+## Agent architecture
 
 The system uses specialized Claude agents to scale document processing:
 
@@ -187,16 +198,17 @@ The system uses specialized Claude agents to scale document processing:
 | **doc-reviewer** | Sonnet | Quality validation, accuracy checking, consistency enforcement |
 | **doc-librarian** | Haiku | Quick consistency checks, cross-references, index maintenance |
 
-### Agent Integration
+### Agent integration
 
 - `/doc-plan` spawns **doc-orchestrator** for requirement gathering
 - `/doc-write` spawns **doc-writer** for content generation
 - `/doc-review` spawns **doc-reviewer** for quality validation
 - `/doc-sync` spawns **doc-librarian** for cross-reference checks
 - `/doc-batch` coordinates multiple agents for parallel processing
-- `/doc-promote` checks quality gates and moves documents between `rough_draft/`, `pending_approval/`, and `approved_final/`
+- `/doc-promote` checks quality gates and moves documents between `rough_draft/`, `pending_approval/`, and
+  `approved_final/`
 
-### Utility Agents
+### Utility agents
 
 | Agent | Model | Purpose |
 |-------|-------|---------|
@@ -207,7 +219,7 @@ Utility agents handle development hygiene and prompt-engineering tasks separate 
 
 ---
 
-## Quality Grades
+## Quality grades
 
 Documents are scored on a 0-100 scale:
 
@@ -221,7 +233,7 @@ Documents are scored on a 0-100 scale:
 
 ---
 
-## Project Structure
+## Project structure
 
 ```text
 your-project/
@@ -258,107 +270,11 @@ your-project/
 ├── app_docs/                # End-user documentation
 │   └── User-Guide/          # Framework user guide
 ├── prompt/                  # Prompt engineering resources
-│   └── prompt-engineering-docs/  # Reference documentation
-└── tests/                   # Test plans and utilities
-    ├── e2e/logging-spec/    # E2E test logging specifications
-    ├── isolated-test-plan.md
-    └── setup-isolated-test.sh
+└── README.md                # This file
 ```
-
-### Document Workflow
-
-```text
-rough_draft/ → pending_approval/ → approved_final/
-```
-
-| Stage | Description | Audience |
-|-------|-------------|----------|
-| rough_draft | Initial /doc-write output, unreviewed | Doc authors |
-| pending_approval | Passed quality gates, awaiting sign-off | Review team |
-| approved_final | Production-ready, publishable | Public/end-users |
-
----
-
-## Configuration
-
-### Consistency Rules
-
-Located at `.claude/docs/config/consistency-rules.json`:
-
-- Terminology enforcement (preferred terms vs alternatives)
-- Style rules (header case, list style, code blocks)
-- Forbidden patterns (placeholders, incomplete markers)
-
-### Quality Gates
-
-Located at `.claude/docs/config/quality-gates.json`:
-
-- Spec completeness checks
-- Content quality validation
-- Consistency verification
-- Final approval criteria
-
-### Expertise Store
-
-Located at `.claude/docs/expertise/`:
-
-- `patterns.json`: Effective documentation patterns
-- `anti-patterns.json`: Patterns to avoid
-- `domain-knowledge.json`: Project-specific terminology
-
-### Prompt Engineering Resources
-
-Located at `prompt/prompt-engineering-docs/`:
-
-- `anthropic-prompting-best-practices.md`: Anthropic's official prompting guidelines
-- `agentic-prompt-engineering.md`: Patterns for agentic AI workflows
-
-These resources inform the system's agent prompts and command implementations.
-
----
-
-## Mandatory Directives
-
-This project enforces strict anti-shortcut directives for all AI-generated content. See [DIRECTIVES.md](DIRECTIVES.md) for complete details.
-
-**Key requirements:**
-
-- Complete implementation only - no placeholders, ellipsis, TODO/FIXME
-- No simulation - all operations must be real, no mocked data
-- Fix implementation, not tests - TDD integrity must be maintained
-
----
-
-## Getting Help
-
-- **Full Documentation:** [User Guide](app_docs/User-Guide/User-Guide.md)
-- **Command Help:** Run any command without arguments for usage information
-- **Quality Issues:** Use `/doc-review <doc> --fix` for auto-fixable issues
-
-### Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| Command not found | Ensure `.claude/commands/doc/` exists |
-| Template not found | Check `.claude/docs/templates/` directory |
-| Quality gate failures | Run `/doc-review <doc>` to see specific issues |
-| Suite not found | Verify suite manifest in `.claude/docs/suites/` |
-
----
-
-## Running Tests
-
-The repository includes a lightweight smoke suite that verifies configuration integrity and hook behavior:
-
-```bash
-npm test          # JSON validation + hook execution tests + markdownlint
-npm run lint:md   # Markdown style check only
-```
-
-CI runs the same commands plus the isolated install smoke test (`tests/setup-isolated-test.sh`) on every push and pull request.
 
 ---
 
 ## License
 
-MIT
+MIT. See [LICENSE](LICENSE).
