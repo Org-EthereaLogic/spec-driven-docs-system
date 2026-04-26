@@ -8,20 +8,20 @@
 
 Create high-quality technical documentation faster with a spec-first workflow for Claude Code.
 
-Most documentation projects fail for a predictable reason: teams jump straight into writing, then discover gaps in scope,
-voice, structure, and consistency late in review. This framework solves that by making planning mandatory, generating from
-explicit specs, and enforcing quality gates before promotion.
+Most documentation projects fail because teams jump straight into writing, then discover gaps in scope, voice, structure,
+and consistency late in review. This framework prevents that by making planning mandatory, generating from explicit specs,
+and enforcing quality gates before promotion.
 
-In the first 5 minutes, you can plan a document, generate a draft, and run quality review with built-in slash commands.
+In 5 minutes, plan a document, generate a draft, and run quality review using built-in slash commands.
 
 ---
 
 ## Why teams use this project
 
-- Reduce rewrite cycles by defining requirements before generation.
-- Standardize output across API docs, design docs, and manuals.
-- Catch quality and consistency issues early with automated review gates.
-- Scale documentation work using specialized AI agents for each phase.
+- Define requirements before generation to reduce rewrites
+- Standardize output across all document types
+- Catch issues early with automated quality gates
+- Scale work with specialized AI agents
 
 ## How it works
 
@@ -33,8 +33,7 @@ In the first 5 minutes, you can plan a document, generate a draft, and run quali
 5. PROMOTE →  /doc-promote moves the document through workflow stages
 ```
 
-The specification-first approach ensures documentation quality by defining requirements before generation, enabling
-validation at every step.
+The specification-first approach ensures quality by defining requirements before generation and validating at every step.
 
 ---
 
@@ -42,9 +41,8 @@ validation at every step.
 
 ![CLI workflow preview](app_docs/assets/readme-cli-preview.svg)
 
-This preview mirrors the repository's documented flow: plan a specification in `specs/docs/`,
-generate a draft into `spec_driven_docs/rough_draft/`, review it against quality gates, and only
-then move it forward.
+This preview shows the typical workflow: plan a specification, generate a draft, review it against
+quality gates, then promote it through the workflow.
 
 ---
 
@@ -121,24 +119,24 @@ Run `/doc-status` to see your documentation dashboard. If you see status output,
 
 | Concept | Description |
 |---------|-------------|
-| **Commands** | 8 slash commands for planning, writing, reviewing, syncing, batching, status, learning, and promoting |
-| **Agents** | 4 specialized AI agents: Orchestrator (Opus), Writer (Sonnet), Reviewer (Sonnet), Librarian (Haiku) |
-| **Templates** | 3 document types: API documentation, design documents, user manuals |
-| **Quality system** | 4 quality gates, consistency rules, terminology enforcement, scoring (A-F grades) |
-| **Suites** | Organize related documents for batch operations and cross-reference management |
+| **Commands** | 8 slash commands for the full workflow |
+| **Agents** | 4 specialized AI agents with distinct roles |
+| **Templates** | 3 document types: API docs, design docs, manuals |
+| **Quality system** | 4 gates with A-F grading and consistency enforcement |
+| **Suites** | Group docs for batch operations |
 
 ## Command reference
 
 | Command | Purpose | Example |
 |---------|---------|---------|
-| `/doc-plan` | Create document specification | `/doc-plan "REST API" --type api` |
-| `/doc-write` | Generate document from spec | `/doc-write specs/docs/api-spec.md` |
-| `/doc-review` | Validate document quality | `/doc-review spec_driven_docs/rough_draft/api/users.md --fix` |
-| `/doc-sync` | Synchronize suite consistency | `/doc-sync my-suite` |
-| `/doc-batch` | Batch operations across suite | `/doc-batch my-suite generate` |
-| `/doc-status` | View documentation dashboard | `/doc-status my-suite` |
-| `/doc-improve` | Learn from successful docs | `/doc-improve` |
-| `/doc-promote` | Move doc between workflow stages | `/doc-promote <path> --to pending_approval` |
+| `/doc-plan` | Create specification | `/doc-plan "REST API" --type api` |
+| `/doc-write` | Generate from spec | `/doc-write specs/docs/api-spec.md` |
+| `/doc-review` | Validate quality | `/doc-review spec_driven_docs/rough_draft/api/users.md` |
+| `/doc-sync` | Sync suite consistency | `/doc-sync my-suite` |
+| `/doc-batch` | Batch operations | `/doc-batch my-suite generate` |
+| `/doc-status` | View dashboard | `/doc-status my-suite` |
+| `/doc-improve` | Learn patterns | `/doc-improve` |
+| `/doc-promote` | Promote document | `/doc-promote <path> --to pending_approval` |
 
 ### Common workflows
 
@@ -164,35 +162,34 @@ Run `/doc-status` to see your documentation dashboard. If you see status output,
 ## How everything connects
 
 ```text
-                    ┌─────────────────┐
-                    │   /doc-plan     │
-                    │  (Orchestrator) │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │  Specification  │
-                    │   (specs/docs/) │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │   /doc-write    │
-                    │    (Writer)     │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │    Document     │
-                    │(spec_driven_docs│
-                    │  /rough_draft/) │
-                    └────────┬────────┘
-                             │
-                             ▼
-┌─────────────┐     ┌─────────────────┐     ┌─────────────┐
-│  /doc-sync  │◄────│   /doc-review   │────►│ /doc-improve│
-│ (Librarian) │     │   (Reviewer)    │     │(Orchestrator│
-└─────────────┘     └─────────────────┘     └─────────────┘
+       ┌──────────────┐
+       │  /doc-plan   │
+       │(Orchestrator)│
+       └──────┬───────┘
+              │
+              ▼
+       ┌──────────────┐
+       │Specification │
+       │(specs/docs/) │
+       └──────┬───────┘
+              │
+              ▼
+       ┌──────────────┐
+       │ /doc-write   │
+       │  (Writer)    │
+       └──────┬───────┘
+              │
+              ▼
+       ┌──────────────┐
+       │  Document    │
+       │(rough_draft/)│
+       └──────┬───────┘
+              │
+              ▼
+ ┌──────────┐ ┌──────────────┐ ┌──────────┐
+ │/doc-sync │◄│/doc-review   │►│/doc-improve│
+ │(Librarian)│ │(Reviewer)    │ │(Orchestr) │
+ └──────────┘ └──────────────┘ └──────────┘
 ```
 
 ---
@@ -203,10 +200,10 @@ The system uses specialized Claude agents to scale document processing:
 
 | Agent | Model | Purpose |
 |-------|-------|---------|
-| **doc-orchestrator** | Opus | Strategy, requirement analysis, multi-document coordination |
-| **doc-writer** | Sonnet | Technical document generation from specifications |
-| **doc-reviewer** | Sonnet | Quality validation, accuracy checking, consistency enforcement |
-| **doc-librarian** | Haiku | Quick consistency checks, cross-references, index maintenance |
+| **doc-orchestrator** | Opus | Strategy & multi-document coordination |
+| **doc-writer** | Sonnet | Generate docs from specifications |
+| **doc-reviewer** | Sonnet | Quality & consistency validation |
+| **doc-librarian** | Haiku | Cross-reference & consistency checks |
 
 ### Agent integration
 
@@ -214,18 +211,17 @@ The system uses specialized Claude agents to scale document processing:
 - `/doc-write` spawns **doc-writer** for content generation
 - `/doc-review` spawns **doc-reviewer** for quality validation
 - `/doc-sync` spawns **doc-librarian** for cross-reference checks
-- `/doc-batch` coordinates multiple agents for parallel processing
-- `/doc-promote` checks quality gates and moves documents between `rough_draft/`, `pending_approval/`, and
-  `approved_final/`
+- `/doc-batch` coordinates agents for parallel processing
+- `/doc-promote` validates gates and moves documents: `rough_draft/` → `pending_approval/` → `approved_final/`
 
 ### Utility agents
 
 | Agent | Model | Purpose |
 |-------|-------|---------|
-| **workspace-cleanup** | Haiku | Workspace maintenance, temp file removal, file organization |
-| **prompt-enhance-agent** | Sonnet | Transforms vague prompts into clear, actionable prompts |
+| **workspace-cleanup** | Haiku | Maintenance & file organization |
+| **prompt-enhance-agent** | Sonnet | Clarify and structure prompts |
 
-Utility agents handle development hygiene and prompt-engineering tasks separate from the documentation workflow.
+Utility agents handle development hygiene and prompt engineering tasks.
 
 ---
 
