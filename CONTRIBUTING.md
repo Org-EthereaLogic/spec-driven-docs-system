@@ -51,6 +51,12 @@ npm test
 npm run lint:md
 ```
 
+## Versioning and releases
+
+This project follows [Semantic Versioning 2.0.0](https://semver.org/). For the
+full versioning policy, deprecation rules, runtime compatibility matrix, and the
+mandatory pre-release checklist, see [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
+
 ## Commit style
 
 Use imperative commit messages, such as:

@@ -1,17 +1,16 @@
-name: CI
+name: Release
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    tags:
+      - "v*"
 
 permissions:
   contents: read
 
 jobs:
-  smoke:
-    name: Smoke Tests
+  validate:
+    name: Release Validation
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -30,11 +29,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run smoke tests (JSON + hooks + markdownlint)
+      - name: Smoke tests (JSON + hooks + markdownlint)
         run: npm test
 
+      - name: End-to-end workflow tests
+        run: npm run test:e2e
+
   security:
-    name: Security Checks
+    name: Security Gate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -59,7 +61,8 @@ jobs:
           set -e
           if [ $AUDIT_EXIT -ne 0 ]; then
             if grep -qE "403|ECONNREFUSED|ENOTFOUND|ETIMEDOUT" /tmp/audit.txt; then
-              echo "::warning title=Dependency Audit::npm registry unreachable — vulnerability status unknown; manual review required before merge"
+              echo "::error title=Dependency Audit::npm registry unreachable — vulnerability status must be confirmed before release"
+              exit 1
             else
               cat /tmp/audit.txt
               exit $AUDIT_EXIT
@@ -71,19 +74,21 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  isolated-install:
-    name: Isolated Install Smoke
+  publish:
+    name: Publish GitHub Release
+    needs: [validate, security]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run isolated install script
-        run: bash tests/setup-isolated-test.sh /tmp/spec-docs-ci
-
-      - name: Verify isolated install contents
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          test -d /tmp/spec-docs-ci/.claude/commands/doc
-          test -d /tmp/spec-docs-ci/specs/docs
-          test -f /tmp/spec-docs-ci/source/task-manager-overview.md
-          test -f /tmp/spec-docs-ci/test_progress.json
+          gh release create "${{ github.ref_name }}" \
+            --title "Release ${{ github.ref_name }}" \
+            --generate-notes \
+            --verify-tag
