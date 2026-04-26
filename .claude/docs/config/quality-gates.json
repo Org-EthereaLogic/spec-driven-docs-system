@@ -199,5 +199,52 @@
     "auto_fix_enabled": true,
     "escalate_after_max": true,
     "rollback_on_regression": true
+  },
+
+  "quality_profiles": {
+    "description": "Per-document-type quality enforcement overrides applied by /doc-review and /doc-flow when a profile matches the doc type or template variant.",
+    "default_profile": "design",
+    "profile_selection": "Use the spec's doc_type field. If doc_type is 'api', 'design', or 'manual', apply the matching profile. For ADR or RFC documents (template_variant = 'adr' or 'rfc'), apply that profile.",
+    "profiles": {
+      "api": {
+        "description": "Public or internal API reference documentation",
+        "min_score": 85,
+        "required_gates": ["spec_completeness", "content_quality", "consistency", "final_approval"],
+        "required_sections": ["Overview", "Authentication", "Endpoints", "Error Handling"],
+        "enforce_code_examples": true,
+        "enforce_response_schemas": true
+      },
+      "design": {
+        "description": "Architectural design documents and proposals",
+        "min_score": 80,
+        "required_gates": ["spec_completeness", "content_quality", "consistency", "final_approval"],
+        "required_sections": ["Problem Statement", "Proposed Solution", "Alternatives Considered"],
+        "enforce_decision_record": true,
+        "enforce_architecture_diagram": false
+      },
+      "manual": {
+        "description": "User-facing guides and manuals",
+        "min_score": 75,
+        "required_gates": ["spec_completeness", "content_quality", "final_approval"],
+        "required_sections": ["Introduction", "Getting Started", "Core Concepts"],
+        "enforce_numbered_steps": true,
+        "enforce_troubleshooting": false
+      },
+      "adr": {
+        "description": "Architecture Decision Record - single decision with context and consequences",
+        "min_score": 80,
+        "required_gates": ["content_quality", "final_approval"],
+        "required_sections": ["Status", "Context", "Decision", "Consequences"],
+        "enforce_status_field": true,
+        "max_word_count": 800
+      },
+      "rfc": {
+        "description": "Request for Comments - formal proposal for changes or new features",
+        "min_score": 82,
+        "required_gates": ["spec_completeness", "content_quality", "consistency", "final_approval"],
+        "required_sections": ["Abstract", "Motivation", "Detailed Design", "Drawbacks", "Alternatives", "Unresolved Questions"],
+        "enforce_abstract_standalone": true
+      }
+    }
   }
 }

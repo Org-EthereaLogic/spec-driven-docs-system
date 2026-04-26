@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec-driven-docs-system/schema/plugin.schema.json",
+  "title": "Plugin Manifest",
+  "description": "Schema for .claude/plugins/<plugin-name>/plugin.json",
+  "type": "object",
+  "required": ["name", "version", "type", "entry_point", "description"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Plugin name in kebab-case, must match the plugin directory name"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-z0-9.-]+)?$",
+      "description": "Semantic version"
+    },
+    "type": {
+      "enum": ["command", "agent", "template", "hook"],
+      "description": "Primary extension type provided by this plugin"
+    },
+    "entry_point": {
+      "type": "string",
+      "description": "Path to the main file relative to the plugin directory"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "description": "One-sentence description of the plugin"
+    },
+    "author": { "type": "string" },
+    "compatibility": {
+      "type": "object",
+      "properties": {
+        "min_system_version": { "type": "string" }
+      }
+    },
+    "installs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Files this plugin places into target directories"
+    },
+    "requires": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Other plugin names this plugin depends on"
+    }
+  },
+  "additionalProperties": false
+}

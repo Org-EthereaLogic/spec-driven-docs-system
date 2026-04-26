@@ -77,6 +77,17 @@ for manifest in .claude/docs/suites/*/manifest.json; do
     fi
 done
 
+# Plugin manifests (glob — may be zero)
+for manifest in .claude/plugins/*/plugin.json; do
+    [ -f "$manifest" ] || continue
+    if python3 -c "import json,sys; json.load(open('$manifest'))" 2>/dev/null; then
+        pass "json-valid: $manifest"
+    else
+        err=$(python3 -c "import json,sys; json.load(open('$manifest'))" 2>&1 || true)
+        fail "json-valid: $manifest" "$err"
+    fi
+done
+
 # ---------------------------------------------------------------------
 # 2. Hook Execution Tests
 # ---------------------------------------------------------------------
@@ -190,6 +201,86 @@ except Exception:
     pass "post-write-hook: flags terminology violations"
 else
     fail "post-write-hook: flags terminology violations" "$output"
+fi
+
+# ---------------------------------------------------------------------
+# 2b. Post-Review Hook Tests
+# ---------------------------------------------------------------------
+# doc_post_review.py reads CLAUDE_TOOL_RESULT as a raw string (not JSON),
+# so it needs a different invocation pattern than run_hook above.
+
+run_post_review_hook() {
+    local command_str="$1"
+    local result_text="$2"
+    CLAUDE_TOOL_INPUT=$(python3 -c "import json,sys; print(json.dumps({'command': sys.argv[1]}))" "$command_str") \
+    CLAUDE_TOOL_RESULT="$result_text" \
+    CLAUDE_PROJECT_DIR="$FRAMEWORK_ROOT" \
+        python3 .claude/hooks/doc_post_review.py
+}
+
+# Test 6: post-review hook suggests promotion when grade A is found
+output=$(run_post_review_hook \
+    "/doc-review spec_driven_docs/rough_draft/api/users.md" \
+    "Score: 95/100 (A)
+ready_for_publish: true
+passed: true
+Document: spec_driven_docs/rough_draft/api/users.md")
+if echo "$output" | python3 -c "
+import json, sys
+try:
+    d = json.load(sys.stdin)
+    fb = d.get('feedback', '')
+    sys.exit(0 if 'promote' in fb.lower() or 'pending_approval' in fb.lower() else 1)
+except Exception:
+    sys.exit(1)
+" 2>/dev/null; then
+    pass "post-review-hook: suggests promotion for grade A"
+else
+    fail "post-review-hook: suggests promotion for grade A" "$output"
+fi
+
+# Test 7: post-review hook is silent for grade F (no promotion suggestion)
+output=$(run_post_review_hook \
+    "/doc-review spec_driven_docs/rough_draft/api/broken.md" \
+    "Score: 45/100 (F)
+ready_for_publish: false
+passed: false
+Document: spec_driven_docs/rough_draft/api/broken.md")
+# Either empty output or feedback that doesn't suggest promotion is acceptable
+if [ -z "$output" ]; then
+    pass "post-review-hook: silent for grade F"
+elif echo "$output" | python3 -c "
+import json, sys
+try:
+    d = json.load(sys.stdin)
+    fb = d.get('feedback', '').lower()
+    # Should NOT suggest promotion for failing grade
+    sys.exit(0 if 'promote' not in fb and 'pending_approval' not in fb else 1)
+except Exception:
+    sys.exit(1)
+" 2>/dev/null; then
+    pass "post-review-hook: silent for grade F"
+else
+    fail "post-review-hook: silent for grade F" "$output"
+fi
+
+# Test 8: post-review hook is silent for non-review commands
+output=$(run_post_review_hook \
+    "/doc-write specs/docs/api-spec.md" \
+    "Document written successfully")
+if [ -z "$output" ]; then
+    pass "post-review-hook: silent for non-review command"
+elif echo "$output" | python3 -c "
+import json, sys
+try:
+    d = json.load(sys.stdin)
+    sys.exit(0 if not d.get('feedback') else 1)
+except Exception:
+    sys.exit(0)
+" 2>/dev/null; then
+    pass "post-review-hook: silent for non-review command"
+else
+    fail "post-review-hook: silent for non-review command" "$output"
 fi
 
 # ---------------------------------------------------------------------

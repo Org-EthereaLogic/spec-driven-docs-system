@@ -35,6 +35,8 @@ In 5 minutes, plan a document, generate a draft, and run quality review using bu
 
 The specification-first approach ensures quality by defining requirements before generation and validating at every step.
 
+For a one-command shortcut through the full pipeline, use `/doc-flow "Topic" --type api --auto-promote` — it runs plan → write → review → promote in sequence with smart model selection and daily caching of spec analysis. New users can start with `/doc-interactive` for a guided walkthrough.
+
 ---
 
 ## In practice
@@ -131,6 +133,8 @@ Run `/doc-status` to see your documentation dashboard. If you see status output,
 
 | Command | Purpose | Example |
 |---------|---------|---------|
+| `/doc-flow` | Auto pipeline | `/doc-flow "REST API" --type api --auto-promote` |
+| `/doc-interactive` | Guided creation | `/doc-interactive` |
 | `/doc-plan` | Create specification | `/doc-plan "REST API" --type api` |
 | `/doc-write` | Generate from spec | `/doc-write specs/docs/api-spec.md` |
 | `/doc-review` | Validate quality | `/doc-review spec_driven_docs/rough_draft/api/users.md` |
@@ -139,6 +143,7 @@ Run `/doc-status` to see your documentation dashboard. If you see status output,
 | `/doc-status` | View dashboard | `/doc-status my-suite` |
 | `/doc-improve` | Learn patterns | `/doc-improve` |
 | `/doc-promote` | Promote document | `/doc-promote <path> --to pending_approval` |
+| `/doc-config` | Manage configuration | `/doc-config get quality_profiles.api.min_score` |
 
 ### Common workflows
 

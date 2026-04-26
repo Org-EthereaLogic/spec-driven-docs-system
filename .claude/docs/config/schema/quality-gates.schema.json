@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec-driven-docs-system/schema/quality-gates.schema.json",
+  "title": "Quality Gates Configuration",
+  "description": "Schema for .claude/docs/config/quality-gates.json",
+  "type": "object",
+  "required": ["version", "gates", "score_calculation", "grades"],
+  "properties": {
+    "version": { "type": "string" },
+    "description": { "type": "string" },
+    "gates": {
+      "type": "object",
+      "required": ["spec_completeness", "content_quality", "consistency", "final_approval"],
+      "additionalProperties": { "$ref": "#/$defs/Gate" }
+    },
+    "score_calculation": {
+      "type": "object",
+      "properties": {
+        "clarity_weight": { "type": "number" },
+        "required_weight": { "type": "number" },
+        "recommended_weight": { "type": "number" },
+        "project_specific_weight": { "type": "number" },
+        "formula": { "type": "string" },
+        "clarity_factors": { "type": "object" },
+        "note": { "type": "string" }
+      }
+    },
+    "grades": {
+      "type": "object",
+      "required": ["A", "B", "C", "D", "F"],
+      "additionalProperties": {
+        "type": "object",
+        "required": ["min", "max", "action"],
+        "properties": {
+          "min": { "type": "integer" },
+          "max": { "type": "integer" },
+          "action": { "type": "string" }
+        }
+      }
+    },
+    "iteration_config": {
+      "type": "object",
+      "properties": {
+        "max_iterations": { "type": "integer" },
+        "auto_fix_enabled": { "type": "boolean" },
+        "escalate_after_max": { "type": "boolean" },
+        "rollback_on_regression": { "type": "boolean" }
+      }
+    },
+    "quality_profiles": {
+      "type": "object",
+      "required": ["profiles", "default_profile"],
+      "properties": {
+        "description": { "type": "string" },
+        "default_profile": { "type": "string" },
+        "profile_selection": { "type": "string" },
+        "profiles": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/Profile" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "Gate": {
+      "type": "object",
+      "properties": {
+        "description": { "type": "string" },
+        "trigger": { "type": "string" },
+        "required": { "type": "array" },
+        "recommended": { "type": "array" },
+        "pass_threshold": { "type": "string" }
+      }
+    },
+    "Profile": {
+      "type": "object",
+      "required": ["min_score", "required_sections"],
+      "properties": {
+        "description": { "type": "string" },
+        "min_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "required_gates": { "type": "array", "items": { "type": "string" } },
+        "required_sections": { "type": "array", "items": { "type": "string" } },
+        "enforce_code_examples": { "type": "boolean" },
+        "enforce_response_schemas": { "type": "boolean" },
+        "enforce_decision_record": { "type": "boolean" },
+        "enforce_architecture_diagram": { "type": "boolean" },
+        "enforce_numbered_steps": { "type": "boolean" },
+        "enforce_troubleshooting": { "type": "boolean" },
+        "enforce_status_field": { "type": "boolean" },
+        "enforce_abstract_standalone": { "type": "boolean" },
+        "max_word_count": { "type": "integer" }
+      }
+    }
+  }
+}
