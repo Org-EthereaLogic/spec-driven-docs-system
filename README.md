@@ -39,7 +39,9 @@ The specification-first approach ensures quality by defining requirements before
 
 ## In practice
 
-![CLI workflow preview](app_docs/assets/readme-cli-preview.svg)
+<p align="center">
+  <img src="app_docs/assets/readme-cli-preview.svg" alt="CLI workflow preview" width="960" />
+</p>
 
 This preview shows the typical workflow: plan a specification, generate a draft, review it against
 quality gates, then promote it through the workflow.
