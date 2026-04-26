@@ -33,6 +33,43 @@ jobs:
       - name: Run smoke tests (JSON + hooks + markdownlint)
         run: npm test
 
+  security:
+    name: Security Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Dependency vulnerability audit
+        run: |
+          set +e
+          npm audit --audit-level=moderate 2>&1 | tee /tmp/audit.txt
+          AUDIT_EXIT=$?
+          set -e
+          if [ $AUDIT_EXIT -ne 0 ]; then
+            if grep -qE "403|ECONNREFUSED|ENOTFOUND|ETIMEDOUT" /tmp/audit.txt; then
+              echo "::warning title=Dependency Audit::npm registry unreachable — vulnerability status unknown; manual review required before merge"
+            else
+              cat /tmp/audit.txt
+              exit $AUDIT_EXIT
+            fi
+          fi
+
+      - name: Secret scanning
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   isolated-install:
     name: Isolated Install Smoke
     runs-on: ubuntu-latest
