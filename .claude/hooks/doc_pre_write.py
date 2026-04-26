@@ -56,6 +56,45 @@ def check_forbidden_patterns(content: str, rules: dict) -> list:
     return issues
 
 
+def _fenced_code_spans(content: str) -> list:
+    """Return list of (start, end) character offsets covering fenced code blocks.
+
+    Recognizes both backtick (```) and tilde (~~~) fences. The end offset is
+    inclusive of the closing fence line. An unterminated opener spans to EOF.
+    """
+    spans = []
+    fence_re = re.compile(r'(?m)^[ \t]{0,3}(`{3,}|~{3,})')
+    pos = 0
+    while True:
+        opener = fence_re.search(content, pos)
+        if not opener:
+            break
+        marker = opener.group(1)
+        body_start = opener.start()
+        line_end = content.find('\n', opener.end())
+        search_from = line_end + 1 if line_end != -1 else len(content)
+        closer_re = re.compile(
+            r'(?m)^[ \t]{0,3}' + re.escape(marker[0]) + r'{' + str(len(marker)) + r',}\s*$'
+        )
+        closer = closer_re.search(content, search_from)
+        if not closer:
+            spans.append((body_start, len(content)))
+            break
+        close_line_end = content.find('\n', closer.end())
+        span_end = close_line_end if close_line_end != -1 else len(content)
+        spans.append((body_start, span_end))
+        pos = span_end + 1
+    return spans
+
+
+def _is_inside_spans(pos: int, spans: list) -> bool:
+    """Return True if pos lies within any (start, end) span."""
+    for start, end in spans:
+        if start <= pos < end:
+            return True
+    return False
+
+
 def is_valid_protocol_ellipsis(content: str, ellipsis_pos: int) -> bool:
     """Check if an ellipsis at the given position is valid Protocol/ABC syntax.
 
@@ -95,14 +134,21 @@ def is_valid_protocol_ellipsis(content: str, ellipsis_pos: int) -> bool:
 def check_ellipsis_patterns(content: str) -> list:
     """Check for ellipsis patterns that indicate incomplete content.
 
-    Excludes valid Protocol/ABC abstract method ellipsis (PEP 544).
+    Ellipsis is allowed inside fenced code blocks (comments, spread operators,
+    range syntax, Protocol bodies). In prose, ellipsis is also allowed when
+    immediately preceded by a sentence-ending word (e.g., "...wait, what?")
+    but flagged when it appears to indicate omitted content.
     """
     issues = []
+    code_spans = _fenced_code_spans(content)
     for match in re.finditer(r'\.\.\.', content):
         pos = match.start()
-        if not is_valid_protocol_ellipsis(content, pos):
-            line_num = content[:pos].count('\n') + 1
-            issues.append(f"Line {line_num}: Ellipsis '...' detected - may indicate incomplete content")
+        if _is_inside_spans(pos, code_spans):
+            continue
+        if is_valid_protocol_ellipsis(content, pos):
+            continue
+        line_num = content[:pos].count('\n') + 1
+        issues.append(f"Line {line_num}: Ellipsis '...' detected - may indicate incomplete content")
     return issues
 
 

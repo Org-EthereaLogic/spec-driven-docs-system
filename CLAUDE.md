@@ -82,7 +82,7 @@ app_docs/                # End-user documentation (User Guide, tutorials)
 
 - **4 Quality Gates:** spec_completeness → content_quality → consistency → final_approval
 - **Grading:** A (90-100 approved), B (80-89 approved with notes), C (70-79 iterate), D (60-69 required), F (<60 blocked)
-- **Quality Profiles:** Per-doc-type thresholds in `quality-gates.json` → `quality_profiles` (api 85, design 80, manual 75, adr 80, rfc 82)
+- **Quality Profiles:** Per-doc-type thresholds in `quality-gates.json` → `quality_profiles` (api 85, design 80, manual 75, quickstart 75, adr 80, rfc 82). The manual profile accepts section aliases (e.g. "Quickstart" satisfies "Getting Started"); the quickstart profile has no required section names.
 - **Hooks:** `doc_pre_write.py` blocks writes with forbidden patterns; `doc_post_write.py` runs post-validation; `doc_post_review.py` suggests promotion on passing review
 - **Shared utilities:** `hook_utils.py` provides common config loading, environment parsing, and structured feedback formatting
 

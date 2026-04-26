@@ -105,16 +105,23 @@ This agent operates under two governance layers:
 - [ ] Content depth appropriate for feature complexity (simple features = concise docs)
 
 ### Code Example Requirements
-- [ ] Language hint on every code block
+- [ ] Language hint on every fenced code block (use `http` for HTTP method+path,
+      `text` for raw output or non-language content; never emit a bare ```` ``` ````)
 - [ ] Syntactically valid code
 - [ ] Complete, runnable examples (not snippets)
 - [ ] Context provided for each example
 - [ ] Both success and error cases shown (for API docs)
 
-### Style Requirements
+### Style Requirements (Markdownlint-clean)
+The output must pass the project's `npm run lint:md` without manual fixes.
 - [ ] Sentence case for headers
-- [ ] Consistent list markers (dashes)
-- [ ] Proper heading hierarchy (no skipped levels)
+- [ ] Consistent list markers (dashes, MD004)
+- [ ] Proper heading hierarchy (no skipped levels, MD001)
+- [ ] Blank line above and below every list (MD032) — including bullet lists
+      that follow a bold-label paragraph like `**Steps:**`
+- [ ] Blank line above and below every fenced code block (MD031)
+- [ ] No trailing whitespace; file ends with a single trailing newline
+      (MD009, MD047)
 - [ ] Active voice preferred
 - [ ] Second person for instructions ("you")
 

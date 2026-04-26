@@ -227,8 +227,28 @@
         "min_score": 75,
         "required_gates": ["spec_completeness", "content_quality", "final_approval"],
         "required_sections": ["Introduction", "Getting Started", "Core Concepts"],
+        "section_aliases": {
+          "Introduction": ["Overview", "Welcome", "About", "What is", "Purpose"],
+          "Getting Started": ["Quickstart", "Quick Start", "Install", "Installation", "Setup", "First steps"],
+          "Core Concepts": ["Concepts", "Key Concepts", "Fundamentals", "How it works"]
+        },
         "enforce_numbered_steps": true,
         "enforce_troubleshooting": false
+      },
+      "quickstart": {
+        "description": "Short hands-on guide that takes a user from zero to first success in under 10 minutes",
+        "min_score": 75,
+        "required_gates": ["spec_completeness", "content_quality", "final_approval"],
+        "required_sections": [],
+        "section_intent": [
+          "An install or setup section",
+          "An authenticate or configure section (when applicable)",
+          "A first-task section that produces a visible success signal"
+        ],
+        "enforce_numbered_steps": true,
+        "enforce_troubleshooting": false,
+        "max_word_count": 1500,
+        "selection_hint": "Use this profile for short hands-on guides (notesctl-style quickstarts). Use the manual profile for full user guides with multiple chapters."
       },
       "adr": {
         "description": "Architecture Decision Record - single decision with context and consequences",
