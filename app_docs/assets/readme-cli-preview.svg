@@ -1,93 +1,112 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
-  <title id="title">Spec-driven documentation workflow preview</title>
-  <desc id="desc">A clean visual walkthrough of the plan, write, review, and promote stages used in this repository.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Spec-First Documentation Pipeline</title>
+  <desc id="desc">Three-zone EthereaLogic.ai diagram showing the plan, write, review, and promote workflow with quality gates and stage movement.</desc>
 
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0b1220" />
-      <stop offset="100%" stop-color="#111c33" />
+      <stop offset="0%" stop-color="#060B14" />
+      <stop offset="100%" stop-color="#0A1020" />
     </linearGradient>
-    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#38bdf8" />
-      <stop offset="100%" stop-color="#34d399" />
+    <linearGradient id="lineBlue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00D4FF" />
+      <stop offset="100%" stop-color="#2F80ED" />
     </linearGradient>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#020617" flood-opacity="0.45" />
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#020611" flood-opacity="0.5" />
     </filter>
   </defs>
 
-  <rect width="1200" height="720" fill="url(#bg)" rx="28" />
+  <rect width="1200" height="675" rx="28" fill="url(#bg)" />
 
-  <text x="70" y="86" fill="#dbeafe" font-size="18" font-family="Inter, Segoe UI, Arial, sans-serif" letter-spacing="1.5">
-    SPEC-FIRST DOCUMENTATION SYSTEM
-  </text>
-  <text x="70" y="132" fill="#f8fafc" font-size="44" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">
-    Typical command workflow
-  </text>
-  <text x="70" y="166" fill="#94a3b8" font-size="21" font-family="Inter, Segoe UI, Arial, sans-serif">
-    Plan requirements, generate drafts, validate quality gates, then promote through stages.
-  </text>
+  <text x="48" y="60" fill="#AAB6C5" font-size="16" letter-spacing="1.4" font-family="Inter, Segoe UI, Arial, sans-serif">ETHEREALOGIC.AI · DOCUMENTATION GOVERNANCE</text>
+  <text x="48" y="102" fill="#F5F7FA" font-size="42" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">Spec-First Documentation Pipeline</text>
+  <text x="48" y="130" fill="#AAB6C5" font-size="18" font-family="Inter, Segoe UI, Arial, sans-serif">Plan requirements, generate drafts, validate quality gates, and promote approved documentation.</text>
 
   <g filter="url(#shadow)">
-    <rect x="70" y="210" width="760" height="440" rx="18" fill="#0a1120" stroke="#1e293b" />
-    <rect x="70" y="210" width="760" height="44" rx="18" fill="#111827" />
-    <circle cx="98" cy="232" r="6" fill="#fb7185" />
-    <circle cx="118" cy="232" r="6" fill="#fbbf24" />
-    <circle cx="138" cy="232" r="6" fill="#34d399" />
-    <text x="342" y="238" fill="#93a4bd" font-size="14" font-family="Inter, Segoe UI, Arial, sans-serif">
-      CLI session preview
-    </text>
+    <rect x="48" y="168" width="362" height="447" rx="18" fill="#101827" stroke="#1E2A3E" />
+  </g>
+  <text x="74" y="204" fill="#F5F7FA" font-size="24" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">Command Pipeline</text>
+
+  <g>
+    <rect x="74" y="226" width="310" height="88" rx="14" fill="#0B1426" stroke="#2F80ED" stroke-opacity="0.75" />
+    <text x="90" y="251" fill="#00D4FF" font-size="14" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">01 PLAN</text>
+    <text x="90" y="273" fill="#F5F7FA" font-size="20" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">/doc-plan</text>
+    <text x="90" y="292" fill="#AAB6C5" font-size="14" font-family="Inter, Segoe UI, Arial, sans-serif">Define requirements first</text>
+    <text x="90" y="307" fill="#AAB6C5" font-size="14" font-family="Inter, Segoe UI, Arial, sans-serif">Output: specification</text>
   </g>
 
-  <text x="102" y="295" fill="#22d3ee" font-size="20" font-weight="700" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">
-    $ /doc-plan "User authentication API" --type api
-  </text>
-  <text x="132" y="326" fill="#cbd5e1" font-size="17" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">
-    -> specs/docs/user-authentication-api-spec.md
-  </text>
+  <g>
+    <rect x="74" y="324" width="310" height="88" rx="14" fill="#0B1426" stroke="#2F80ED" stroke-opacity="0.75" />
+    <text x="90" y="349" fill="#00D4FF" font-size="14" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">02 WRITE</text>
+    <text x="90" y="371" fill="#F5F7FA" font-size="20" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">/doc-write</text>
+    <text x="90" y="390" fill="#AAB6C5" font-size="14" font-family="Inter, Segoe UI, Arial, sans-serif">Generate from approved spec</text>
+    <text x="90" y="405" fill="#AAB6C5" font-size="14" font-family="Inter, Segoe UI, Arial, sans-serif">Output: rough draft</text>
+  </g>
 
-  <text x="102" y="382" fill="#60a5fa" font-size="20" font-weight="700" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">
-    $ /doc-write specs/docs/user-authentication-api-spec.md
-  </text>
-  <text x="132" y="413" fill="#cbd5e1" font-size="17" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">
-    -> spec_driven_docs/rough_draft/api/user-authentication.md
-  </text>
+  <g>
+    <rect x="74" y="422" width="310" height="88" rx="14" fill="#0B1426" stroke="#F5B642" stroke-opacity="0.85" />
+    <text x="90" y="447" fill="#F5B642" font-size="14" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">03 REVIEW</text>
+    <text x="90" y="469" fill="#F5F7FA" font-size="20" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">/doc-review</text>
+    <text x="90" y="488" fill="#AAB6C5" font-size="14" font-family="Inter, Segoe UI, Arial, sans-serif">Validate quality gates</text>
+    <text x="90" y="503" fill="#AAB6C5" font-size="14" font-family="Inter, Segoe UI, Arial, sans-serif">Output: review report</text>
+  </g>
 
-  <text x="102" y="470" fill="#fbbf24" font-size="20" font-weight="700" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">
-    $ /doc-review spec_driven_docs/rough_draft/api/user-authentication.md --fix
-  </text>
-  <text x="132" y="501" fill="#cbd5e1" font-size="17" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">
-    -> checks completeness, content quality, consistency, and final approval
-  </text>
-
-  <rect x="102" y="548" width="165" height="34" rx="17" fill="#052e2b" stroke="#14b8a6" stroke-opacity="0.45" />
-  <rect x="282" y="548" width="170" height="34" rx="17" fill="#082f49" stroke="#38bdf8" stroke-opacity="0.45" />
-  <rect x="467" y="548" width="146" height="34" rx="17" fill="#422006" stroke="#f59e0b" stroke-opacity="0.45" />
-  <rect x="628" y="548" width="172" height="34" rx="17" fill="#14532d" stroke="#22c55e" stroke-opacity="0.45" />
-
-  <text x="121" y="570" fill="#99f6e4" font-size="13" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">SPEC COMPLETE</text>
-  <text x="302" y="570" fill="#7dd3fc" font-size="13" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">QUALITY VERIFIED</text>
-  <text x="489" y="570" fill="#fcd34d" font-size="13" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">CONSISTENT</text>
-  <text x="649" y="570" fill="#bbf7d0" font-size="13" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">READY TO PROMOTE</text>
+  <g>
+    <rect x="74" y="520" width="310" height="88" rx="14" fill="#0B1426" stroke="#20D08A" stroke-opacity="0.9" />
+    <text x="90" y="545" fill="#20D08A" font-size="14" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">04 PROMOTE</text>
+    <text x="90" y="567" fill="#F5F7FA" font-size="20" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">/doc-promote</text>
+    <text x="90" y="586" fill="#AAB6C5" font-size="14" font-family="Inter, Segoe UI, Arial, sans-serif">Move through workflow stages</text>
+    <text x="90" y="601" fill="#AAB6C5" font-size="14" font-family="Inter, Segoe UI, Arial, sans-serif">Output: approved final</text>
+  </g>
 
   <g filter="url(#shadow)">
-    <rect x="860" y="210" width="270" height="440" rx="18" fill="#0f172a" stroke="#1e293b" />
+    <rect x="426" y="168" width="398" height="447" rx="18" fill="#101827" stroke="#1E2A3E" />
   </g>
+  <text x="450" y="204" fill="#F5F7FA" font-size="24" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">Quality Gate</text>
 
-  <text x="890" y="262" fill="#f8fafc" font-size="29" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">Stage movement</text>
-  <text x="890" y="294" fill="#94a3b8" font-size="16" font-family="Inter, Segoe UI, Arial, sans-serif">Promotion is unlocked after review.</text>
+  <rect x="450" y="226" width="350" height="204" rx="14" fill="#0B1426" stroke="#F5B642" stroke-opacity="0.45" />
+  <circle cx="474" cy="259" r="7" fill="#20D08A" />
+  <circle cx="474" cy="298" r="7" fill="#20D08A" />
+  <circle cx="474" cy="337" r="7" fill="#20D08A" />
+  <circle cx="474" cy="376" r="7" fill="#20D08A" />
+  <text x="492" y="264" fill="#F5F7FA" font-size="20" font-family="Inter, Segoe UI, Arial, sans-serif">Completeness</text>
+  <text x="492" y="303" fill="#F5F7FA" font-size="20" font-family="Inter, Segoe UI, Arial, sans-serif">Consistency</text>
+  <text x="492" y="342" fill="#F5F7FA" font-size="20" font-family="Inter, Segoe UI, Arial, sans-serif">Structure</text>
+  <text x="492" y="381" fill="#F5F7FA" font-size="20" font-family="Inter, Segoe UI, Arial, sans-serif">Promotion readiness</text>
 
-  <rect x="890" y="334" width="210" height="54" rx="14" fill="#111827" stroke="#38bdf8" stroke-opacity="0.6" />
-  <rect x="890" y="430" width="210" height="54" rx="14" fill="#111827" stroke="#fbbf24" stroke-opacity="0.6" />
-  <rect x="890" y="526" width="210" height="54" rx="14" fill="#111827" stroke="#22c55e" stroke-opacity="0.6" />
+  <rect x="450" y="448" width="160" height="34" rx="17" fill="#082133" stroke="#00D4FF" stroke-opacity="0.5" />
+  <rect x="622" y="448" width="178" height="34" rx="17" fill="#082133" stroke="#2F80ED" stroke-opacity="0.5" />
+  <rect x="450" y="494" width="149" height="34" rx="17" fill="#33240A" stroke="#F5B642" stroke-opacity="0.6" />
+  <rect x="611" y="494" width="189" height="34" rx="17" fill="#0E2D22" stroke="#20D08A" stroke-opacity="0.7" />
 
-  <path d="M995 388v42" stroke="url(#accent)" stroke-width="5" stroke-linecap="round" />
-  <path d="M995 484v42" stroke="url(#accent)" stroke-width="5" stroke-linecap="round" />
+  <text x="472" y="470" fill="#BFEFFF" font-size="13" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">SPEC COMPLETE</text>
+  <text x="643" y="470" fill="#C7D9FF" font-size="13" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">QUALITY VERIFIED</text>
+  <text x="473" y="516" fill="#FFE0A4" font-size="13" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">CONSISTENT</text>
+  <text x="633" y="516" fill="#BDEED9" font-size="13" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">READY TO PROMOTE</text>
 
-  <text x="925" y="366" fill="#e2e8f0" font-size="19" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">specs/docs/</text>
-  <text x="920" y="462" fill="#e2e8f0" font-size="19" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">rough_draft/</text>
-  <text x="904" y="558" fill="#e2e8f0" font-size="19" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">pending -> approved</text>
+  <text x="450" y="560" fill="#AAB6C5" font-size="16" font-family="Inter, Segoe UI, Arial, sans-serif">Commands: 8 slash commands</text>
+  <text x="450" y="584" fill="#AAB6C5" font-size="16" font-family="Inter, Segoe UI, Arial, sans-serif">Agents: Orchestrator · Writer · Reviewer · Librarian</text>
+  <text x="450" y="608" fill="#AAB6C5" font-size="16" font-family="Inter, Segoe UI, Arial, sans-serif">Quality: A–F grading + consistency gates</text>
 
-  <rect x="890" y="604" width="210" height="24" rx="12" fill="#082f49" />
-  <text x="906" y="621" fill="#bae6fd" font-size="12" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">CI: smoke tests + markdown lint</text>
+  <g filter="url(#shadow)">
+    <rect x="840" y="168" width="312" height="447" rx="18" fill="#101827" stroke="#1E2A3E" />
+  </g>
+  <text x="864" y="204" fill="#F5F7FA" font-size="24" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">Stage Movement</text>
+
+  <rect x="864" y="232" width="264" height="68" rx="12" fill="#0B1426" stroke="#00D4FF" stroke-opacity="0.55" />
+  <rect x="864" y="327" width="264" height="68" rx="12" fill="#0B1426" stroke="#2F80ED" stroke-opacity="0.6" />
+  <rect x="864" y="422" width="264" height="68" rx="12" fill="#0B1426" stroke="#F5B642" stroke-opacity="0.75" />
+  <rect x="864" y="517" width="264" height="68" rx="12" fill="#0B1426" stroke="#20D08A" stroke-opacity="0.8" />
+
+  <path d="M996 300v25" stroke="url(#lineBlue)" stroke-width="4" stroke-linecap="round" />
+  <path d="M996 395v25" stroke="url(#lineBlue)" stroke-width="4" stroke-linecap="round" />
+  <path d="M996 490v25" stroke="url(#lineBlue)" stroke-width="4" stroke-linecap="round" />
+
+  <text x="887" y="272" fill="#F5F7FA" font-size="26" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">specs/docs</text>
+  <text x="887" y="367" fill="#F5F7FA" font-size="26" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">rough_draft</text>
+  <text x="887" y="462" fill="#F5F7FA" font-size="23" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">pending_approval</text>
+  <text x="887" y="557" fill="#F5F7FA" font-size="24" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace">approved_final</text>
+
+  <rect x="48" y="629" width="1104" height="30" rx="15" fill="#0E1628" stroke="#1E2A3E" />
+  <text x="600" y="649" text-anchor="middle" fill="#AAB6C5" font-size="15" font-family="Inter, Segoe UI, Arial, sans-serif">Spec-first · Quality-gated · Agent-assisted · Promotion-controlled</text>
 </svg>
