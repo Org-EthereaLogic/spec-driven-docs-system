@@ -1,7 +1,7 @@
 ---
 model: opus
 description: Create a document specification with intelligent requirement gathering
-argument-hint: <topic-or-path> [--type <api|design|manual>] [--suite <name>] [--output <path>]
+argument-hint: <topic-or-path> [--type <api|design|manual>] [--profile <api|design|manual|quickstart|adr|rfc>] [--suite <name>] [--output <path>]
 allowed-tools: Read, Glob, Grep, Task, Write, AskUserQuestion
 ---
 
@@ -90,15 +90,27 @@ Blockers (spec rejected if present):
 
 1. **Parse Arguments**
    - Extract topic or path from first argument
-   - Parse optional flags: --type, --suite, --output
+   - Parse optional flags: --type, --profile, --suite, --output
    - If path provided, read the file for context
 
 2. **Detect Document Type**
    If --type not specified, infer from:
    - Keywords in topic (API, endpoint, authentication implies api)
    - Keywords (architecture, design, RFC, proposal implies design)
-   - Keywords (guide, tutorial, how-to, manual implies manual)
+   - Keywords (guide, tutorial, how-to, manual, quickstart implies manual)
    - If ambiguous, ask user with specific options
+
+3. **Detect Quality Profile**
+   The profile drives review thresholds and required-section checks.
+   - If --profile is provided, use it.
+   - Otherwise default to the same value as --type for api/design/manual.
+   - Detect a `quickstart` profile when the topic contains `quickstart`,
+     `quick start`, `first run`, `getting started in`, or similar
+     short-hands-on-guide language. Quickstart docs use `--type manual`
+     internally but record `quality_profile: quickstart` in the spec.
+   - For the quickstart profile, do not enforce the standard manual sections
+     (`Introduction`, `Getting Started`, `Core Concepts`). Instead use the
+     `section_intent` guidance from the profile.
 
 ### Phase 2: Context Exploration (Parallel)
 
@@ -156,6 +168,7 @@ Create a detailed specification document with this structure:
 
 ## Metadata
 - **Type:** [api|design|manual]
+- **Quality Profile:** [api|design|manual|quickstart|adr|rfc] (omit if same as Type)
 - **Created:** [ISO date]
 - **Status:** draft
 - **Suite:** [suite-name if applicable]
