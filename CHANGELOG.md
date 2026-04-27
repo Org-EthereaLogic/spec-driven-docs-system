@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI: removed unsupported `config-path` input from `gitleaks-action` — the
   action auto-discovers `.gitleaks.toml` from the repository root
 - Docs: corrected stale counts in `CLAUDE.md`, `README.md`,
-  `tests/isolated-test-plan.md`, and `IMPROVEMENT_OPPORTUNITIES.md`
+  `tests/isolated-test-plan.md`, and `app_docs/reports/IMPROVEMENT_OPPORTUNITIES.md`
   (8→11 slash commands, 3→6 document templates)
 
 ### Dependencies
