@@ -96,6 +96,12 @@ specs/docs/*
 !specs/docs/_example/
 !specs/docs/README.md
 
+# Project-specific deliverable bundles (customer hand-off packages produced
+# by the framework). Like specs/docs/* and .claude/docs/suites/*, these
+# contain content that pertains to specific projects and should not be
+# tracked by the public framework repo.
+deliverables/
+
 # Test archives (local only, not committed)
 tests/archives/
 
