@@ -28,10 +28,13 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install Python dependencies (for schema validation)
+        run: pip install --quiet jsonschema
+
       - name: Install dependencies
         run: npm ci
 
-      - name: Run smoke tests (JSON + hooks + markdownlint)
+      - name: Run smoke tests (JSON syntax + JSON Schema + hooks + markdownlint)
         run: npm test
 
   security:
