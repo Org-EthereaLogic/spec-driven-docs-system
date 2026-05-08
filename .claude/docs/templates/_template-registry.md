@@ -127,7 +127,7 @@ Each template should be parseable for automation:
 
 To add a new document template:
 
-1. **Create the template file** in `***REMOVED***/Dev/.claude/docs/templates/`
+1. **Create the template file** in `.claude/docs/templates/`
    - Use existing templates as a guide
    - Include Purpose, Target Audience, Required Sections, Optional Sections, Style Guidelines
 
