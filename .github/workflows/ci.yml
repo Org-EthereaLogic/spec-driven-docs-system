@@ -29,7 +29,10 @@ jobs:
           python-version: "3.11"
 
       - name: Install Python dependencies (for schema validation)
-        run: pip install --quiet jsonschema
+        # Use `python3 -m pip` so install targets the interpreter that
+        # actions/setup-python configured. Pin a floor that supports
+        # Draft 2020-12 (added in jsonschema 4.0; 4.18 is a recent stable).
+        run: python3 -m pip install --quiet 'jsonschema>=4.18,<5'
 
       - name: Install dependencies
         run: npm ci
