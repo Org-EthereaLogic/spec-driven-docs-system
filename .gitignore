@@ -102,6 +102,17 @@ specs/docs/*
 # tracked by the public framework repo.
 deliverables/
 
+# Project-specific generated documentation (per-project workflow output).
+# The rough_draft / pending_approval / approved_final directories carry
+# README.md files that describe the workflow stage (those stay tracked);
+# every other artifact is project content and stays local.
+spec_driven_docs/rough_draft/*
+spec_driven_docs/pending_approval/*
+spec_driven_docs/approved_final/*
+!spec_driven_docs/rough_draft/README.md
+!spec_driven_docs/pending_approval/README.md
+!spec_driven_docs/approved_final/README.md
+
 # Test archives (local only, not committed)
 tests/archives/
 
