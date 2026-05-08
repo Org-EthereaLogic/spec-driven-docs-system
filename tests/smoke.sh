@@ -3,9 +3,11 @@
 # Smoke tests for spec-driven-docs-system
 #
 # Runs:
-#   1. JSON validation for all configuration files
-#   2. Hook execution tests (pre-write blocking, protocol ellipsis allowed)
-#   3. Markdown lint (lint:md)
+#   1. JSON syntax validation for all configuration files
+#   2. JSON Schema validation for suite manifests (requires `jsonschema`;
+#      skipped gracefully if the package is unavailable)
+#   3. Hook execution tests (pre-write blocking, protocol ellipsis allowed)
+#   4. Markdown lint (lint:md)
 #
 # Runs all checks, prints a summary, and exits non-zero if any check fails.
 # Designed for CI and local `npm test`.
@@ -89,7 +91,139 @@ for manifest in .claude/plugins/*/plugin.json; do
 done
 
 # ---------------------------------------------------------------------
-# 2. Hook Execution Tests
+# 2. JSON Schema Validation (suite manifests)
+# ---------------------------------------------------------------------
+# Validates each suite manifest under .claude/docs/suites/*/manifest.json
+# against .claude/docs/config/schema/manifest.schema.json (Draft 2020-12).
+#
+# Behavior:
+#   - In CI ($GITHUB_ACTIONS == "true") missing prerequisites (schema file
+#     or `jsonschema` package supporting Draft 2020-12) are HARD FAILURES.
+#     CI must surface configuration drift, not silently skip.
+#   - Locally, missing prerequisites SKIP gracefully so npm test stays
+#     portable across developer environments.
+#   - All manifests are validated in a single Python invocation to
+#     amortize interpreter startup as the suite count grows.
+section "JSON Schema Validation"
+
+SCHEMA_FILE=".claude/docs/config/schema/manifest.schema.json"
+CI_MODE="${GITHUB_ACTIONS:-false}"
+
+# Collect manifest files (nullglob expands to nothing when no matches)
+shopt -s nullglob
+MANIFEST_FILES=(.claude/docs/suites/*/manifest.json)
+shopt -u nullglob
+
+prereq_unavailable() {
+    # In CI, missing prerequisites are failures; locally they are skips.
+    local check_name="$1"
+    local detail="$2"
+    if [ "$CI_MODE" = "true" ]; then
+        fail "schema-validate: $check_name" "$detail (CI requires schema validation)"
+    else
+        echo "  [SKIP] schema-validate: $detail"
+    fi
+}
+
+if [ ! -f "$SCHEMA_FILE" ]; then
+    prereq_unavailable "schema-missing" "schema file not found at $SCHEMA_FILE"
+elif ! python3 -c "from jsonschema import Draft202012Validator" 2>/dev/null; then
+    # Check for Draft202012Validator specifically — older jsonschema lacks it.
+    prereq_unavailable "validator-unavailable" \
+        "Draft202012Validator not importable; install 'jsonschema>=4.18'"
+elif [ ${#MANIFEST_FILES[@]} -eq 0 ]; then
+    echo "  [SKIP] schema-validate: no suite manifests to validate"
+else
+    # Single Python invocation. Emits machine-readable lines:
+    #   PASS <path>            -> bash translates to pass()
+    #   FAIL <path>            -> followed by indented detail lines, then bash fail()
+    SCHEMA_VALIDATE_OUT=$(mktemp)
+    SCHEMA_FILE="$SCHEMA_FILE" python3 - "${MANIFEST_FILES[@]}" >"$SCHEMA_VALIDATE_OUT" 2>&1 <<'PY'
+import json, os, sys
+from jsonschema import Draft202012Validator
+
+# Load and compile schema; concise error if malformed
+try:
+    with open(os.environ["SCHEMA_FILE"]) as f:
+        schema = json.load(f)
+    validator = Draft202012Validator(schema)
+except json.JSONDecodeError as e:
+    print(f"FATAL: schema is not valid JSON: {e}")
+    sys.exit(2)
+except Exception as e:
+    print(f"FATAL: failed to construct validator: {type(e).__name__}: {e}")
+    sys.exit(2)
+
+exit_code = 0
+for path in sys.argv[1:]:
+    try:
+        with open(path) as f:
+            manifest = json.load(f)
+    except FileNotFoundError:
+        print(f"FAIL {path}")
+        print(f"    file not found")
+        exit_code = 1
+        continue
+    except json.JSONDecodeError as e:
+        print(f"FAIL {path}")
+        print(f"    not valid JSON: {e}")
+        exit_code = 1
+        continue
+
+    errors = list(validator.iter_errors(manifest))
+    if errors:
+        print(f"FAIL {path}")
+        for e in errors[:5]:
+            field = "/".join(str(p) for p in e.absolute_path) or "<root>"
+            print(f"    {field}: {e.message}")
+        if len(errors) > 5:
+            print(f"    ... and {len(errors) - 5} more")
+        exit_code = 1
+    else:
+        print(f"PASS {path}")
+
+sys.exit(exit_code)
+PY
+    rc=$?
+
+    if [ $rc -eq 2 ]; then
+        # Validator construction failed — fatal, single failure entry
+        fail "schema-validate: validator-construction" "$(cat "$SCHEMA_VALIDATE_OUT")"
+    else
+        # Parse PASS/FAIL stanzas; collect indented detail lines as failure context
+        current_fail=""
+        details=""
+        while IFS= read -r line; do
+            if [[ "$line" == "PASS "* ]]; then
+                if [ -n "$current_fail" ]; then
+                    fail "schema-valid: $current_fail" "$details"
+                    current_fail=""; details=""
+                fi
+                pass "schema-valid: ${line#PASS }"
+            elif [[ "$line" == "FAIL "* ]]; then
+                if [ -n "$current_fail" ]; then
+                    fail "schema-valid: $current_fail" "$details"
+                fi
+                current_fail="${line#FAIL }"
+                details=""
+            else
+                # Continuation / detail line for current failure
+                if [ -n "$details" ]; then
+                    details="${details}"$'\n'"$line"
+                else
+                    details="$line"
+                fi
+            fi
+        done < "$SCHEMA_VALIDATE_OUT"
+        if [ -n "$current_fail" ]; then
+            fail "schema-valid: $current_fail" "$details"
+        fi
+    fi
+    rm -f "$SCHEMA_VALIDATE_OUT"
+fi
+
+# ---------------------------------------------------------------------
+# 3. Hook Execution Tests
 # ---------------------------------------------------------------------
 section "Hook Execution"
 
@@ -342,7 +476,7 @@ else
 fi
 
 # ---------------------------------------------------------------------
-# 3. Markdown Lint
+# 4. Markdown Lint
 # ---------------------------------------------------------------------
 section "Markdown Lint"
 
