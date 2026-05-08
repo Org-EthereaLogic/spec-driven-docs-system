@@ -3,9 +3,11 @@
 # Smoke tests for spec-driven-docs-system
 #
 # Runs:
-#   1. JSON validation for all configuration files
-#   2. Hook execution tests (pre-write blocking, protocol ellipsis allowed)
-#   3. Markdown lint (lint:md)
+#   1. JSON syntax validation for all configuration files
+#   2. JSON Schema validation for suite manifests (requires `jsonschema`;
+#      skipped gracefully if the package is unavailable)
+#   3. Hook execution tests (pre-write blocking, protocol ellipsis allowed)
+#   4. Markdown lint (lint:md)
 #
 # Runs all checks, prints a summary, and exits non-zero if any check fails.
 # Designed for CI and local `npm test`.
@@ -89,7 +91,54 @@ for manifest in .claude/plugins/*/plugin.json; do
 done
 
 # ---------------------------------------------------------------------
-# 2. Hook Execution Tests
+# 2. JSON Schema Validation (suite manifests)
+# ---------------------------------------------------------------------
+# Validates each suite manifest against .claude/docs/config/schema/manifest.schema.json
+# using the `jsonschema` package (Draft 2020-12). If the package is not
+# installed, the section reports SKIP without failing the suite — keeps
+# `npm test` portable. CI installs jsonschema explicitly.
+section "JSON Schema Validation"
+
+SCHEMA_FILE=".claude/docs/config/schema/manifest.schema.json"
+
+if [ ! -f "$SCHEMA_FILE" ]; then
+    echo "  [SKIP] schema-validate: schema not found at $SCHEMA_FILE"
+elif ! python3 -c "import jsonschema" 2>/dev/null; then
+    echo "  [SKIP] schema-validate: jsonschema package not installed; run 'pip install jsonschema' to enable"
+else
+    SCHEMA_RAN=0
+    for manifest in .claude/docs/suites/*/manifest.json; do
+        [ -f "$manifest" ] || continue
+        SCHEMA_RAN=1
+        out=$(SCHEMA_FILE="$SCHEMA_FILE" MANIFEST_FILE="$manifest" python3 -c '
+import json, os, sys
+from jsonschema import Draft202012Validator
+schema = json.load(open(os.environ["SCHEMA_FILE"]))
+manifest = json.load(open(os.environ["MANIFEST_FILE"]))
+errors = list(Draft202012Validator(schema).iter_errors(manifest))
+if errors:
+    for e in errors[:5]:
+        path = "/".join(str(p) for p in e.absolute_path) or "<root>"
+        print(f"    {path}: {e.message}")
+    if len(errors) > 5:
+        print(f"    ... and {len(errors) - 5} more")
+    sys.exit(1)
+sys.exit(0)
+' 2>&1)
+        rc=$?
+        if [ $rc -eq 0 ]; then
+            pass "schema-valid: $manifest"
+        else
+            fail "schema-valid: $manifest" "$out"
+        fi
+    done
+    if [ "$SCHEMA_RAN" = "0" ]; then
+        echo "  [SKIP] schema-validate: no suite manifests to validate"
+    fi
+fi
+
+# ---------------------------------------------------------------------
+# 3. Hook Execution Tests
 # ---------------------------------------------------------------------
 section "Hook Execution"
 
@@ -342,7 +391,7 @@ else
 fi
 
 # ---------------------------------------------------------------------
-# 3. Markdown Lint
+# 4. Markdown Lint
 # ---------------------------------------------------------------------
 section "Markdown Lint"
 
