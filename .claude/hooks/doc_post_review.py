@@ -162,7 +162,7 @@ def main():
     # If we can't determine the document path from results, try to extract from command
     if not results["document_path"]:
         # Try to extract path from command args
-        path_match = re.search(r'/doc-review\s+([^\s]+)', command)
+        path_match = re.search(r'/doc(?::doc)?-review\s+([^\s]+)', command)
         if path_match:
             results["document_path"] = path_match.group(1)
 
