@@ -7,7 +7,9 @@
 #   2. JSON Schema validation for suite manifests (requires `jsonschema`;
 #      skipped gracefully if the package is unavailable)
 #   3. Hook execution tests (pre-write blocking, protocol ellipsis allowed)
-#   4. Markdown lint (lint:md)
+#   4. Codex hook parity (.codex/hooks/*.py byte-match .claude/hooks/*.py;
+#      skipped gracefully when the local-only .codex mirror is absent)
+#   5. Markdown lint (lint:md)
 #
 # Runs all checks, prints a summary, and exits non-zero if any check fails.
 # Designed for CI and local `npm test`.
@@ -689,7 +691,58 @@ else
 fi
 
 # ---------------------------------------------------------------------
-# 4. Markdown Lint
+# 4. Codex Hook Parity
+# ---------------------------------------------------------------------
+# The git-ignored .codex/hooks/ mirror must stay byte-identical to the
+# tracked .claude/hooks/ Python sources — only .codex/hooks.json carries
+# machine-specific absolute paths, so the .py logic is portable and should
+# never drift. The mirror is regenerated locally and is absent in CI and in
+# non-Codex checkouts, so its absence is a clean skip (not a failure).
+section "Codex Hook Parity"
+
+CLAUDE_HOOKS_DIR=".claude/hooks"
+CODEX_HOOKS_DIR=".codex/hooks"
+
+if [ ! -d "$CODEX_HOOKS_DIR" ]; then
+    echo "  [SKIP] codex-parity: $CODEX_HOOKS_DIR not present (regenerated locally; absent in CI)"
+else
+    shopt -s nullglob
+    CLAUDE_HOOK_FILES=("$CLAUDE_HOOKS_DIR"/*.py)
+    CODEX_HOOK_FILES=("$CODEX_HOOKS_DIR"/*.py)
+    shopt -u nullglob
+
+    if [ ${#CLAUDE_HOOK_FILES[@]} -eq 0 ]; then
+        fail "codex-parity: no .claude hook sources found" \
+             "expected *.py under $CLAUDE_HOOKS_DIR"
+    else
+        # Forward: every tracked .claude hook must exist and match in .codex.
+        for src in "${CLAUDE_HOOK_FILES[@]}"; do
+            base=$(basename "$src")
+            mirror="$CODEX_HOOKS_DIR/$base"
+            if [ ! -f "$mirror" ]; then
+                fail "codex-parity: $base missing in .codex" \
+                     "regenerate the .codex mirror from $CLAUDE_HOOKS_DIR"
+            elif cmp -s "$src" "$mirror"; then
+                pass "codex-parity: $base matches .claude"
+            else
+                fail "codex-parity: $base drifted from .claude" \
+                     "diff $src $mirror"
+            fi
+        done
+
+        # Reverse: flag orphan .codex hooks with no .claude counterpart.
+        for mirror in "${CODEX_HOOK_FILES[@]}"; do
+            base=$(basename "$mirror")
+            if [ ! -f "$CLAUDE_HOOKS_DIR/$base" ]; then
+                fail "codex-parity: $base orphaned in .codex" \
+                     "no counterpart under $CLAUDE_HOOKS_DIR"
+            fi
+        done
+    fi
+fi
+
+# ---------------------------------------------------------------------
+# 5. Markdown Lint
 # ---------------------------------------------------------------------
 section "Markdown Lint"
 
