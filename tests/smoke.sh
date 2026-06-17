@@ -528,6 +528,26 @@ else
     fail "pre-write-hook: allows ellipsis inside code-block comments" "$output"
 fi
 
+# Test 5e: pre-write hook flags missing language hints on tilde fences.
+tilde_fence_doc="# Tilde Fence Smoke
+
+This document checks that tilde fenced code blocks receive the same
+language-hint warning as backtick fenced code blocks. The content has
+enough prose to avoid the short-document warning and keep this smoke
+test focused on the fence parser behavior. The shell snippet below has
+no language tag by design, so the hook should continue while returning
+the existing warning text for a missing code block language hint.
+
+~~~
+echo ready
+~~~"
+output=$(run_hook .claude/hooks/doc_pre_write.py "$DOC_PATH" "$tilde_fence_doc")
+if echo "$output" | python3 -c "import json,sys; d=json.load(sys.stdin); fb=d.get('feedback',''); sys.exit(0 if d.get('continue') is True and 'Code block missing language hint' in fb else 1)"; then
+    pass "pre-write-hook: warns on missing tilde-fence language hint"
+else
+    fail "pre-write-hook: warns on missing tilde-fence language hint" "$output"
+fi
+
 # ---------------------------------------------------------------------
 # 2b. Post-Review Hook Tests
 # ---------------------------------------------------------------------
