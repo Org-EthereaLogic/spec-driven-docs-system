@@ -21,10 +21,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from hook_utils import get_tool_input  # noqa: E402
-
-
-PUBLISH_THRESHOLD = 80
+from hook_utils import get_project_dir, get_publish_threshold, get_tool_input  # noqa: E402
 
 
 def get_tool_result() -> str:
@@ -81,17 +78,18 @@ def extract_review_results(result_text: str) -> dict:
 
     results["passed"] = extract_bool("passed")
     results["ready_for_publish"] = extract_bool("ready_for_publish")
+    publish_threshold = get_publish_threshold(get_project_dir())
 
     if results["passed"] is None:
         results["passed"] = results["grade"] in ["A", "B"] or (
-            results["score"] is not None and results["score"] >= PUBLISH_THRESHOLD
+            results["score"] is not None and results["score"] >= publish_threshold
         )
 
     if results["ready_for_publish"] is None:
         results["ready_for_publish"] = results["grade"] in ["A", "B"] or (
             results["grade"] is None
             and results["score"] is not None
-            and results["score"] >= PUBLISH_THRESHOLD
+            and results["score"] >= publish_threshold
         )
 
     # Try to extract document path

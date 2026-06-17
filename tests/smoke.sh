@@ -557,9 +557,10 @@ fi
 run_post_review_hook() {
     local command_str="$1"
     local result_text="$2"
+    local project_dir="${3:-$FRAMEWORK_ROOT}"
     CLAUDE_TOOL_INPUT=$(python3 -c "import json,sys; print(json.dumps({'command': sys.argv[1]}))" "$command_str") \
     CLAUDE_TOOL_RESULT="$result_text" \
-    CLAUDE_PROJECT_DIR="$FRAMEWORK_ROOT" \
+    CLAUDE_PROJECT_DIR="$project_dir" \
         python3 .claude/hooks/doc_post_review.py
 }
 
@@ -689,6 +690,42 @@ except Exception:
     pass "post-review-hook: derives readiness from JSON score"
 else
     fail "post-review-hook: derives readiness from JSON score" "$output"
+fi
+
+# Test 8e: post-review score-only readiness uses quality-gates.json Grade B threshold.
+tmp_project=$(mktemp -d)
+mkdir -p "$tmp_project/.claude/docs/config"
+python3 - "$FRAMEWORK_ROOT/.claude/docs/config/quality-gates.json" \
+    "$tmp_project/.claude/docs/config/quality-gates.json" <<'PY'
+import json
+import sys
+
+source, target = sys.argv[1], sys.argv[2]
+with open(source) as f:
+    data = json.load(f)
+data["grades"]["B"]["min"] = 86
+with open(target, "w") as f:
+    json.dump(data, f)
+PY
+output=$(run_post_review_hook \
+    "/doc-review spec_driven_docs/rough_draft/api/users.md" \
+    '{"score": 85}' \
+    "$tmp_project")
+rm -rf "$tmp_project"
+if [ -z "$output" ]; then
+    pass "post-review-hook: uses configured publish threshold"
+elif echo "$output" | python3 -c "
+import json, sys
+try:
+    d = json.load(sys.stdin)
+    fb = d.get('feedback', '').lower()
+    sys.exit(0 if 'promote' not in fb and 'pending_approval' not in fb else 1)
+except Exception:
+    sys.exit(1)
+" 2>/dev/null; then
+    pass "post-review-hook: uses configured publish threshold"
+else
+    fail "post-review-hook: uses configured publish threshold" "$output"
 fi
 
 # Test 9: post-review hook is silent for non-review commands
