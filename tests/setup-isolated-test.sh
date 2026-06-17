@@ -8,9 +8,40 @@
 set -e
 
 # Configuration
-TEST_ROOT="${1:-/tmp/spec-docs-test}"
+REQUESTED_TEST_ROOT="${1:-/tmp/spec-docs-test}"
 FRAMEWORK_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+resolve_path() {
+    if realpath -m "$1" >/dev/null 2>&1; then
+        realpath -m "$1"
+    else
+        if command -v python3 >/dev/null 2>&1; then
+            python3 -c 'import os, sys; print(os.path.realpath(sys.argv[1]))' "$1"
+        else
+            echo "ERROR: Unable to resolve paths safely; realpath -m or python3 is required." >&2
+            return 1
+        fi
+    fi
+}
+
+TEST_ROOT="$(resolve_path "$REQUESTED_TEST_ROOT")"
+RESOLVED_TMP_ROOT="$(resolve_path /tmp)"
+RESOLVED_FRAMEWORK_ROOT="$(resolve_path "$FRAMEWORK_ROOT")"
+RESOLVED_HOME=""
+if [ -n "$HOME" ]; then
+    RESOLVED_HOME="$(resolve_path "$HOME")"
+fi
+
+if [ -z "$TEST_ROOT" ] ||
+   [ "$TEST_ROOT" = "/" ] ||
+   { [ -n "$RESOLVED_HOME" ] && [ "$TEST_ROOT" = "$RESOLVED_HOME" ]; } ||
+   [ "$TEST_ROOT" = "$RESOLVED_FRAMEWORK_ROOT" ] ||
+   [[ "$TEST_ROOT" != "$RESOLVED_TMP_ROOT"/* ]]; then
+    echo "ERROR: Refusing unsafe test root: $REQUESTED_TEST_ROOT" >&2
+    echo "Resolved path must be a non-root directory under /tmp/." >&2
+    exit 1
+fi
 
 echo "========================================"
 echo "Isolated Test Environment Setup"
