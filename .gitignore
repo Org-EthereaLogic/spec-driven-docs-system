@@ -129,3 +129,10 @@ chat/
 
 # Snyk Security Extension - AI Rules (auto-generated)
 .github/instructions/snyk_rules.instructions.md
+
+# External agent-platform artifacts (auto-generated, machine-specific).
+# Codex CLI config mirrors .claude/ with hardcoded absolute paths, and the
+# migrated skill files carry templated cross-project references. Regenerate
+# locally as needed; not portable repo content.
+.codex/
+.agents/
