@@ -32,6 +32,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `tests/isolated-test-plan.md`, and `app_docs/reports/IMPROVEMENT_OPPORTUNITIES.md`
   (8→11 slash commands, 3→6 document templates)
 
+### Changed
+
+- Codacy: bumped `.codacy/codacy.yaml` to current CLI tooling — dropped the
+  `java` runtime and `pmd`/`semgrep`, added `opengrep`, and bumped
+  `lizard`/`pylint`/`trivy` versions (PR \#29)
+- Repo hygiene: ignore `.codex/` and `.agents/` — auto-generated external
+  agent-platform artifacts that carry machine-specific absolute paths and
+  templated cross-project references, so they are not portable repo
+  content (PR \#29)
+
 ### Dependencies
 
 - Bump `actions/checkout` 4→6, `actions/setup-node` 4→6,
