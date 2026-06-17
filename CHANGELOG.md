@@ -115,6 +115,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   agent-platform artifacts that carry machine-specific absolute paths and
   templated cross-project references, so they are not portable repo
   content (PR \#29)
+- Hooks: centralized the hook word/score thresholds and removed dead code.
+  `hook_utils.py` now defines `MIN_DOCUMENT_WORDS` (50), `MAX_PARAGRAPH_WORDS`
+  (200), and `DEFAULT_PUBLISH_THRESHOLD` (80), plus `get_publish_threshold()`
+  which reads `grades.B.min` from `quality-gates.json`. `doc_post_review.py`
+  now derives its score-only publish/readiness threshold from that helper
+  instead of a hardcoded `80`, so the configured Grade B minimum is honored.
+  `doc_post_write.py` uses the shared paragraph threshold and drops the dead
+  `seen_lines` set (per-pass line indices are already unique). `doc_pre_write.py`
+  removes the unreachable non-fenced Protocol-ellipsis handler — valid code
+  examples belong inside fenced blocks, which `_fenced_code_spans()` already
+  allows — and hoists `content.lower()` out of the forbidden-pattern loop. A
+  smoke regression asserts post-review honors a configured Grade B threshold
+  (PR \#49)
 
 ### Dependencies
 
