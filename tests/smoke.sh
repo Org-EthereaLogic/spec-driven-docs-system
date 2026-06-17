@@ -554,6 +554,68 @@ else
     fail "post-review-hook: silent for grade F" "$output"
 fi
 
+# Test 8b: post-review hook does not treat "downgrade B" as Grade B
+output=$(run_post_review_hook \
+    "/doc-review spec_driven_docs/rough_draft/api/users.md" \
+    "Review note: downgrade B because blocker remains
+Document: spec_driven_docs/rough_draft/api/users.md")
+if [ -z "$output" ]; then
+    pass "post-review-hook: ignores downgrade text"
+elif echo "$output" | python3 -c "
+import json, sys
+try:
+    d = json.load(sys.stdin)
+    fb = d.get('feedback', '').lower()
+    sys.exit(0 if 'promote' not in fb and 'pending_approval' not in fb else 1)
+except Exception:
+    sys.exit(1)
+" 2>/dev/null; then
+    pass "post-review-hook: ignores downgrade text"
+else
+    fail "post-review-hook: ignores downgrade text" "$output"
+fi
+
+# Test 8c: post-review hook honors explicit passed:false
+output=$(run_post_review_hook \
+    "/doc-review spec_driven_docs/rough_draft/api/users.md" \
+    "Score: 95/100 (A)
+ready_for_publish: true
+passed: false
+Document: spec_driven_docs/rough_draft/api/users.md")
+if [ -z "$output" ]; then
+    pass "post-review-hook: honors explicit passed false"
+elif echo "$output" | python3 -c "
+import json, sys
+try:
+    d = json.load(sys.stdin)
+    fb = d.get('feedback', '').lower()
+    sys.exit(0 if 'promote' not in fb and 'pending_approval' not in fb else 1)
+except Exception:
+    sys.exit(1)
+" 2>/dev/null; then
+    pass "post-review-hook: honors explicit passed false"
+else
+    fail "post-review-hook: honors explicit passed false" "$output"
+fi
+
+# Test 8d: post-review hook derives readiness from JSON score when grade is absent
+output=$(run_post_review_hook \
+    "/doc-review spec_driven_docs/rough_draft/api/users.md" \
+    '{"score": 85}')
+if echo "$output" | python3 -c "
+import json, sys
+try:
+    d = json.load(sys.stdin)
+    fb = d.get('feedback', '')
+    sys.exit(0 if 'promote' in fb.lower() or 'pending_approval' in fb.lower() else 1)
+except Exception:
+    sys.exit(1)
+" 2>/dev/null; then
+    pass "post-review-hook: derives readiness from JSON score"
+else
+    fail "post-review-hook: derives readiness from JSON score" "$output"
+fi
+
 # Test 9: post-review hook is silent for non-review commands
 output=$(run_post_review_hook \
     "/doc-write specs/docs/api-spec.md" \
