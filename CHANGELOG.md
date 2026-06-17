@@ -60,6 +60,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
+- Bump `markdownlint-cli` 0.48→0.49 to clear moderate `npm audit`
+  findings in transitive deps — `js-yaml` (GHSA-h67p-54hq-rp68) and
+  `markdown-it` (GHSA-6v5v-wf23-fmfq); a follow-on `npm audit fix`
+  bumped `brace-expansion` (GHSA-jxxr-4gwj-5jf2). `npm audit
+  --audit-level=moderate` now reports 0 vulnerabilities (PR \#35)
 - Bump `actions/checkout` 4→6, `actions/setup-node` 4→6,
   `actions/setup-python` 5→6 (Dependabot, PRs \#18–20)
 
