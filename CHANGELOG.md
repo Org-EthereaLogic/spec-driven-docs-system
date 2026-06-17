@@ -31,6 +31,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Docs: corrected stale counts in `CLAUDE.md`, `README.md`,
   `tests/isolated-test-plan.md`, and `app_docs/reports/IMPROVEMENT_OPPORTUNITIES.md`
   (8→11 slash commands, 3→6 document templates)
+- Hooks: scoped the pre/post doc-write hooks to generated and app docs
+  only. The matchers previously caught any markdown under a `/docs/`
+  path, which incorrectly captured framework templates (`.claude/docs/`)
+  and input specifications (`specs/docs/`) — editing those triggered
+  placeholder/forbidden-pattern validation meant only for generated
+  output. `hook_utils.py` now drops the broad `/docs/` entry and adds an
+  explicit `EXCLUDED_DOC_PATHS` guard, and `.claude/settings.json` uses a
+  negative lookahead so only `spec_driven_docs/` and `app_docs/` match
+  (PR \#31)
 
 ### Changed
 
