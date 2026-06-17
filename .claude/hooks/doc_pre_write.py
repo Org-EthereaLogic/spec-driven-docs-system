@@ -160,18 +160,17 @@ def check_placeholder_content(content: str) -> list:
 def check_code_blocks(content: str) -> list:
     """Check that code blocks have language hints."""
     issues = []
-    lines = content.split("\n")
-    in_code_block = False
+    opener_re = re.compile(r'^[ \t]{0,3}(`{3,}|~{3,})(.*)$')
 
-    for i, line in enumerate(lines, 1):
-        if line.strip().startswith("```"):
-            if not in_code_block:
-                lang_hint = line.strip()[3:].strip()
-                if not lang_hint:
-                    issues.append(f"Line {i}: Code block missing language hint")
-                in_code_block = True
-            else:
-                in_code_block = False
+    for start, end in _fenced_code_spans(content):
+        line_end = content.find('\n', start, end)
+        if line_end == -1:
+            line_end = end
+        opener_line = content[start:line_end]
+        opener = opener_re.match(opener_line)
+        if opener and not opener.group(2).strip():
+            line_num = content[:start].count('\n') + 1
+            issues.append(f"Line {line_num}: Code block missing language hint")
 
     return issues
 
