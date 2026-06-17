@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- Tests: hardened `tests/setup-isolated-test.sh` against destructive
+  `rm -rf`. The script previously accepted an arbitrary test root and
+  deleted it unchecked, so `./tests/setup-isolated-test.sh ~` (or `/`,
+  or the repo root) could wipe important directories. It now resolves the
+  requested root with `realpath` (python3 fallback) and refuses unsafe
+  targets — empty, `/`, `$HOME`, the framework root, and anything not
+  under `/tmp/` — before any destructive or setup operation. realpath
+  resolution also defeats symlink-escape attempts (PR \#27)
+
 ### Fixed
 
 - CI/release: replaced `gitleaks-action` binary-download workaround with
