@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "(Write|Edit).*(spec_driven_docs|app_docs|docs)/.*\\.md$",
+        "matcher": "(Write|Edit)(?!.*(?:\\.claude/docs|specs/docs)/).*(spec_driven_docs|app_docs)/.*\\.md$",
         "hooks": [
           {
             "type": "command",
@@ -13,7 +13,7 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "(Write|Edit).*(spec_driven_docs|app_docs|docs)/.*\\.md$",
+        "matcher": "(Write|Edit)(?!.*(?:\\.claude/docs|specs/docs)/).*(spec_driven_docs|app_docs)/.*\\.md$",
         "hooks": [
           {
             "type": "command",
