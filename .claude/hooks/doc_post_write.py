@@ -95,7 +95,7 @@ def check_internal_links(content: str, file_path: str) -> list:
     issues = []
     project_dir = get_project_dir()
 
-    link_pattern = r'\[([^\]]+)\]\(([^)]+)\)'
+    link_pattern = r'(?<!!)\[([^\]]+)\]\(([^)]+)\)'
     matches = re.findall(link_pattern, content)
 
     for link_text, link_target in matches:
