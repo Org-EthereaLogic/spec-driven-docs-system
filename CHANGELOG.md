@@ -20,6 +20,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Hooks: de-duplicated pre-write blocking issues in `doc_pre_write.py`.
+  `check_placeholder_content()` re-flagged placeholder terms (TODO, FIXME,
+  TBD, XXX, HACK, WIP, lorem ipsum, example.com, `[your`/`<your`/`{your`)
+  that `check_forbidden_patterns()` already reports from
+  `consistency-rules.json`, so a single offending term produced duplicate
+  blocking issues. The function now delegates only to the contextual
+  ellipsis check, and `validate_documentation_write()` de-dupes issues
+  while preserving order. All previously hardcoded placeholders remain
+  covered by `forbidden_patterns`, so no validation coverage is lost. The
+  smoke TODO case now asserts exactly `1 issue(s)` (PR \#39)
 - Hooks: the post-review promotion hook now recognizes the namespaced
   `/doc:doc-review` command form in addition to plain `/doc-review`. The
   `.claude/settings.json` PostToolUse matcher and the fallback
