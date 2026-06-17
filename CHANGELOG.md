@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Tests: added a "Codex Hook Parity" check to `tests/smoke.sh` that
+  byte-compares each `.claude/hooks/*.py` against its `.codex/hooks/`
+  counterpart (forward and orphan directions). The git-ignored `.codex`
+  mirror sits outside version control and so silently fell behind the
+  tracked `.claude` sources across several merges; only `.codex/hooks.json`
+  carries machine-specific absolute paths, so the `.py` logic is portable
+  and must stay byte-identical. The mirror is regenerated locally and is
+  absent in CI and non-Codex checkouts, so its absence is a clean skip
+  rather than a failure (PR \#45)
+
 ### Security
 
 - Tests: hardened `tests/setup-isolated-test.sh` against destructive
