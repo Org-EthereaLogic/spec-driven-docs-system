@@ -450,7 +450,35 @@ else
     fail "post-write-hook: ignores terminology in code/inline/links" "$output"
 fi
 
-# Test 5b: pre-write hook allows ellipsis inside fenced code blocks.
+# Test 5b: post-write hook ignores Markdown headings inside fenced code blocks.
+code_heading_doc="# CLI Quickstart
+
+Run this setup script before continuing.
+
+\`\`\`bash
+#!/usr/bin/env bash
+### Internal setup
+echo \"ready\"
+\`\`\`"
+output=$(run_hook .claude/hooks/doc_post_write.py "$DOC_PATH" "$code_heading_doc" 2>&1 || true)
+if echo "$output" | python3 -c "
+import json, sys
+raw = sys.stdin.read().strip()
+if not raw:
+    sys.exit(0)
+try:
+    d = json.loads(raw)
+    fb = d.get('feedback', '')
+    sys.exit(1 if 'Header hierarchy skipped' in fb else 0)
+except Exception:
+    sys.exit(1)
+" 2>/dev/null; then
+    pass "post-write-hook: ignores headings in code blocks"
+else
+    fail "post-write-hook: ignores headings in code blocks" "$output"
+fi
+
+# Test 5c: pre-write hook allows ellipsis inside fenced code blocks.
 # Code-comment elision (e.g. '# ... existing logic ...') is a common
 # documentation pattern and must not block writes.
 code_ellipsis_doc="# Event Bus Example

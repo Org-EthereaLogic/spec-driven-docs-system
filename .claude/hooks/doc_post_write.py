@@ -116,7 +116,7 @@ def check_internal_links(content: str, file_path: str) -> list:
 def check_header_hierarchy(content: str) -> list:
     """Check that header levels don't skip (e.g., h1 to h3)."""
     issues = []
-    lines = content.split('\n')
+    lines = _strip_code_regions(content).split('\n')
 
     current_level = 0
     for i, line in enumerate(lines, 1):
