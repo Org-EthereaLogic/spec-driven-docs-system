@@ -15,7 +15,8 @@ import os
 from pathlib import Path
 
 
-VALID_DOC_PATHS = ["/spec_driven_docs/", "/app_docs/", "/docs/"]
+VALID_DOC_PATHS = ["/spec_driven_docs/", "/app_docs/"]
+EXCLUDED_DOC_PATHS = ["/.claude/docs/", "/specs/docs/"]
 
 
 def get_tool_input() -> dict:
@@ -69,6 +70,8 @@ def load_quality_profiles(project_dir: Path) -> dict:
 def is_documentation_file(file_path: str) -> bool:
     """Return True if file_path is a markdown file under a tracked docs directory."""
     if not file_path or not file_path.endswith(".md"):
+        return False
+    if any(p in file_path for p in EXCLUDED_DOC_PATHS):
         return False
     return any(p in file_path for p in VALID_DOC_PATHS)
 

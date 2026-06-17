@@ -244,6 +244,41 @@ print(json.dumps({'file_path': sys.argv[1], 'content': sys.argv[2]}))
 # so the tests below pass absolute-style paths to match real invocation.
 DOC_PATH="$FRAMEWORK_ROOT/spec_driven_docs/rough_draft/test.md"
 PROTO_PATH="$FRAMEWORK_ROOT/spec_driven_docs/rough_draft/protocol.md"
+TEMPLATE_PATH="$FRAMEWORK_ROOT/.claude/docs/templates/api-docs.md"
+
+# Test 0: settings matchers target generated docs, not framework/input docs.
+if python3 - <<'PY'
+import json
+import re
+import sys
+
+with open(".claude/settings.json") as f:
+    settings = json.load(f)
+
+matchers = [
+    settings["hooks"]["PreToolUse"][0]["matcher"],
+    settings["hooks"]["PostToolUse"][0]["matcher"],
+]
+cases = [
+    ("Write /repo/.claude/docs/templates/api-docs.md", False),
+    ("Edit /repo/specs/docs/input-spec.md", False),
+    ("Write /repo/spec_driven_docs/rough_draft/test.md", True),
+    ("Edit /repo/app_docs/User-Guide/User-Guide.md", True),
+]
+
+for matcher in matchers:
+    pattern = re.compile(matcher)
+    for text, expected in cases:
+        matched = bool(pattern.search(text))
+        if matched != expected:
+            print(f"{matcher!r} matched {text!r}: expected {expected}, got {matched}")
+            sys.exit(1)
+PY
+then
+    pass "settings-matchers: exclude framework and input docs"
+else
+    fail "settings-matchers: exclude framework and input docs"
+fi
 
 # Test 1: pre-write blocks forbidden TODO markers
 output=$(run_hook .claude/hooks/doc_pre_write.py \
@@ -294,6 +329,20 @@ if echo "$output" | python3 -c "import json,sys; d=json.load(sys.stdin); sys.exi
     pass "pre-write-hook: skips non-docs files"
 else
     fail "pre-write-hook: skips non-docs files" "$output"
+fi
+
+# Test 3a: pre-write skips framework docs templates.
+output=$(run_hook .claude/hooks/doc_pre_write.py \
+    "$TEMPLATE_PATH" \
+    "# API Template
+
+Use https://example.com for sample endpoint references.
+Replace <your-api-key> with a real credential source.
+Describe omitted sections with ... while drafting.")
+if echo "$output" | python3 -c "import json,sys; d=json.load(sys.stdin); sys.exit(0 if d.get('continue') is True else 1)"; then
+    pass "pre-write-hook: skips framework docs templates"
+else
+    fail "pre-write-hook: skips framework docs templates" "$output"
 fi
 
 # Test 4: post-write hook runs without error on a valid document.
