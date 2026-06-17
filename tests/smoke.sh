@@ -450,7 +450,32 @@ else
     fail "post-write-hook: ignores terminology in code/inline/links" "$output"
 fi
 
-# Test 5b: post-write hook ignores Markdown headings inside fenced code blocks.
+# Test 5b: post-write hook does NOT flag missing image assets as broken doc links.
+image_link_doc="# Image Link Smoke
+
+This page embeds an image that may be generated later. The missing asset
+must not be reported as a broken document link by the post-write hook.
+
+![Architecture overview](assets/missing-diagram.png)"
+output=$(run_hook .claude/hooks/doc_post_write.py "$DOC_PATH" "$image_link_doc" 2>&1 || true)
+if echo "$output" | python3 -c "
+import json, sys
+raw = sys.stdin.read().strip()
+if not raw:
+    sys.exit(0)
+try:
+    d = json.loads(raw)
+    fb = d.get('feedback', '')
+    sys.exit(1 if 'Broken link: [Architecture overview](assets/missing-diagram.png)' in fb else 0)
+except Exception:
+    sys.exit(1)
+" 2>/dev/null; then
+    pass "post-write-hook: ignores image references for broken links"
+else
+    fail "post-write-hook: ignores image references for broken links" "$output"
+fi
+
+# Test 5c: post-write hook ignores Markdown headings inside fenced code blocks.
 code_heading_doc="# CLI Quickstart
 
 Run this setup script before continuing.
@@ -478,7 +503,7 @@ else
     fail "post-write-hook: ignores headings in code blocks" "$output"
 fi
 
-# Test 5c: pre-write hook allows ellipsis inside fenced code blocks.
+# Test 5d: pre-write hook allows ellipsis inside fenced code blocks.
 # Code-comment elision (e.g. '# ... existing logic ...') is a common
 # documentation pattern and must not block writes.
 code_ellipsis_doc="# Event Bus Example
