@@ -32,6 +32,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Hooks: the pre-write code-block language-hint check in `doc_pre_write.py`
+  now flags tilde (`~~~`) fences, not just backtick (` ``` `) fences.
+  `check_code_blocks()` previously split content into lines and only matched
+  openers starting with ` ``` `, so a tilde-fenced block with no language tag
+  was silently skipped. It now reuses `_fenced_code_spans()` — the same helper
+  the ellipsis check relies on — and inspects each opening fence line, so both
+  fence styles receive the identical "missing language hint" warning. Smoke
+  tests cover the tilde-fence-without-language case (PR \#47)
 - Hooks: the post-write internal-link check in `doc_post_write.py` no
   longer flags Markdown image embeds as broken document links.
   `check_internal_links()` matched `[...](...)`, which also captured image
