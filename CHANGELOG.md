@@ -20,6 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Hooks: the post-review promotion hook now recognizes the namespaced
+  `/doc:doc-review` command form in addition to plain `/doc-review`. The
+  `.claude/settings.json` PostToolUse matcher and the fallback
+  command-path extraction in `doc_post_review.py` previously matched only
+  the plain form, so namespaced invocations never fired the hook or had
+  their document path recovered from the command — passing reviews
+  produced no promotion suggestion. Smoke tests cover both forms (PR \#33)
 - CI/release: replaced `gitleaks-action` binary-download workaround with
   the official `gitleaks/gitleaks-action` (SHA-pinned in the workflow;
   corresponds to `v2.3.9`) now that a paid license is configured via
