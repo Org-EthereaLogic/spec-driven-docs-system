@@ -317,10 +317,10 @@ output=$(run_hook .claude/hooks/doc_pre_write.py \
 This is a reasonably long document with sufficient prose to pass
 the minimum word-count warning. It includes a TODO marker which must
 be rejected by the pre-write hook. The hook should return continue:false
-and feedback mentioning the forbidden TODO placeholder. Add more words
+and feedback mentioning the forbidden TODO marker. Add more words
 here to ensure we are above the fifty-word warning threshold comfortably
 and only fail for the forbidden pattern, not the word count.")
-if echo "$output" | python3 -c "import json,sys; d=json.load(sys.stdin); sys.exit(0 if d.get('continue') is False else 1)"; then
+if echo "$output" | python3 -c "import json,sys; d=json.load(sys.stdin); fb=d.get('feedback',''); sys.exit(0 if d.get('continue') is False and \"Documentation write blocked - 1 issue(s):\" in fb and \"Forbidden pattern found: 'TODO'\" in fb else 1)"; then
     pass "pre-write-hook: blocks TODO markers"
 else
     fail "pre-write-hook: blocks TODO markers" "$output"

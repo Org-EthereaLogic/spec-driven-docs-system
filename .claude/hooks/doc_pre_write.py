@@ -153,20 +153,8 @@ def check_ellipsis_patterns(content: str) -> list:
 
 
 def check_placeholder_content(content: str) -> list:
-    """Check for placeholder content that shouldn't be in final docs."""
-    issues = []
-    placeholders = [
-        "TODO", "FIXME", "TBD", "XXX", "HACK", "WIP",
-        "[your", "<your", "{your",
-        "lorem ipsum", "example.com",
-    ]
-
-    for placeholder in placeholders:
-        if placeholder.lower() in content.lower():
-            issues.append(f"Placeholder content detected: '{placeholder}'")
-
-    issues.extend(check_ellipsis_patterns(content))
-    return issues
+    """Check for contextual placeholder content that needs code logic."""
+    return check_ellipsis_patterns(content)
 
 
 def check_code_blocks(content: str) -> list:
@@ -201,6 +189,7 @@ def validate_documentation_write(file_path: str, content: str) -> dict:
 
     issues.extend(check_forbidden_patterns(content, rules))
     issues.extend(check_placeholder_content(content))
+    issues = list(dict.fromkeys(issues))
     warnings.extend(check_code_blocks(content))
 
     word_count = len(content.split())
