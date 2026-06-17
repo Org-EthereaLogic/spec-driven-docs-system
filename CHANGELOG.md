@@ -27,6 +27,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the plain form, so namespaced invocations never fired the hook or had
   their document path recovered from the command — passing reviews
   produced no promotion suggestion. Smoke tests cover both forms (PR \#33)
+- Hooks: tightened the post-review result parser in `doc_post_review.py`
+  to prevent false-positive promotion suggestions. Grade parsing is now
+  anchored so substrings like "downgrade B" no longer register as Grade
+  B; `passed`/`ready_for_publish` are parsed as explicit booleans whose
+  `false` values veto promotion; score-only readiness derives from a
+  shared `PUBLISH_THRESHOLD` (80) when no grade is present; and the final
+  suggestion is gated on both `passed` and `ready_for_publish`. The hook
+  also shares `get_tool_input` from `hook_utils` instead of duplicating
+  it. Smoke tests cover the downgrade-text, explicit `passed: false`, and
+  JSON score-only cases (PR \#37)
 - CI/release: replaced `gitleaks-action` binary-download workaround with
   the official `gitleaks/gitleaks-action` (SHA-pinned in the workflow;
   corresponds to `v2.3.9`) now that a paid license is configured via
