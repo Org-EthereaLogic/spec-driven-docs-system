@@ -17,6 +17,9 @@ from pathlib import Path
 
 VALID_DOC_PATHS = ["/spec_driven_docs/", "/app_docs/"]
 EXCLUDED_DOC_PATHS = ["/.claude/docs/", "/specs/docs/"]
+MIN_DOCUMENT_WORDS = 50
+MAX_PARAGRAPH_WORDS = 200
+DEFAULT_PUBLISH_THRESHOLD = 80
 
 
 def get_tool_input() -> dict:
@@ -67,6 +70,22 @@ def load_quality_profiles(project_dir: Path) -> dict:
     return {}
 
 
+def get_publish_threshold(project_dir: Path) -> int:
+    """Load the Grade B minimum score from quality-gates.json."""
+    gates_path = project_dir / ".claude" / "docs" / "config" / "quality-gates.json"
+    if gates_path.exists():
+        try:
+            with open(gates_path) as f:
+                data = json.load(f)
+                return int(data.get("grades", {}).get("B", {}).get(
+                    "min",
+                    DEFAULT_PUBLISH_THRESHOLD,
+                ))
+        except (json.JSONDecodeError, IOError, TypeError, ValueError):
+            pass
+    return DEFAULT_PUBLISH_THRESHOLD
+
+
 def is_documentation_file(file_path: str) -> bool:
     """Return True if file_path is a markdown file under a tracked docs directory."""
     if not file_path or not file_path.endswith(".md"):
@@ -81,7 +100,7 @@ def is_documentation_file(file_path: str) -> bool:
 _FIX_HINTS = [
     ("Forbidden pattern", "Remove or replace this placeholder before saving."),
     ("Placeholder content", "Replace with finalized content; placeholders block writes."),
-    ("Ellipsis", "Replace with real content, or verify this is a Protocol/ABC method body."),
+    ("Ellipsis", "Replace with real content, or move valid code examples into a fenced block."),
     ("Code block missing language hint", "Add a language hint, e.g. ```python or ```bash."),
     ("Terminology", "Use the project's preferred term per consistency-rules.json."),
     ("Broken link", "Fix the path or remove the link."),

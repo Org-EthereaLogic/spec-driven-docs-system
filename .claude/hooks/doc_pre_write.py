@@ -22,6 +22,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from hook_utils import (  # noqa: E402
+    MIN_DOCUMENT_WORDS,
     format_blocking_feedback,
     format_warning_feedback,
     get_project_dir,
@@ -40,10 +41,10 @@ def check_forbidden_patterns(content: str, rules: dict) -> list:
     issues = []
     forbidden = rules.get("forbidden_patterns", {}).get("patterns", [])
     word_boundary_patterns = {"foo", "bar", "baz"}
+    content_lower = content.lower()
 
     for pattern in forbidden:
         pattern_lower = pattern.lower()
-        content_lower = content.lower()
 
         if pattern_lower in word_boundary_patterns:
             regex = r'\b' + re.escape(pattern_lower) + r'\b'
@@ -95,57 +96,18 @@ def _is_inside_spans(pos: int, spans: list) -> bool:
     return False
 
 
-def is_valid_protocol_ellipsis(content: str, ellipsis_pos: int) -> bool:
-    """Check if an ellipsis at the given position is valid Protocol/ABC syntax.
-
-    Valid PEP 544 ellipsis must:
-    1. Appear as a standalone statement (just '...' on its own line)
-    2. Be preceded by 'def' within the recent lookback window
-    3. Be inside a class that inherits from Protocol or ABC
-    """
-    lines = content[:ellipsis_pos].split('\n')
-    if not lines:
-        return False
-
-    current_line_start = content.rfind('\n', 0, ellipsis_pos) + 1
-    current_line_end = content.find('\n', ellipsis_pos)
-    if current_line_end == -1:
-        current_line_end = len(content)
-    current_line = content[current_line_start:current_line_end].strip()
-
-    if current_line != '...':
-        return False
-
-    lookback_lines = lines[-10:] if len(lines) >= 10 else lines
-    lookback_text = '\n'.join(lookback_lines)
-
-    has_def = bool(re.search(r'\bdef\s+\w+', lookback_text))
-    if not has_def:
-        return False
-
-    has_protocol_context = bool(re.search(
-        r'class\s+\w+\s*\([^)]*\b(Protocol|ABC)\b[^)]*\)',
-        lookback_text
-    ))
-
-    return has_protocol_context
-
-
 def check_ellipsis_patterns(content: str) -> list:
     """Check for ellipsis patterns that indicate incomplete content.
 
     Ellipsis is allowed inside fenced code blocks (comments, spread operators,
-    range syntax, Protocol bodies). In prose, ellipsis is also allowed when
-    immediately preceded by a sentence-ending word (e.g., "...wait, what?")
-    but flagged when it appears to indicate omitted content.
+    range syntax, Protocol bodies). Non-fenced ellipsis is flagged because it
+    may indicate omitted content.
     """
     issues = []
     code_spans = _fenced_code_spans(content)
     for match in re.finditer(r'\.\.\.', content):
         pos = match.start()
         if _is_inside_spans(pos, code_spans):
-            continue
-        if is_valid_protocol_ellipsis(content, pos):
             continue
         line_num = content[:pos].count('\n') + 1
         issues.append(f"Line {line_num}: Ellipsis '...' detected - may indicate incomplete content")
@@ -192,7 +154,7 @@ def validate_documentation_write(file_path: str, content: str) -> dict:
     warnings.extend(check_code_blocks(content))
 
     word_count = len(content.split())
-    if word_count < 50:
+    if word_count < MIN_DOCUMENT_WORDS:
         warnings.append(f"Document has only {word_count} words - seems incomplete")
 
     return {

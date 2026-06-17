@@ -21,6 +21,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from hook_utils import (  # noqa: E402
+    MAX_PARAGRAPH_WORDS,
     get_project_dir,
     get_tool_input,
     get_tool_result,
@@ -74,12 +75,8 @@ def check_terminology(content: str, rules: dict) -> list:
     for correct_term, forbidden_variants in terminology.items():
         for variant in forbidden_variants:
             pattern = re.compile(r'\b' + re.escape(variant) + r'\b', re.IGNORECASE)
-            seen_lines = set()
             for i, line in enumerate(lines, 1):
                 if pattern.search(line):
-                    if i in seen_lines:
-                        continue
-                    seen_lines.add(i)
                     snippet = line.strip()
                     if len(snippet) > 80:
                         snippet = snippet[:77] + "..."
@@ -148,7 +145,7 @@ def check_document_consistency(file_path: str, content: str) -> dict:
     paragraphs = content.split('\n\n')
     for i, para in enumerate(paragraphs, 1):
         word_count = len(para.split())
-        if word_count > 200 and not para.strip().startswith('```'):
+        if word_count > MAX_PARAGRAPH_WORDS and not para.strip().startswith('```'):
             suggestions.append(
                 f"Paragraph {i} has {word_count} words - consider breaking up for readability"
             )
