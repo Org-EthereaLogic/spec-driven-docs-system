@@ -20,6 +20,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Hooks: the post-write header-hierarchy check in `doc_post_write.py` now
+  ignores Markdown headings inside fenced code blocks. `check_header_hierarchy()`
+  scanned raw Markdown, so a fenced `bash` block containing a shebang
+  (`#!/usr/bin/env bash`, read as h1) followed by a comment like
+  `### Internal setup` (read as h3) produced a false-positive "Header
+  hierarchy skipped from h1 to h3" suggestion. It now scans
+  `_strip_code_regions(content)` — the same helper `check_terminology()`
+  uses — which blanks code regions to equal-length whitespace, so
+  real-header line numbers stay accurate and genuine prose-level skips are
+  still flagged. Smoke tests cover the code-fenced-heading case (PR \#41)
 - Hooks: de-duplicated pre-write blocking issues in `doc_pre_write.py`.
   `check_placeholder_content()` re-flagged placeholder terms (TODO, FIXME,
   TBD, XXX, HACK, WIP, lorem ipsum, example.com, `[your`/`<your`/`{your`)
