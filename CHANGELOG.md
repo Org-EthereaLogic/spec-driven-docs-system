@@ -20,6 +20,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Hooks: the post-write internal-link check in `doc_post_write.py` no
+  longer flags Markdown image embeds as broken document links.
+  `check_internal_links()` matched `[...](...)`, which also captured image
+  syntax `![alt](src)`, so an image whose asset is generated later (e.g.
+  `![Architecture overview](assets/missing-diagram.png)`) was reported as a
+  broken link. The link regex now uses a negative lookbehind `(?<!!)` to
+  skip image embeds while ordinary links are still validated. Smoke tests
+  cover the missing-image-asset case (PR \#43)
 - Hooks: the post-write header-hierarchy check in `doc_post_write.py` now
   ignores Markdown headings inside fenced code blocks. `check_header_hierarchy()`
   scanned raw Markdown, so a fenced `bash` block containing a shebang
