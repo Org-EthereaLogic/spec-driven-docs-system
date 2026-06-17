@@ -16,16 +16,15 @@ Matcher: SlashCommand.*/doc-review.*
 import json
 import os
 import re
+import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).parent))
 
-def get_tool_input() -> dict:
-    """Read tool input from environment."""
-    tool_input_str = os.environ.get("CLAUDE_TOOL_INPUT", "{}")
-    try:
-        return json.loads(tool_input_str)
-    except json.JSONDecodeError:
-        return {}
+from hook_utils import get_tool_input  # noqa: E402
+
+
+PUBLISH_THRESHOLD = 80
 
 
 def get_tool_result() -> str:
@@ -46,8 +45,8 @@ def extract_review_results(result_text: str) -> dict:
     results = {
         "score": None,
         "grade": None,
-        "passed": False,
-        "ready_for_publish": False,
+        "passed": None,
+        "ready_for_publish": None,
         "document_path": None,
     }
 
@@ -64,21 +63,36 @@ def extract_review_results(result_text: str) -> dict:
 
     # Try to find grade pattern if not found above
     if not results["grade"]:
-        grade_match = re.search(r'[Gg]rade["\s:]+([A-F])', result_text)
+        grade_match = re.search(
+            r'(?im)(?:^|[{\s,])"?grade"?\s*:?\s*"?([A-F])\b',
+            result_text,
+        )
         if grade_match:
             results["grade"] = grade_match.group(1)
 
-    # Check for passed status
-    if re.search(r'"passed"\s*:\s*true', result_text, re.IGNORECASE):
-        results["passed"] = True
-    elif results["score"] and results["score"] >= 80:
-        results["passed"] = True
+    def extract_bool(name: str):
+        match = re.search(
+            rf'(?i)(?<!\w)"?{re.escape(name)}"?\s*:\s*(true|false)\b',
+            result_text,
+        )
+        if match:
+            return match.group(1).lower() == "true"
+        return None
 
-    # Check for ready_for_publish
-    if re.search(r'"ready_for_publish"\s*:\s*true', result_text, re.IGNORECASE):
-        results["ready_for_publish"] = True
-    elif results["grade"] in ["A", "B"]:
-        results["ready_for_publish"] = True
+    results["passed"] = extract_bool("passed")
+    results["ready_for_publish"] = extract_bool("ready_for_publish")
+
+    if results["passed"] is None:
+        results["passed"] = results["grade"] in ["A", "B"] or (
+            results["score"] is not None and results["score"] >= PUBLISH_THRESHOLD
+        )
+
+    if results["ready_for_publish"] is None:
+        results["ready_for_publish"] = results["grade"] in ["A", "B"] or (
+            results["grade"] is None
+            and results["score"] is not None
+            and results["score"] >= PUBLISH_THRESHOLD
+        )
 
     # Try to extract document path
     doc_match = re.search(r'[Dd]ocument["\s:]+["\']?([^\s"\']+\.md)', result_text)
@@ -115,7 +129,7 @@ def get_next_stage(current_stage: str) -> str:
 
 def suggest_next_action(document_path: str, results: dict) -> str:
     """Generate promotion suggestion based on review results."""
-    if not results.get("ready_for_publish"):
+    if not results.get("passed") or not results.get("ready_for_publish"):
         return ""
 
     current_stage = detect_workflow_stage(document_path)
@@ -167,7 +181,7 @@ def main():
             results["document_path"] = path_match.group(1)
 
     # Generate suggestion if document passed review
-    if results.get("ready_for_publish") and results.get("document_path"):
+    if results.get("passed") and results.get("ready_for_publish") and results.get("document_path"):
         suggestion = suggest_next_action(results["document_path"], results)
         if suggestion:
             print(json.dumps({
