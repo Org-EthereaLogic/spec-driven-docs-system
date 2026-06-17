@@ -280,6 +280,35 @@ else
     fail "settings-matchers: exclude framework and input docs"
 fi
 
+# Test 0b: slash-command matcher recognizes namespaced doc-review commands.
+if python3 - <<'PY'
+import json
+import re
+import sys
+
+with open(".claude/settings.json") as f:
+    settings = json.load(f)
+
+matcher = settings["hooks"]["PostToolUse"][1]["matcher"]
+pattern = re.compile(matcher)
+cases = [
+    ("SlashCommand /doc-review spec_driven_docs/rough_draft/api/users.md", True),
+    ("SlashCommand /doc:doc-review spec_driven_docs/rough_draft/api/users.md", True),
+    ("SlashCommand /doc-write specs/docs/api-spec.md", False),
+]
+
+for text, expected in cases:
+    matched = bool(pattern.search(text))
+    if matched != expected:
+        print(f"{matcher!r} matched {text!r}: expected {expected}, got {matched}")
+        sys.exit(1)
+PY
+then
+    pass "settings-matchers: recognize namespaced doc-review"
+else
+    fail "settings-matchers: recognize namespaced doc-review"
+fi
+
 # Test 1: pre-write blocks forbidden TODO markers
 output=$(run_hook .claude/hooks/doc_pre_write.py \
     "$DOC_PATH" \
@@ -480,7 +509,27 @@ else
     fail "post-review-hook: suggests promotion for grade A" "$output"
 fi
 
-# Test 7: post-review hook is silent for grade F (no promotion suggestion)
+# Test 7: post-review hook suggests promotion for namespaced doc-review commands
+output=$(run_post_review_hook \
+    "/doc:doc-review spec_driven_docs/rough_draft/api/users.md" \
+    "Score: 95/100 (A)
+ready_for_publish: true
+passed: true")
+if echo "$output" | python3 -c "
+import json, sys
+try:
+    d = json.load(sys.stdin)
+    fb = d.get('feedback', '')
+    sys.exit(0 if 'promote' in fb.lower() or 'pending_approval' in fb.lower() else 1)
+except Exception:
+    sys.exit(1)
+" 2>/dev/null; then
+    pass "post-review-hook: suggests promotion for namespaced doc-review"
+else
+    fail "post-review-hook: suggests promotion for namespaced doc-review" "$output"
+fi
+
+# Test 8: post-review hook is silent for grade F (no promotion suggestion)
 output=$(run_post_review_hook \
     "/doc-review spec_driven_docs/rough_draft/api/broken.md" \
     "Score: 45/100 (F)
@@ -505,7 +554,7 @@ else
     fail "post-review-hook: silent for grade F" "$output"
 fi
 
-# Test 8: post-review hook is silent for non-review commands
+# Test 9: post-review hook is silent for non-review commands
 output=$(run_post_review_hook \
     "/doc-write specs/docs/api-spec.md" \
     "Document written successfully")

@@ -22,7 +22,7 @@
         ]
       },
       {
-        "matcher": "SlashCommand.*/doc-review.*",
+        "matcher": "SlashCommand.*/doc(?::doc)?-review.*",
         "hooks": [
           {
             "type": "command",
