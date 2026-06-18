@@ -14,6 +14,7 @@ Matcher: (Write|Edit).*(spec_driven_docs|app_docs|docs)/.*\\.md$
 """
 
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -27,6 +28,7 @@ from hook_utils import (  # noqa: E402
     get_tool_result,
     is_documentation_file,
     load_consistency_rules,
+    load_suite_output_paths,
 )
 
 
@@ -87,10 +89,18 @@ def check_terminology(content: str, rules: dict) -> list:
     return issues
 
 
-def check_internal_links(content: str, file_path: str) -> list:
-    """Check that internal markdown links are valid."""
+def check_internal_links(content: str, file_path: str):
+    """Check that internal markdown links are valid.
+
+    Returns a (issues, suggestions) tuple. A missing target that matches a
+    planned document's output_path in a suite manifest is reported as a
+    non-blocking suggestion (the sibling is expected but not yet generated);
+    any other missing target is reported as a broken-link issue.
+    """
     issues = []
+    suggestions = []
     project_dir = get_project_dir()
+    planned_paths = load_suite_output_paths(project_dir)
 
     link_pattern = r'(?<!!)\[([^\]]+)\]\(([^)]+)\)'
     matches = re.findall(link_pattern, content)
@@ -101,13 +111,26 @@ def check_internal_links(content: str, file_path: str) -> list:
         if link_target.startswith('#'):
             continue
 
+        relative_target = link_target.split('#')[0]
         current_dir = Path(file_path).parent
-        target_path = current_dir / link_target.split('#')[0]
+        target_path = current_dir / relative_target
 
-        if not target_path.exists() and not (project_dir / link_target.split('#')[0]).exists():
+        if target_path.exists() or (project_dir / relative_target).exists():
+            continue
+
+        candidates = {
+            os.path.normpath(str(target_path)),
+            os.path.normpath(str(project_dir / relative_target)),
+        }
+        if candidates & planned_paths:
+            suggestions.append(
+                f"Planned sibling not yet generated: [{link_text}]({link_target}) "
+                "- will resolve when the suite document is created"
+            )
+        else:
             issues.append(f"Broken link: [{link_text}]({link_target})")
 
-    return issues
+    return issues, suggestions
 
 
 def check_header_hierarchy(content: str) -> list:
@@ -139,7 +162,9 @@ def check_document_consistency(file_path: str, content: str) -> dict:
     suggestions = []
 
     issues.extend(check_terminology(content, rules))
-    issues.extend(check_internal_links(content, file_path))
+    link_issues, link_suggestions = check_internal_links(content, file_path)
+    issues.extend(link_issues)
+    suggestions.extend(link_suggestions)
     suggestions.extend(check_header_hierarchy(content))
 
     paragraphs = content.split('\n\n')

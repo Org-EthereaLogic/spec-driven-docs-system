@@ -477,6 +477,65 @@ else
     fail "post-write-hook: ignores image references for broken links" "$output"
 fi
 
+# Test 5b-i: post-write hook treats a link to a planned-but-not-yet-generated
+# suite sibling as a non-blocking suggestion, not a broken-link issue.
+# api/reference.md is a pending output_path in the _example suite manifest.
+planned_sibling_doc="# Users API
+
+This page links to a companion document that the suite will generate later.
+The reference target is declared in the example suite manifest as a planned
+output, so the post-write hook should treat it as a pending sibling rather
+than a broken link. This prose exists to clear the minimum word-count check.
+
+See the [API Reference](api/reference.md) for the full parameter catalog."
+output=$(run_hook .claude/hooks/doc_post_write.py "$DOC_PATH" "$planned_sibling_doc" 2>&1 || true)
+if echo "$output" | python3 -c "
+import json, sys
+raw = sys.stdin.read().strip()
+if not raw:
+    sys.exit(1)
+try:
+    d = json.loads(raw)
+    fb = d.get('feedback', '')
+    ok = ('Planned sibling not yet generated' in fb
+          and 'Broken link: [API Reference]' not in fb)
+    sys.exit(0 if ok else 1)
+except Exception:
+    sys.exit(1)
+" 2>/dev/null; then
+    pass "post-write-hook: planned suite sibling is a suggestion, not broken"
+else
+    fail "post-write-hook: planned suite sibling is a suggestion, not broken" "$output"
+fi
+
+# Test 5b-ii: post-write hook still reports a genuinely missing link (not in
+# any suite manifest) as a broken-link issue.
+broken_link_doc="# Release Notes
+
+This document references a file that does not exist anywhere in the project
+and is not declared in any suite manifest. The post-write hook must report it
+as a genuine broken link so real mistakes are not silently ignored. Extra
+prose keeps the document above the minimum word-count threshold comfortably.
+
+See [Missing](nonexistent-doc.md) for details that were never written."
+output=$(run_hook .claude/hooks/doc_post_write.py "$DOC_PATH" "$broken_link_doc" 2>&1 || true)
+if echo "$output" | python3 -c "
+import json, sys
+raw = sys.stdin.read().strip()
+if not raw:
+    sys.exit(1)
+try:
+    d = json.loads(raw)
+    fb = d.get('feedback', '')
+    sys.exit(0 if 'Broken link: [Missing](nonexistent-doc.md)' in fb else 1)
+except Exception:
+    sys.exit(1)
+" 2>/dev/null; then
+    pass "post-write-hook: genuine missing link is a broken-link issue"
+else
+    fail "post-write-hook: genuine missing link is a broken-link issue" "$output"
+fi
+
 # Test 5c: post-write hook ignores Markdown headings inside fenced code blocks.
 code_heading_doc="# CLI Quickstart
 
