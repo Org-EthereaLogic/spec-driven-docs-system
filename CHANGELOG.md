@@ -32,6 +32,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Hooks: the post-write internal-link check in `doc_post_write.py` no longer
+  reports links to planned-but-not-yet-generated suite siblings as broken
+  links. During incremental suite generation a document can legitimately link
+  to a sibling that is declared in a suite manifest but not yet written;
+  `check_internal_links()` flagged every missing target as a `Broken link`
+  consistency issue, producing false positives. The check now loads every
+  manifest `output_path` via the new `hook_utils.load_suite_output_paths()`
+  helper and routes missing-but-planned targets to non-blocking suggestions
+  ("Planned sibling not yet generated"), while genuinely unknown missing
+  targets remain broken-link issues so real mistakes are still caught. Smoke
+  tests cover both the planned-sibling and genuine-broken cases (PR \#51)
 - Hooks: the pre-write code-block language-hint check in `doc_pre_write.py`
   now flags tilde (`~~~`) fences, not just backtick (` ``` `) fences.
   `check_code_blocks()` previously split content into lines and only matched
