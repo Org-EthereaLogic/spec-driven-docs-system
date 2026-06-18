@@ -22,7 +22,7 @@ verified, and obtain a second-maintainer sign-off before tagging.
 
 - [ ] `CHANGELOG.md` — new release section added above `[Unreleased]`, entries
   accurate and complete
-- [ ] Public-facing docs (`README.md`, `FAQ.md`, User Guide, command docs under
+- [ ] Public-facing docs (`README.md`, `docs/FAQ.md`, User Guide, command docs under
   `.claude/commands/doc/`) reflect any changed behavior
 - [ ] New or changed commands have updated help text
 - [ ] New agent definitions in `.claude/agents/` include `description`, `model`,

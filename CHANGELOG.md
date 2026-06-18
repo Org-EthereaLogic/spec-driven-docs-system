@@ -119,6 +119,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Docs: moved the FAQ and release checklist into `docs/`, added a project docs
+  index, added a reports index under `app_docs/reports/`, and added
+  `.github/CODEOWNERS` for maintainer review routing.
 - Codacy: bumped `.codacy/codacy.yaml` to current CLI tooling — dropped the
   `java` runtime and `pmd`/`semgrep`, added `opengrep`, and bumped
   `lizard`/`pylint`/`trivy` versions (PR \#29)

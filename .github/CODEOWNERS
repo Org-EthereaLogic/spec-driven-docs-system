@@ -1,0 +1,15 @@
+# Review ownership for framework-critical paths.
+* @AJ-EthereaLogic-ai
+
+/.claude/ @AJ-EthereaLogic-ai
+/tests/ @AJ-EthereaLogic-ai
+/docs/ @AJ-EthereaLogic-ai
+/app_docs/ @AJ-EthereaLogic-ai
+/specs/docs/ @AJ-EthereaLogic-ai
+/spec_driven_docs/ @AJ-EthereaLogic-ai
+
+/AGENTS.md @AJ-EthereaLogic-ai
+/CLAUDE.md @AJ-EthereaLogic-ai
+/CONSTITUTION.md @AJ-EthereaLogic-ai
+/DIRECTIVES.md @AJ-EthereaLogic-ai
+/.github/workflows/ @AJ-EthereaLogic-ai

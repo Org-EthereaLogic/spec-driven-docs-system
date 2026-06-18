@@ -118,7 +118,7 @@ promotion into `pending_approval/`.
 | Document | Purpose |
 |----------|---------|
 | [User Guide](app_docs/User-Guide/User-Guide.md) | Comprehensive guide to all features |
-| [FAQ](FAQ.md) | Common questions about setup, workflow, and quality gates |
+| [FAQ](docs/FAQ.md) | Common questions about setup, workflow, and quality gates |
 | [Contributing](CONTRIBUTING.md) | Contribution workflow, standards, and quality expectations |
 
 ### Related documentation
@@ -261,6 +261,7 @@ Utility agents handle development hygiene and prompt engineering tasks.
 ```text
 .
 ├── .claude/                 # Commands, agents, hooks, templates, and quality rules
+├── docs/                    # Project FAQ and release documentation
 ├── specs/docs/              # Input specifications
 ├── spec_driven_docs/        # Generated output by workflow stage
 │   ├── rough_draft/
@@ -268,6 +269,7 @@ Utility agents handle development hygiene and prompt engineering tasks.
 │   └── approved_final/
 ├── app_docs/                # End-user documentation
 │   └── User-Guide/          # Framework user guide
+├── app_docs/reports/        # Tracked audit and readiness reports
 ├── prompt/                  # Prompt engineering resources
 └── README.md                # This file
 ```
