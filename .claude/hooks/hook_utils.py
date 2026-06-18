@@ -10,6 +10,7 @@ doc_post_write.py: environment parsing, project-root resolution, configuration
 loading, file-path filtering, and structured feedback formatting.
 """
 
+import glob
 import json
 import os
 from pathlib import Path
@@ -84,6 +85,27 @@ def get_publish_threshold(project_dir: Path) -> int:
         except (json.JSONDecodeError, IOError, TypeError, ValueError):
             pass
     return DEFAULT_PUBLISH_THRESHOLD
+
+
+def load_suite_output_paths(project_dir: Path) -> set:
+    """Return resolved absolute paths of every planned doc across suite manifests.
+
+    Used to distinguish links to not-yet-generated suite siblings (expected) from
+    genuinely broken links. Returns an empty set on any failure.
+    """
+    planned = set()
+    suites_glob = str(project_dir / ".claude" / "docs" / "suites" / "*" / "manifest.json")
+    for manifest_path in glob.glob(suites_glob):
+        try:
+            with open(manifest_path) as f:
+                data = json.load(f)
+        except (json.JSONDecodeError, IOError):
+            continue
+        for doc in data.get("documents", []):
+            output_path = doc.get("output_path")
+            if output_path:
+                planned.add(os.path.normpath(str(project_dir / output_path)))
+    return planned
 
 
 def is_documentation_file(file_path: str) -> bool:
