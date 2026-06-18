@@ -14,7 +14,7 @@ This directory contains documentation for **users** of the Spec-Driven Docs Syst
 - **Tutorials:** Step-by-step tutorials for common workflows
 - **Command reference:** Detailed reference for all slash commands
 - **Examples:** Real-world examples and recipes
-- **FAQ:** Frequently asked questions and troubleshooting
+- **End-user FAQs:** Questions specific to using the framework
 
 ## What Does NOT Belong Here
 
@@ -26,6 +26,10 @@ This directory contains documentation for **users** of the Spec-Driven Docs Syst
 ## Current Documentation
 
 - [User Guide](User-Guide/User-Guide.md) - Comprehensive guide to all framework features
+
+## Related Documentation
+
+- [Project FAQ](../docs/FAQ.md) - Common setup, workflow, and quality-gate questions
 
 ## Contributing
 
